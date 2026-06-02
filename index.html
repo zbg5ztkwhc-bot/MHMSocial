@@ -3,37 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>MHMSocial + MHMChat | Complete Platform</title>
+    <title>MHMSocial + MHMChat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
         }
-
-        /* Auth Container */
         .auth-container {
             max-width: 450px;
-            width: 100%;
+            margin: 50px auto;
             background: white;
             border-radius: 32px;
             padding: 40px 30px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.2);
             text-align: center;
         }
-
         .auth-container h2 {
             font-size: 2rem;
             margin-bottom: 10px;
@@ -42,13 +34,11 @@
             background-clip: text;
             color: transparent;
         }
-
         .auth-subtitle {
             color: #64748b;
             margin-bottom: 30px;
             font-size: 14px;
         }
-
         .auth-input {
             width: 100%;
             padding: 14px 18px;
@@ -56,15 +46,7 @@
             border: 2px solid #e2e8f0;
             border-radius: 30px;
             font-size: 15px;
-            font-family: inherit;
-            transition: all 0.2s;
         }
-
-        .auth-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
         .auth-btn {
             width: 100%;
             padding: 14px;
@@ -73,41 +55,25 @@
             border: none;
             border-radius: 30px;
             font-weight: 600;
-            font-size: 16px;
             cursor: pointer;
             margin-top: 15px;
-            transition: transform 0.2s;
         }
-
-        .auth-btn:hover {
-            transform: scale(0.98);
-        }
-
         .auth-link {
             margin-top: 20px;
             color: #667eea;
             cursor: pointer;
             font-size: 14px;
         }
-
         .auth-error {
             color: #ef4444;
             font-size: 13px;
             margin-top: 10px;
-            padding: 8px;
-            background: #fee2e2;
-            border-radius: 12px;
         }
-
         .auth-success {
             color: #10b981;
             font-size: 13px;
             margin-top: 10px;
-            padding: 8px;
-            background: #d1fae5;
-            border-radius: 12px;
         }
-
         .migration-box {
             background: #fef3c7;
             border-radius: 16px;
@@ -116,37 +82,29 @@
             text-align: left;
             border-left: 4px solid #f59e0b;
         }
-
         .migration-box h4 {
             color: #92400e;
             margin-bottom: 8px;
         }
-
         .migration-box p {
             color: #78350f;
             font-size: 13px;
             margin: 5px 0;
         }
-
-        /* Main App */
         .main-app {
             display: none;
-            width: 100%;
             max-width: 1300px;
             margin: 0 auto;
         }
-
         .header {
             text-align: center;
             color: white;
             margin-bottom: 30px;
         }
-
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
-
         .user-badge {
             display: inline-flex;
             align-items: center;
@@ -157,7 +115,6 @@
             border-radius: 50px;
             margin-top: 10px;
         }
-
         .logout-header-btn {
             background: rgba(239,68,68,0.8);
             border: none;
@@ -166,19 +123,16 @@
             border-radius: 20px;
             cursor: pointer;
         }
-
         .two-columns {
             display: grid;
             grid-template-columns: 1fr 380px;
             gap: 25px;
         }
-
         .social-feed {
             background: rgba(255,255,255,0.95);
             border-radius: 24px;
             padding: 20px;
         }
-
         .create-card {
             background: white;
             border-radius: 20px;
@@ -186,14 +140,12 @@
             margin-bottom: 25px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
-
         .create-header {
             display: flex;
             align-items: center;
             gap: 12px;
             margin-bottom: 15px;
         }
-
         .avatar-icon {
             width: 50px;
             height: 50px;
@@ -205,7 +157,6 @@
             color: white;
             font-size: 1.5rem;
         }
-
         textarea {
             width: 100%;
             border: 2px solid #e2e8f0;
@@ -213,20 +164,12 @@
             padding: 12px;
             font-family: inherit;
             resize: vertical;
-            font-size: 14px;
         }
-
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
         .media-actions {
             display: flex;
             gap: 12px;
             margin: 12px 0;
         }
-
         .media-btn {
             background: #f1f5f9;
             border: none;
@@ -236,9 +179,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 13px;
         }
-
         .publish-btn {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -249,13 +190,11 @@
             cursor: pointer;
             float: right;
         }
-
         .clearfix::after {
             content: "";
             clear: both;
             display: table;
         }
-
         .post-card {
             background: white;
             border-radius: 20px;
@@ -263,14 +202,12 @@
             margin-bottom: 16px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-
         .post-header {
             display: flex;
             gap: 12px;
             align-items: center;
             margin-bottom: 12px;
         }
-
         .post-avatar {
             width: 45px;
             height: 45px;
@@ -281,31 +218,25 @@
             justify-content: center;
             color: white;
         }
-
         .post-user-info {
             flex: 1;
         }
-
         .post-username {
             font-weight: 700;
         }
-
         .post-time {
             font-size: 11px;
             color: #64748b;
         }
-
         .post-text {
             margin: 10px 0;
             line-height: 1.5;
         }
-
         .post-image img {
             max-width: 100%;
             max-height: 350px;
             border-radius: 16px;
         }
-
         .post-actions {
             display: flex;
             gap: 25px;
@@ -313,7 +244,6 @@
             padding-top: 10px;
             border-top: 1px solid #e2e8f0;
         }
-
         .action-btn {
             background: none;
             border: none;
@@ -322,13 +252,10 @@
             gap: 8px;
             cursor: pointer;
             color: #64748b;
-            font-size: 13px;
         }
-
         .action-btn.liked {
             color: #ef4444;
         }
-
         .comments-section {
             margin-top: 12px;
             background: #f8fafc;
@@ -336,34 +263,27 @@
             padding: 12px;
             display: none;
         }
-
         .comment-item {
             padding: 6px 0;
             border-bottom: 1px solid #e2e8f0;
             display: flex;
             gap: 10px;
-            font-size: 13px;
         }
-
         .comment-author {
             font-weight: 700;
             color: #667eea;
         }
-
         .add-comment-form {
             display: flex;
             gap: 8px;
             margin-top: 10px;
         }
-
         .comment-input {
             flex: 1;
             border: 1px solid #cbd5e1;
             border-radius: 20px;
             padding: 6px 12px;
-            font-size: 12px;
         }
-
         .user-info-card {
             background: white;
             border-radius: 24px;
@@ -371,7 +291,6 @@
             text-align: center;
             margin-bottom: 20px;
         }
-
         .user-avatar-large {
             width: 80px;
             height: 80px;
@@ -384,7 +303,6 @@
             color: white;
             font-size: 32px;
         }
-
         .chat-popup-btn {
             position: fixed;
             bottom: 30px;
@@ -401,13 +319,7 @@
             z-index: 1000;
             color: white;
             font-size: 24px;
-            transition: transform 0.2s;
         }
-
-        .chat-popup-btn:hover {
-            transform: scale(1.05);
-        }
-
         .chat-modal {
             display: none;
             position: fixed;
@@ -420,24 +332,19 @@
             align-items: center;
             justify-content: center;
         }
-
         .chat-modal.active {
             display: flex;
         }
-
         .chat-modal-content {
             width: 90%;
             max-width: 500px;
             height: 85vh;
-            max-height: 700px;
             background: white;
             border-radius: 28px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
         }
-
         .chat-modal-header {
             background: linear-gradient(135deg, #4f46e5, #7c3aed);
             color: white;
@@ -446,47 +353,33 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .close-chat {
             background: none;
             border: none;
             color: white;
             font-size: 24px;
             cursor: pointer;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
         }
-
-        .close-chat:hover {
-            background: rgba(255,255,255,0.2);
-        }
-
         .chat-iframe-container {
             flex: 1;
         }
-
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
-
         .empty-feed {
             text-align: center;
             padding: 40px;
             color: #94a3b8;
         }
-
         .preview-area {
             margin: 10px 0;
         }
-
         .preview-area img {
             max-height: 100px;
             border-radius: 8px;
         }
-
         @media (max-width: 900px) {
             .two-columns {
                 grid-template-columns: 1fr;
@@ -522,7 +415,7 @@
     <div class="migration-box">
         <h4><i class="fas fa-exchange-alt"></i> For Existing MHMChat Users</h4>
         <p>Click "Sign Up / Migrate" above, enter your MHMChat email, create a password, and your account will be migrated automatically!</p>
-        <p style="margin-top: 8px;"><strong>Demo credentials:</strong> any email + password "123456"</p>
+        <p style="margin-top: 8px;"><strong>Demo:</strong> Use any email + password "123456"</p>
     </div>
 </div>
 
@@ -540,7 +433,7 @@
 
     <div class="two-columns">
         <div class="social-feed" id="socialFeedContainer">
-            <div class="loading-feed" style="text-align: center; padding: 40px;">
+            <div style="text-align: center; padding: 40px;">
                 <i class="fas fa-spinner fa-pulse"></i> Loading feed...
             </div>
         </div>
@@ -588,23 +481,19 @@
 
     let currentUser = null;
     let posts = JSON.parse(localStorage.getItem('mhmsocial_posts') || '[]');
+    let currentImageBase64 = null;
 
     function showToast(message, isError = false) {
         const toast = document.createElement('div');
-        toast.style.cssText = `position:fixed;bottom:80px;right:20px;background:${isError ? '#ef4444' : '#10b981'};color:white;padding:12px 20px;border-radius:12px;z-index:3000;font-size:14px;animation:fadeInOut 3s ease;`;
+        toast.style.cssText = `position:fixed;bottom:80px;right:20px;background:${isError ? '#ef4444' : '#10b981'};color:white;padding:12px 20px;border-radius:12px;z-index:3000;font-size:14px;`;
         toast.innerHTML = message;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     }
 
-    // Add animation style
-    const style = document.createElement('style');
-    style.textContent = `@keyframes fadeInOut { 0% { opacity: 0; transform: translateX(50px); } 15% { opacity: 1; transform: translateX(0); } 85% { opacity: 1; } 100% { opacity: 0; transform: translateX(50px); } }`;
-    document.head.appendChild(style);
-
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, (m) => {
+        return str.replace(/[&<>]/g, function(m) {
             if (m === '&') return '&amp;';
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
@@ -613,7 +502,7 @@
     }
 
     // Login handler
-    document.getElementById('loginBtn').onclick = () => {
+    document.getElementById('loginBtn').onclick = function() {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
 
@@ -622,7 +511,6 @@
             return;
         }
 
-        // Demo login - accept any email with password 123456
         if (password === '123456') {
             currentUser = {
                 email: email,
@@ -638,26 +526,25 @@
             userEmailDisplay.textContent = currentUser.email;
             
             renderPosts();
-            showToast(`Welcome ${currentUser.name}! 🎉`);
+            showToast('Welcome ' + currentUser.name + '! 🎉');
         } else {
             document.getElementById('authError').textContent = 'Invalid password. Use "123456" for demo.';
         }
     };
 
-    // Sign up / Migrate
-    document.getElementById('showSignupLink').onclick = () => {
+    document.getElementById('showSignupLink').onclick = function() {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('signupForm').style.display = 'block';
         document.getElementById('authError').textContent = '';
     };
 
-    document.getElementById('showLoginLink').onclick = () => {
+    document.getElementById('showLoginLink').onclick = function() {
         document.getElementById('signupForm').style.display = 'none';
         document.getElementById('loginForm').style.display = 'block';
         document.getElementById('signupError').textContent = '';
     };
 
-    document.getElementById('signupBtn').onclick = () => {
+    document.getElementById('signupBtn').onclick = function() {
         const name = document.getElementById('signupName').value.trim();
         const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value;
@@ -672,7 +559,7 @@
         }
 
         document.getElementById('signupSuccess').textContent = 'Account created! Please login.';
-        setTimeout(() => {
+        setTimeout(function() {
             document.getElementById('signupForm').style.display = 'none';
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('loginEmail').value = email;
@@ -680,7 +567,7 @@
         }, 1500);
     };
 
-    navLogoutBtn.onclick = () => {
+    navLogoutBtn.onclick = function() {
         currentUser = null;
         authScreen.style.display = 'block';
         mainApp.style.display = 'none';
@@ -689,118 +576,51 @@
         showToast('Logged out successfully');
     };
 
-    // Post rendering
-    let currentImageBase64 = null;
-
-    function renderPosts() {
-        const container = document.getElementById('socialFeedContainer');
-        
-        let createCardHtml = `
-            <div class="create-card">
-                <div class="create-header">
-                    <div class="avatar-icon"><i class="fas fa-user-astronaut"></i></div>
-                    <div><h3>Create a post</h3></div>
-                </div>
-                <textarea id="postText" rows="2" placeholder="What's on your mind? 🌍"></textarea>
-                <div class="media-actions">
-                    <label class="media-btn" for="imageUpload"><i class="fas fa-camera"></i> Add Photo</label>
-                    <input type="file" id="imageUpload" accept="image/*" style="display:none">
-                </div>
-                <div id="previewArea" class="preview-area"></div>
-                <div class="clearfix"></div>
-                <button id="publishBtn" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish</button>
-                <div class="clearfix"></div>
-            </div>
-        `;
-
-        if (posts.length === 0) {
-            container.innerHTML = createCardHtml + `<div class="empty-feed"><i class="fas fa-comment"></i> No posts yet. Be the first!</div>`;
-            attachCreateEvents();
-            return;
-        }
-
-        let postsHtml = createCardHtml;
-        posts.forEach(post => {
-            postsHtml += `
-                <div class="post-card">
-                    <div class="post-header">
-                        <div class="post-avatar"><i class="fas fa-user-circle"></i></div>
-                        <div class="post-user-info">
-                            <div class="post-username">${escapeHtml(post.author)}</div>
-                            <div class="post-time">${new Date(post.timestamp).toLocaleString()}</div>
-                        </div>
-                    </div>
-                    <div class="post-text">${escapeHtml(post.text)}</div>
-                    ${post.image ? `<div class="post-image"><img src="${post.image}" loading="lazy"></div>` : ''}
-                    <div class="post-actions">
-                        <button class="action-btn like-btn" data-id="${post.id}">
-                            <i class="fa-regular fa-heart"></i> <span class="like-count">${post.likes || 0}</span> Likes
-                        </button>
-                        <button class="action-btn comment-toggle" data-id="${post.id}">
-                            <i class="fa-regular fa-comment"></i> Comments (${post.comments?.length || 0})
-                        </button>
-                    </div>
-                    <div class="comments-section" id="comments-${post.id}">
-                        <div class="comment-list">
-                            ${renderComments(post.comments)}
-                        </div>
-                        <div class="add-comment-form">
-                            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="Write a comment...">
-                            <button class="comment-submit" data-id="${post.id}">Post</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        
-        container.innerHTML = postsHtml;
-        attachCreateEvents();
-        attachPostEvents();
-    }
-
     function renderComments(comments) {
         if (!comments || comments.length === 0) return '<div>No comments yet</div>';
-        return comments.map(c => `
-            <div class="comment-item">
-                <span class="comment-author">${escapeHtml(c.author)}</span>
-                <span>${escapeHtml(c.text)}</span>
-            </div>
-        `).join('');
+        var html = '';
+        for (var i = 0; i < comments.length; i++) {
+            html += '<div class="comment-item">';
+            html += '<span class="comment-author">' + escapeHtml(comments[i].author) + '</span>';
+            html += '<span>' + escapeHtml(comments[i].text) + '</span>';
+            html += '</div>';
+        }
+        return html;
     }
 
     function attachCreateEvents() {
-        const publishBtn = document.getElementById('publishBtn');
+        var publishBtn = document.getElementById('publishBtn');
         if (!publishBtn) return;
 
-        const imageInput = document.getElementById('imageUpload');
-        const previewArea = document.getElementById('previewArea');
+        var imageInput = document.getElementById('imageUpload');
+        var previewArea = document.getElementById('previewArea');
         
         if (imageInput) {
-            imageInput.onchange = (e) => {
-                const file = e.target.files[0];
+            imageInput.onchange = function(e) {
+                var file = e.target.files[0];
                 if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
                         currentImageBase64 = e.target.result;
-                        previewArea.innerHTML = `<img src="${e.target.result}" style="max-height:100px; border-radius:8px;">`;
+                        previewArea.innerHTML = '<img src="' + e.target.result + '" style="max-height:100px; border-radius:8px;">';
                     };
                     reader.readAsDataURL(file);
                 }
             };
         }
         
-        publishBtn.onclick = () => {
-            const text = document.getElementById('postText').value.trim();
+        publishBtn.onclick = function() {
+            var text = document.getElementById('postText').value.trim();
             if (!text && !currentImageBase64) {
                 showToast("Write something or add a photo", true);
                 return;
             }
             
-            const newPost = {
+            var newPost = {
                 id: Date.now(),
                 text: text || "📸 Shared a photo",
                 image: currentImageBase64,
-                author: currentUser?.name || 'User',
+                author: currentUser ? currentUser.name : 'User',
                 timestamp: Date.now(),
                 likes: 0,
                 comments: []
@@ -819,288 +639,204 @@
     }
 
     function attachPostEvents() {
-        // Like buttons
-        document.querySelectorAll('.like-btn').forEach(btn => {
-            btn.onclick = () => {
-                const id = parseInt(btn.getAttribute('data-id'));
-                const post = posts.find(p => p.id === id);
-                if (post) {
-                    post.likes = (post.likes || 0) + 1;
-                    localStorage.setItem('mhmsocial_posts', JSON.stringify(posts));
-                    renderPosts();
+        var likeBtns = document.querySelectorAll('.like-btn');
+        for (var i = 0; i < likeBtns.length; i++) {
+            likeBtns[i].onclick = function() {
+                var id = parseInt(this.getAttribute('data-id'));
+                for (var j = 0; j < posts.length; j++) {
+                    if (posts[j].id === id) {
+                        posts[j].likes = (posts[j].likes || 0) + 1;
+                        break;
+                    }
                 }
+                localStorage.setItem('mhmsocial_posts', JSON.stringify(posts));
+                renderPosts();
             };
-        });
+        }
         
-        // Comment toggle
-        document.querySelectorAll('.comment-toggle').forEach(btn => {
-            btn.onclick = () => {
-                const id = btn.getAttribute('data-id');
-                const div = document.getElementById(`comments-${id}`);
+        var commentToggles = document.querySelectorAll('.comment-toggle');
+        for (var i = 0; i < commentToggles.length; i++) {
+            commentToggles[i].onclick = function() {
+                var id = this.getAttribute('data-id');
+                var div = document.getElementById('comments-' + id);
                 if (div) {
-                    div.style.display = div.style.display === 'none' ? 'block' : 'none';
-                }
-            };
-        });
-        
-        // Comment submit
-        document.querySelectorAll('.comment-submit').forEach(btn => {
-            btn.onclick = () => {
-                const id = parseInt(btn.getAttribute('data-id'));
-                const input = document.getElementById(`commentInput-${id}`);
-                const text = input.value.trim();
-                if (text) {
-                    const post = posts.find(p => p.id === id);
-                    if (post) {
-                        post.comments = post.comments || [];
-                        post.comments.push({
-                            author: currentUser?.name || 'User',
-                            text: text
-                        });
-                        localStorage.setItem('mhmsocial_posts', JSON.stringify(posts));
-                        renderPosts();
-                        showToast("Comment added!");
+                    if (div.style.display === 'none') {
+                        div.style.display = 'block';
+                    } else {
+                        div.style.display = 'none';
                     }
                 }
             };
-        });
+        }
+        
+        var commentSubmits = document.querySelectorAll('.comment-submit');
+        for (var i = 0; i < commentSubmits.length; i++) {
+            commentSubmits[i].onclick = function() {
+                var id = parseInt(this.getAttribute('data-id'));
+                var input = document.getElementById('commentInput-' + id);
+                var text = input.value.trim();
+                if (text) {
+                    for (var j = 0; j < posts.length; j++) {
+                        if (posts[j].id === id) {
+                            if (!posts[j].comments) posts[j].comments = [];
+                            posts[j].comments.push({
+                                author: currentUser ? currentUser.name : 'User',
+                                text: text
+                            });
+                            break;
+                        }
+                    }
+                    localStorage.setItem('mhmsocial_posts', JSON.stringify(posts));
+                    renderPosts();
+                    showToast("Comment added!");
+                }
+            };
+        }
     }
 
-    // MHMChat Chat Application HTML
-    const mhmchatHTML = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MHMChat</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f1f5f9;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            background: white;
-        }
-        .chat-header {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .chat-header i { font-size: 24px; }
-        .chat-header h2 { flex: 1; font-size: 1.2rem; }
-        .online-badge { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }
-        .contacts-bar {
-            background: #f8fafc;
-            padding: 10px 16px;
-            display: flex;
-            gap: 10px;
-            border-bottom: 1px solid #e2e8f0;
-            overflow-x: auto;
-        }
-        .contact {
-            background: white;
-            padding: 8px 18px;
-            border-radius: 25px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid #e2e8f0;
-            white-space: nowrap;
-            transition: all 0.2s;
-        }
-        .contact.active {
-            background: #4f46e5;
-            color: white;
-            border-color: #4f46e5;
-        }
-        .messages-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: #f8fafc;
-        }
-        .message {
-            max-width: 75%;
-            padding: 10px 14px;
-            border-radius: 18px;
-            font-size: 0.85rem;
-            animation: fadeIn 0.2s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .message.sent {
-            background: #4f46e5;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-        .message.received {
-            background: white;
-            color: #1e293b;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        .message-sender { font-size: 0.7rem; font-weight: 600; margin-bottom: 4px; opacity: 0.8; }
-        .message-time { font-size: 0.6rem; margin-top: 4px; opacity: 0.6; }
-        .input-area {
-            display: flex;
-            gap: 10px;
-            padding: 12px 16px;
-            background: white;
-            border-top: 1px solid #e2e8f0;
-        }
-        .input-area input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #cbd5e1;
-            border-radius: 28px;
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .input-area input:focus { border-color: #4f46e5; }
-        .input-area button {
-            background: #4f46e5;
-            color: white;
-            border: none;
-            padding: 0 24px;
-            border-radius: 28px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .welcome {
-            text-align: center;
-            padding: 50px 20px;
-            color: #94a3b8;
-        }
-        .welcome i { font-size: 48px; margin-bottom: 16px; }
-    </style>
-</head>
-<body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <i class="fas fa-comments"></i>
-            <h2>MHMChat</h2>
-            <div class="online-badge"><i class="fas fa-circle" style="font-size: 8px; color: #10b981;"></i> Connected</div>
-        </div>
-        <div class="contacts-bar">
-            <div class="contact active" data-room="general">💬 General</div>
-            <div class="contact" data-room="team">👥 Team</div>
-            <div class="contact" data-room="support">🛟 Support</div>
-        </div>
-        <div class="messages-area" id="messagesArea">
-            <div class="welcome"><i class="fas fa-comment-dots"></i><p>Select a chat to start messaging</p></div>
-        </div>
-        <div class="input-area">
-            <input type="text" id="messageInput" placeholder="Type a message...">
-            <button id="sendBtn"><i class="fas fa-paper-plane"></i> Send</button>
-        </div>
-    </div>
-    <script>
-        let currentRoom = 'general';
-        let messages = {
-            general: [{ text: "Welcome to MHMChat! 👋", sender: "Bot", sent: false, time: new Date() }],
-            team: [{ text: "Team meeting at 3 PM today!", sender: "Admin", sent: false, time: new Date() }],
-            support: [{ text: "How can we help you?", sender: "Support", sent: false, time: new Date() }]
-        };
+    function renderPosts() {
+        var container = document.getElementById('socialFeedContainer');
         
-        const messagesArea = document.getElementById('messagesArea');
-        const messageInput = document.getElementById('messageInput');
-        const sendBtn = document.getElementById('sendBtn');
-        
-        function formatTime(d) { return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
-        
-        function escapeHtml(s) { 
-            if (!s) return '';
-            return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m] || m));
-        }
-        
-        function loadMessages() {
-            const roomMessages = messages[currentRoom] || [];
-            if (roomMessages.length === 0) {
-                messagesArea.innerHTML = '<div class="welcome"><i class="fas fa-comment-dots"></i><p>No messages yet. Start the conversation!</p></div>';
-                return;
-            }
-            messagesArea.innerHTML = roomMessages.map(m => `
-                <div class="message ${m.sent ? 'sent' : 'received'}">
-                    ${!m.sent ? `<div class="message-sender">${escapeHtml(m.sender)}</div>` : ''}
-                    ${escapeHtml(m.text)}
-                    <div class="message-time">${formatTime(m.time)}</div>
-                </div>
-            `).join('');
-            messagesArea.scrollTop = messagesArea.scrollHeight;
-        }
-        
-        function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text) return;
-            messages[currentRoom].push({ text, sender: 'You', sent: true, time: new Date() });
-            loadMessages();
-            messageInput.value = '';
-            setTimeout(() => {
-                let reply = '';
-                if (currentRoom === 'general') {
-                    reply = "Thanks for your message! 🎉";
-                } else if (currentRoom === 'team') {
-                    reply = "Noted! I'll share with the team.";
-                } else {
-                    reply = "Support will get back to you soon.";
-                }
-                messages[currentRoom].push({ 
-                    text: reply, 
-                    sender: currentRoom === 'general' ? 'Bot' : (currentRoom === 'team' ? 'Team Lead' : 'Support Agent'), 
-                    sent: false, 
-                    time: new Date() 
-                });
-                loadMessages();
-            }, 800);
-        }
-        
-        sendBtn.onclick = sendMessage;
-        messageInput.onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
-        
-        document.querySelectorAll('.contact').forEach(c => {
-            c.onclick = () => {
-                document.querySelectorAll('.contact').forEach(ct => ct.classList.remove('active'));
-                c.classList.add('active');
-                currentRoom = c.dataset.room;
-                loadMessages();
-            };
-        });
-        
-        loadMessages();
-    </script>
-</body>
-</html>`;
+        var createCardHtml = '<div class="create-card">' +
+            '<div class="create-header">' +
+            '<div class="avatar-icon"><i class="fas fa-user-astronaut"></i></div>' +
+            '<div><h3>Create a post</h3></div>' +
+            '</div>' +
+            '<textarea id="postText" rows="2" placeholder="What\'s on your mind? 🌍"></textarea>' +
+            '<div class="media-actions">' +
+            '<label class="media-btn" for="imageUpload"><i class="fas fa-camera"></i> Add Photo</label>' +
+            '<input type="file" id="imageUpload" accept="image/*" style="display:none">' +
+            '</div>' +
+            '<div id="previewArea" class="preview-area"></div>' +
+            '<div class="clearfix"></div>' +
+            '<button id="publishBtn" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish</button>' +
+            '<div class="clearfix"></div>' +
+            '</div>';
 
-    // Setup chat iframe
-    const blob = new Blob([mhmchatHTML], { type: 'text/html' });
-    const chatUrl = URL.createObjectURL(blob);
+        if (posts.length === 0) {
+            container.innerHTML = createCardHtml + '<div class="empty-feed"><i class="fas fa-comment"></i> No posts yet. Be the first!</div>';
+            attachCreateEvents();
+            return;
+        }
+
+        var postsHtml = createCardHtml;
+        for (var i = 0; i < posts.length; i++) {
+            var post = posts[i];
+            postsHtml += '<div class="post-card">' +
+                '<div class="post-header">' +
+                '<div class="post-avatar"><i class="fas fa-user-circle"></i></div>' +
+                '<div class="post-user-info">' +
+                '<div class="post-username">' + escapeHtml(post.author) + '</div>' +
+                '<div class="post-time">' + new Date(post.timestamp).toLocaleString() + '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="post-text">' + escapeHtml(post.text) + '</div>' +
+                (post.image ? '<div class="post-image"><img src="' + post.image + '" loading="lazy"></div>' : '') +
+                '<div class="post-actions">' +
+                '<button class="action-btn like-btn" data-id="' + post.id + '">' +
+                '<i class="fa-regular fa-heart"></i> <span>' + (post.likes || 0) + '</span> Likes</button>' +
+                '<button class="action-btn comment-toggle" data-id="' + post.id + '">' +
+                '<i class="fa-regular fa-comment"></i> Comments (' + (post.comments ? post.comments.length : 0) + ')</button>' +
+                '</div>' +
+                '<div class="comments-section" id="comments-' + post.id + '" style="display: none;">' +
+                '<div class="comment-list">' + renderComments(post.comments) + '</div>' +
+                '<div class="add-comment-form">' +
+                '<input type="text" class="comment-input" id="commentInput-' + post.id + '" placeholder="Write a comment...">' +
+                '<button class="comment-submit" data-id="' + post.id + '">Post</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        }
+        
+        container.innerHTML = postsHtml;
+        attachCreateEvents();
+        attachPostEvents();
+    }
+
+    // MHMChat Chat Application
+    var mhmchatHTML = '<!DOCTYPE html>\n' +
+    '<html>\n' +
+    '<head>\n' +
+    '<meta charset="UTF-8">\n' +
+    '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+    '<title>MHMChat</title>\n' +
+    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">\n' +
+    '<style>\n' +
+    '* { margin: 0; padding: 0; box-sizing: border-box; }\n' +
+    'body { font-family: system-ui, sans-serif; background: #f1f5f9; height: 100vh; overflow: hidden; }\n' +
+    '.chat-container { display: flex; flex-direction: column; height: 100%; background: white; }\n' +
+    '.chat-header { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; padding: 16px 20px; display: flex; align-items: center; gap: 12px; }\n' +
+    '.chat-header h2 { flex: 1; font-size: 1.2rem; }\n' +
+    '.online-badge { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }\n' +
+    '.contacts-bar { background: #f8fafc; padding: 10px 16px; display: flex; gap: 10px; border-bottom: 1px solid #e2e8f0; overflow-x: auto; }\n' +
+    '.contact { background: white; padding: 8px 18px; border-radius: 25px; font-size: 0.85rem; font-weight: 500; cursor: pointer; border: 1px solid #e2e8f0; white-space: nowrap; }\n' +
+    '.contact.active { background: #4f46e5; color: white; }\n' +
+    '.messages-area { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #f8fafc; }\n' +
+    '.message { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 0.85rem; }\n' +
+    '.message.sent { background: #4f46e5; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }\n' +
+    '.message.received { background: white; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }\n' +
+    '.message-sender { font-size: 0.7rem; font-weight: 600; margin-bottom: 4px; opacity: 0.8; }\n' +
+    '.message-time { font-size: 0.6rem; margin-top: 4px; opacity: 0.6; }\n' +
+    '.input-area { display: flex; gap: 10px; padding: 12px 16px; background: white; border-top: 1px solid #e2e8f0; }\n' +
+    '.input-area input { flex: 1; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 28px; font-size: 0.9rem; outline: none; }\n' +
+    '.input-area button { background: #4f46e5; color: white; border: none; padding: 0 24px; border-radius: 28px; font-weight: 600; cursor: pointer; }\n' +
+    '.welcome { text-align: center; padding: 50px 20px; color: #94a3b8; }\n' +
+    '.welcome i { font-size: 48px; margin-bottom: 16px; }\n' +
+    '</style>\n' +
+    '</head>\n' +
+    '<body>\n' +
+    '<div class="chat-container">\n' +
+    '<div class="chat-header">\n' +
+    '<i class="fas fa-comments"></i>\n' +
+    '<h2>MHMChat</h2>\n' +
+    '<div class="online-badge"><i class="fas fa-circle" style="font-size: 8px; color: #10b981;"></i> Connected</div>\n' +
+    '</div>\n' +
+    '<div class="contacts-bar">\n' +
+    '<div class="contact active" data-room="general">💬 General</div>\n' +
+    '<div class="contact" data-room="team">👥 Team</div>\n' +
+    '<div class="contact" data-room="support">🛟 Support</div>\n' +
+    '</div>\n' +
+    '<div class="messages-area" id="messagesArea"></div>\n' +
+    '<div class="input-area">\n' +
+    '<input type="text" id="messageInput" placeholder="Type a message...">\n' +
+    '<button id="sendBtn"><i class="fas fa-paper-plane"></i> Send</button>\n' +
+    '</div>\n' +
+    '</div>\n' +
+    '<script>\n' +
+    'let currentRoom = "general";\n' +
+    'let messages = {\n' +
+    'general: [{ text: "Welcome to MHMChat! 👋", sender: "Bot", sent: false, time: new Date() }],\n' +
+    'team: [{ text: "Team meeting at 3 PM today!", sender: "Admin", sent: false, time: new Date() }],\n' +
+    'support: [{ text: "How can we help you?", sender: "Support", sent: false, time: new Date() }]\n' +
+    '};\n' +
+    'function formatTime(d) { return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); }\n' +
+    'function escapeHtml(s) { if (!s) return ""; return s.replace(/[&<>]/g, function(m) { if (m === "&") return "&amp;"; if (m === "<") return "&lt;"; if (m === ">") return "&gt;"; return m; }); }\n' +
+    'function loadMessages() { var msgs = messages[currentRoom] || []; var area = document.getElementById("messagesArea"); if (msgs.length === 0) { area.innerHTML = "<div class=\"welcome\"><i class=\"fas fa-comment-dots\"></i><p>No messages yet. Start the conversation!</p></div>"; return; } var html = ""; for (var i = 0; i < msgs.length; i++) { var m = msgs[i]; html += "<div class=\"message " + (m.sent ? "sent" : "received") + "\">"; if (!m.sent) html += "<div class=\"message-sender\">" + escapeHtml(m.sender) + "</div>"; html += escapeHtml(m.text); html += "<div class=\"message-time\">" + formatTime(m.time) + "</div></div>"; } area.innerHTML = html; area.scrollTop = area.scrollHeight; }\n' +
+    'function sendMessage() { var input = document.getElementById("messageInput"); var text = input.value.trim(); if (!text) return; messages[currentRoom].push({ text: text, sender: "You", sent: true, time: new Date() }); loadMessages(); input.value = ""; setTimeout(function() { var reply = ""; if (currentRoom === "general") reply = "Thanks for your message! 🎉"; else if (currentRoom === "team") reply = "Noted! I\'ll share with the team."; else reply = "Support will get back to you soon."; messages[currentRoom].push({ text: reply, sender: currentRoom === "general" ? "Bot" : (currentRoom === "team" ? "Team Lead" : "Support Agent"), sent: false, time: new Date() }); loadMessages(); }, 800); }\n' +
+    'document.getElementById("sendBtn").onclick = sendMessage;\n' +
+    'document.getElementById("messageInput").onkeypress = function(e) { if (e.key === "Enter") sendMessage(); };\n' +
+    'var contacts = document.querySelectorAll(".contact");\n' +
+    'for (var i = 0; i < contacts.length; i++) { contacts[i].onclick = function() { for (var j = 0; j < contacts.length; j++) contacts[j].classList.remove("active"); this.classList.add("active"); currentRoom = this.dataset.room; loadMessages(); }; }\n' +
+    'loadMessages();\n' +
+    '<\/script>\n' +
+    '</body>\n' +
+    '</html>';
+
+    var blob = new Blob([mhmchatHTML], { type: 'text/html' });
+    var chatUrl = URL.createObjectURL(blob);
     chatIframe.src = chatUrl;
     
-    chatPopupBtn.onclick = () => {
+    chatPopupBtn.onclick = function() {
         chatModal.classList.add('active');
         if (chatIframe.src !== chatUrl) chatIframe.src = chatUrl;
     };
-    closeChatBtn.onclick = () => chatModal.classList.remove('active');
-    chatModal.onclick = (e) => { if (e.target === chatModal) chatModal.classList.remove('active'); };
+    closeChatBtn.onclick = function() {
+        chatModal.classList.remove('active');
+    };
+    chatModal.onclick = function(e) {
+        if (e.target === chatModal) chatModal.classList.remove('active');
+    };
     
-    // Initial render
     renderPosts();
 </script>
 </body>

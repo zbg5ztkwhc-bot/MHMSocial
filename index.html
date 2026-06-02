@@ -55,6 +55,10 @@
             cursor: pointer;
             margin-top: 15px;
         }
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
         .auth-link {
             margin-top: 20px;
             color: #667eea;
@@ -80,13 +84,6 @@
             font-size: 13px;
             margin: 5px 0;
         }
-        .migration-box code {
-            background: #fffbeb;
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-size: 12px;
-        }
-        
         .main-app {
             display: none;
             width: 100%;
@@ -337,12 +334,10 @@
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
 <div id="authScreen" class="auth-container">
     <h2><i class="fas fa-fire"></i> MHMSocial</h2>
     <div class="subtitle" style="color:#64748b; margin-bottom:20px;">Connect with MHMChat</div>
     
-    <!-- LOGIN FORM -->
     <div id="loginForm">
         <input type="email" id="loginEmail" class="auth-input" placeholder="Email address">
         <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
@@ -351,11 +346,10 @@
         <div id="authError" class="auth-error"></div>
     </div>
 
-    <!-- SIGNUP FORM (ALSO FOR MIGRATION) -->
     <div id="signupForm" style="display: none;">
         <input type="text" id="signupName" class="auth-input" placeholder="Full Name">
         <input type="email" id="signupEmail" class="auth-input" placeholder="Email address">
-        <input type="password" id="signupPassword" class="auth-input" placeholder="Create a password">
+        <input type="password" id="signupPassword" class="auth-input" placeholder="Create a password (min 6 chars)">
         <button id="signupBtn" class="auth-btn">Create / Migrate Account</button>
         <div class="auth-link" id="showLoginLink">Already have an account? Log In</div>
         <div id="signupError" class="auth-error"></div>
@@ -366,15 +360,13 @@
         <h4><i class="fas fa-exchange-alt"></i> For Existing MHMChat Users</h4>
         <p>Your MHMChat account exists in Firestore but needs to be migrated to Firebase Authentication.</p>
         <p><strong>How to migrate:</strong></p>
-        <p>1. Click <strong>"Sign Up"</strong> above (not Log In)</p>
+        <p>1. Click <strong>"Sign Up"</strong> above</p>
         <p>2. Enter your <strong>same email</strong> from MHMChat</p>
         <p>3. Create a <strong>new password</strong> for Firebase Auth</p>
-        <p>4. Your existing data will be preserved and linked</p>
-        <p style="margin-top: 8px;"><code>After migration, you can log in normally!</code></p>
+        <p>4. Your existing data will be preserved</p>
     </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="mainApp" class="main-app">
     <div class="header">
         <h1><i class="fas fa-fire"></i> MHMSocial</h1>
@@ -429,7 +421,6 @@
 </script>
 
 <script type="module">
-    // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyDexKxdFHxMAw7K1e9_xWRuwSrlqaqxviU",
         authDomain: "mhmsocial.firebaseapp.com",
@@ -455,7 +446,6 @@
     let currentImageBase64 = null;
     let postsList = [];
 
-    // DOM Elements
     const authScreen = document.getElementById('authScreen');
     const mainApp = document.getElementById('mainApp');
     const chatPopupBtn = document.getElementById('chatPopupBtn');
@@ -508,7 +498,6 @@
         });
     }
 
-    // Find existing MHMChat user in Firestore by email
     async function findMHMChatUserInFirestore(email) {
         try {
             const usersRef = collection(db, 'users');
@@ -525,40 +514,26 @@
         }
     }
 
-    // Migrate MHMChat user to Firebase Auth + link Firestore
     async function migrateMHMChatUser(email, name, password) {
         try {
-            // Create Firebase Auth account
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const firebaseUser = userCredential.user;
             
-            // Find existing MHMChat user in Firestore
             const existingUser = await findMHMChatUserInFirestore(email);
             
             if (existingUser) {
-                // Migrate existing Firestore data to new Auth UID
                 await setDoc(doc(db, 'users', firebaseUser.uid), {
-                    ...existingUser.data,
                     email: email,
                     emailLower: email.toLowerCase(),
-                    name: name || existingUser.data.name,
-                    nameLower: (name || existingUser.data.name).toLowerCase(),
-                    originalFirestoreId: existingUser.id,
-                    migratedAt: new Date().toISOString(),
+                    name: name || existingUser.data.name || email.split('@')[0],
+                    nameLower: (name || existingUser.data.name || email.split('@')[0]).toLowerCase(),
                     contacts: existingUser.data.contacts || [],
-                    groups: existingUser.data.groups || []
-                }, { merge: true });
-                
-                // Optional: Keep old document for backup
-                await setDoc(doc(db, 'users', existingUser.id), {
-                    migratedToUid: firebaseUser.uid,
+                    groups: existingUser.data.groups || [],
+                    migratedFrom: existingUser.id,
                     migratedAt: new Date().toISOString()
-                }, { merge: true });
-                
-                console.log(`✅ Migrated user ${email} from Firestore to Firebase Auth`);
+                });
                 return { success: true, message: "MHMChat account migrated successfully!" };
             } else {
-                // Create new user document
                 await setDoc(doc(db, 'users', firebaseUser.uid), {
                     email: email,
                     emailLower: email.toLowerCase(),
@@ -579,14 +554,18 @@
         }
     }
 
-    // Get user data from Firestore
     async function getUserData(userId) {
-        const userRef = doc(db, 'users', userId);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-            return userSnap.data();
+        try {
+            const userRef = doc(db, 'users', userId);
+            const userSnap = await getDoc(userRef);
+            if (userSnap.exists()) {
+                return userSnap.data();
+            }
+            return null;
+        } catch (error) {
+            console.error("Error getting user data:", error);
+            return null;
         }
-        return null;
     }
 
     function renderFeed() {
@@ -735,7 +714,6 @@
     document.getElementById('showSignupLink').onclick = () => { loginForm.style.display = 'none'; signupForm.style.display = 'block'; };
     document.getElementById('showLoginLink').onclick = () => { signupForm.style.display = 'none'; loginForm.style.display = 'block'; };
 
-    // LOGIN - for users already in Firebase Auth
     document.getElementById('loginBtn').onclick = async () => {
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
@@ -752,7 +730,6 @@
         }
     };
 
-    // SIGNUP / MIGRATION
     document.getElementById('signupBtn').onclick = async () => {
         const name = document.getElementById('signupName').value.trim();
         const email = document.getElementById('signupEmail').value.trim();
@@ -768,40 +745,16 @@
         document.getElementById('signupSuccess').textContent = '';
         
         try {
-            // Check if this email already exists in MHMChat Firestore
-            const existingMHMChatUser = await findMHMChatUserInFirestore(email);
-            
-            if (existingMHMChatUser) {
-                document.getElementById('signupSuccess').innerHTML = '📦 MHMChat user found! Migrating your account...';
-                
-                // Migrate the user
-                const result = await migrateMHMChatUser(email, name || existingMHMChatUser.data.name, password);
-                
-                if (result.success) {
-                    document.getElementById('signupSuccess').innerHTML = '✅ ' + result.message + ' Redirecting to login...';
-                    setTimeout(() => {
-                        signupForm.style.display = 'none';
-                        loginForm.style.display = 'block';
-                        document.getElementById('loginEmail').value = email;
-                        document.getElementById('signupError').textContent = '';
-                    }, 2000);
-                } else {
-                    document.getElementById('signupError').textContent = result.message;
-                }
+            const result = await migrateMHMChatUser(email, name, password);
+            if (result.success) {
+                document.getElementById('signupSuccess').innerHTML = '✅ ' + result.message + ' Redirecting to login...';
+                setTimeout(() => {
+                    signupForm.style.display = 'none';
+                    loginForm.style.display = 'block';
+                    document.getElementById('loginEmail').value = email;
+                }, 2000);
             } else {
-                // Brand new user - create directly
-                document.getElementById('signupSuccess').innerHTML = 'Creating new account...';
-                const result = await migrateMHMChatUser(email, name, password);
-                if (result.success) {
-                    document.getElementById('signupSuccess').innerHTML = '✅ Account created! Redirecting to login...';
-                    setTimeout(() => {
-                        signupForm.style.display = 'none';
-                        loginForm.style.display = 'block';
-                        document.getElementById('loginEmail').value = email;
-                    }, 2000);
-                } else {
-                    document.getElementById('signupError').textContent = result.message;
-                }
+                document.getElementById('signupError').textContent = result.message;
             }
         } catch (error) {
             document.getElementById('signupError').textContent = error.message;
@@ -839,14 +792,7 @@
 
     navLogoutBtn.onclick = async () => { await signOut(auth); showToast("Logged out"); };
 
-    // Chat Popup
-    const chatHTML = `<!DOCTYPE html>
-    <html>
-    <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MHMChat</title>
-    <style>body{font-family:system-ui;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:20px;}.container{background:white;border-radius:28px;padding:40px;text-align:center;max-width:400px;}.container i{font-size:64px;color:#667eea;margin-bottom:20px;}.container h2{color:#1e293b;margin-bottom:10px;}.container p{color:#64748b;}</style>
-    </head>
-    <body><div class="container"><i class="fas fa-comments"></i><h2>MHMChat</h2><p>Connected to MHMSocial!</p><p style="font-size:13px;">✅ Same account<br>✅ Firestore users synced</p></div></body></html>`;
-    
+    const chatHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>MHMChat</title><style>body{font-family:system-ui;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:20px;}.container{background:white;border-radius:28px;padding:40px;text-align:center;max-width:400px;}.container i{font-size:64px;color:#667eea;margin-bottom:20px;}.container h2{color:#1e293b;margin-bottom:10px;}.container p{color:#64748b;}</style></head><body><div class="container"><i class="fas fa-comments"></i><h2>MHMChat</h2><p>Connected to MHMSocial!</p></div></body></html>`;
     const blob = new Blob([chatHTML], { type: 'text/html' });
     chatIframe.src = URL.createObjectURL(blob);
     chatPopupBtn.onclick = () => chatModal.classList.add('active');

@@ -3,24 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>MHMSocial</title>
+    <title>MHMSocial + MHMChat | Integrated Platform</title>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
-        .container {
-            max-width: 800px;
+
+        /* Main Container */
+        .main-container {
+            max-width: 1300px;
             margin: 0 auto;
         }
+
+        /* Header */
         .header {
             text-align: center;
             color: white;
@@ -30,38 +38,52 @@
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
-        .header p {
-            opacity: 0.9;
+        .header h1 i {
+            margin-right: 10px;
         }
-        .status {
+        .status-badge {
             display: inline-block;
-            background: #f59e0b;
+            background: #10b981;
             color: white;
             padding: 5px 15px;
             border-radius: 30px;
             font-size: 12px;
             margin-top: 10px;
         }
-        .status.connected {
-            background: #10b981;
+        .status-badge.offline {
+            background: #f59e0b;
         }
-        .status.error {
-            background: #ef4444;
+
+        /* Two Column Layout */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 25px;
         }
+
+        /* Social Feed Column */
+        .social-feed {
+            background: rgba(255,255,255,0.95);
+            border-radius: 24px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Create Post Card */
         .create-card {
             background: white;
             border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
         .create-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-        .avatar {
+        .avatar-icon {
             width: 50px;
             height: 50px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -75,76 +97,87 @@
         textarea {
             width: 100%;
             border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 15px;
-            font-size: 16px;
+            border-radius: 16px;
+            padding: 12px;
             font-family: inherit;
             resize: vertical;
-            margin-bottom: 15px;
+            font-size: 14px;
         }
         textarea:focus {
             outline: none;
             border-color: #667eea;
         }
+        .media-actions {
+            display: flex;
+            gap: 12px;
+            margin: 12px 0;
+        }
         .media-btn {
             background: #f1f5f9;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 30px;
             cursor: pointer;
+            font-size: 13px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 15px;
-            font-size: 14px;
         }
-        .media-btn:hover {
-            background: #e2e8f0;
-        }
-        .preview-container {
+        .preview-area {
             margin: 10px 0;
         }
-        .preview-image {
-            max-height: 150px;
-            border-radius: 10px;
+        .preview-item {
             position: relative;
             display: inline-block;
+        }
+        .preview-item img {
+            max-height: 120px;
+            border-radius: 12px;
+            border: 2px solid #667eea;
+        }
+        .remove-preview {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
         }
         .publish-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 10px 24px;
             border-radius: 30px;
-            font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             float: right;
-        }
-        .publish-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
         .clearfix::after {
             content: "";
             clear: both;
             display: table;
         }
+
+        /* Post Card */
         .post-card {
             background: white;
             border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            transition: transform 0.2s;
-        }
-        .post-card:hover {
-            transform: translateY(-2px);
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         .post-header {
             display: flex;
-            align-items: center;
             gap: 12px;
+            align-items: center;
             margin-bottom: 12px;
         }
         .post-avatar {
@@ -156,57 +189,36 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
         }
-        .post-info {
+        .post-user-info {
             flex: 1;
         }
-        .username {
-            font-weight: bold;
-            font-size: 16px;
+        .post-username {
+            font-weight: 700;
         }
-        .time {
+        .post-time {
             font-size: 11px;
             color: #64748b;
         }
-        .delete-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: #cbd5e1;
-            font-size: 16px;
-            padding: 5px;
-        }
-        .delete-btn:hover {
-            color: #ef4444;
-        }
         .post-text {
-            margin: 12px 0;
+            margin: 10px 0;
             line-height: 1.5;
-            word-break: break-word;
         }
         .post-image {
-            margin: 15px 0;
-            border-radius: 15px;
+            margin: 12px 0;
+            border-radius: 16px;
             overflow: hidden;
-            text-align: center;
-            background: #f8fafc;
         }
         .post-image img {
             max-width: 100%;
-            max-height: 400px;
+            max-height: 350px;
             object-fit: contain;
         }
-        .image-size {
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 5px;
-        }
-        .actions {
+        .post-actions {
             display: flex;
             gap: 25px;
-            margin-top: 15px;
-            padding-top: 12px;
+            margin-top: 12px;
+            padding-top: 10px;
             border-top: 1px solid #e2e8f0;
         }
         .action-btn {
@@ -217,159 +229,241 @@
             gap: 8px;
             cursor: pointer;
             color: #64748b;
-            font-size: 14px;
-        }
-        .action-btn:hover {
-            color: #667eea;
+            font-size: 13px;
         }
         .action-btn.liked {
             color: #ef4444;
         }
         .comments-section {
-            margin-top: 15px;
+            margin-top: 12px;
             background: #f8fafc;
-            border-radius: 15px;
-            padding: 15px;
+            border-radius: 16px;
+            padding: 12px;
             display: none;
         }
-        .comment {
-            padding: 8px 0;
+        .comment-item {
+            padding: 6px 0;
             border-bottom: 1px solid #e2e8f0;
             display: flex;
             gap: 10px;
+            font-size: 13px;
         }
         .comment-author {
-            font-weight: bold;
-            min-width: 80px;
+            font-weight: 700;
             color: #667eea;
         }
         .add-comment-form {
             display: flex;
-            gap: 10px;
-            margin-top: 12px;
+            gap: 8px;
+            margin-top: 10px;
         }
         .comment-input {
             flex: 1;
             border: 1px solid #cbd5e1;
             border-radius: 20px;
-            padding: 8px 15px;
-            font-family: inherit;
+            padding: 6px 12px;
+            font-size: 12px;
         }
-        .empty-feed, .loading {
+        .empty-feed {
             text-align: center;
-            padding: 50px;
-            background: white;
-            border-radius: 20px;
-            color: #64748b;
+            padding: 40px;
+            color: #94a3b8;
         }
-        .toast {
+
+        /* Chat Popup Button */
+        .chat-popup-btn {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: transform 0.2s;
+            color: white;
+            font-size: 24px;
+        }
+        .chat-popup-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Chat Modal Overlay */
+        .chat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .chat-modal.active {
+            display: flex;
+        }
+        .chat-modal-content {
+            width: 90%;
+            max-width: 500px;
+            height: 85vh;
+            max-height: 700px;
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-modal-header {
             background: #1e293b;
             color: white;
-            padding: 12px 20px;
-            border-radius: 10px;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            font-size: 14px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .chat-modal-header h3 {
+            font-size: 1.2rem;
         }
-        .compress-options {
-            background: #f0fdf4;
-            border-radius: 12px;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 13px;
-        }
-        .compress-options label {
-            margin-right: 15px;
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
             cursor: pointer;
         }
-        footer {
+
+        /* Iframe Container */
+        .chat-iframe-container {
+            flex: 1;
+            background: white;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Right Column - User Info */
+        .user-info-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
             text-align: center;
-            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        .user-avatar-large {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
             color: white;
-            font-size: 12px;
-            opacity: 0.7;
+            font-size: 32px;
+        }
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        @media (max-width: 900px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+            .chat-popup-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
-<div class="container">
+<div class="main-container">
     <div class="header">
         <h1><i class="fas fa-fire"></i> MHMSocial</h1>
-        <p>Share posts with compressed images • Live Realtime Database</p>
-        <div class="status" id="statusBadge">
-            <i class="fas fa-spinner fa-pulse"></i> Connecting...
+        <p>Share posts with photos • Integrated with MHMChat</p>
+        <div class="status-badge" id="socialStatus">
+            <i class="fas fa-spinner fa-pulse"></i> Loading...
         </div>
     </div>
 
-    <div class="create-card">
-        <div class="create-header">
-            <div class="avatar"><i class="fas fa-user-astronaut"></i></div>
-            <div>
-                <h3>Create a post</h3>
-                <small>Add text, upload compressed photos, or both</small>
+    <div class="two-columns">
+        <!-- Left Column: Social Feed -->
+        <div class="social-feed" id="socialFeedContainer">
+            <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading your feed...</div>
+        </div>
+
+        <!-- Right Column: User Info & Quick Actions -->
+        <div>
+            <div class="user-info-card" id="userInfoCard">
+                <div class="user-avatar-large"><i class="fas fa-user"></i></div>
+                <h3 id="userNameDisplay">Guest</h3>
+                <p id="userEmailDisplay" style="color:#64748b; font-size:13px;">Not signed in</p>
+                <button class="logout-btn" id="logoutBtn" style="display:none;">Logout</button>
+                <button class="logout-btn" id="loginPromptBtn" style="background:#667eea;">Sign In to Post</button>
             </div>
         </div>
-        
-        <textarea id="postText" rows="3" placeholder="What's on your mind? 🌍"></textarea>
-        
-        <label class="media-btn" for="imageInput">
-            <i class="fas fa-camera"></i> Add Photo
-        </label>
-        <input type="file" id="imageInput" accept="image/*" style="display:none">
-        
-        <div class="compress-options">
-            <span style="font-weight: 500;">📸 Compression: </span>
-            <label>
-                <input type="radio" name="quality" value="high" checked> High (800px)
-            </label>
-            <label>
-                <input type="radio" name="quality" value="medium"> Medium (600px)
-            </label>
-            <label>
-                <input type="radio" name="quality" value="low"> Low (400px)
-            </label>
-        </div>
-        
-        <div id="previewArea" class="preview-container"></div>
-        
-        <div class="clearfix"></div>
-        <button id="publishBtn" class="publish-btn">
-            <i class="fas fa-paper-plane"></i> Publish
-        </button>
-        <div class="clearfix"></div>
     </div>
-
-    <div id="feed"></div>
-    <footer>
-        <i class="fas fa-database"></i> Powered by Firebase Realtime Database (Asia Southeast 1)
-    </footer>
 </div>
 
+<!-- Chat Popup Button -->
+<div class="chat-popup-btn" id="chatPopupBtn">
+    <i class="fas fa-comment-dots"></i>
+</div>
+
+<!-- Chat Modal -->
+<div class="chat-modal" id="chatModal">
+    <div class="chat-modal-content">
+        <div class="chat-modal-header">
+            <h3><i class="fas fa-comments"></i> MHMChat</h3>
+            <button class="close-chat" id="closeChatBtn">&times;</button>
+        </div>
+        <div class="chat-iframe-container">
+            <iframe id="chatIframe" src="about:blank"></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDKs -->
 <script type="importmap">
     {
         "imports": {
             "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-            "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"
+            "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
         }
     }
 </script>
 
 <script type="module">
     // ============================================
-    // YOUR CORRECT FIREBASE CONFIGURATION
+    // FIREBASE CONFIGURATION (MHMSocial + MHMChat combined)
     // ============================================
     const firebaseConfig = {
         apiKey: "AIzaSyDexKxdFHxMAw7K1e9_xWRuwSrlqaqxviU",
@@ -382,252 +476,39 @@
     };
 
     import { initializeApp } from "firebase/app";
-    import { getDatabase, ref, push, set, onValue, remove, update, get } from "firebase/database";
+    import { getDatabase, ref, push, set, onValue, get, remove, update } from "firebase/database";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    const rtdb = getDatabase(app);
+    const auth = getAuth(app);
 
+    // Global state
+    let currentUser = null;
     let currentImageBase64 = null;
-    let currentImageSize = 0;
-    let currentUser = "user_" + Math.random().toString(36).substr(2, 8);
+    let postsList = [];
 
-    const statusBadge = document.getElementById('statusBadge');
+    // DOM Elements
+    const socialContainer = document.getElementById('socialFeedContainer');
+    const statusBadge = document.getElementById('socialStatus');
+    const userNameDisplay = document.getElementById('userNameDisplay');
+    const userEmailDisplay = document.getElementById('userEmailDisplay');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const loginPromptBtn = document.getElementById('loginPromptBtn');
 
+    // Helper functions
     function showToast(message, isError = false) {
         const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.style.background = isError ? '#ef4444' : '#10b981';
+        toast.style.cssText = `position:fixed;bottom:80px;right:20px;background:${isError ? '#ef4444' : '#10b981'};color:white;padding:12px 20px;border-radius:12px;z-index:3000;font-size:14px;animation:fadeInOut 3s ease;`;
         toast.innerHTML = message;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     }
 
-    // Get selected compression quality
-    function getSelectedQuality() {
-        const selected = document.querySelector('input[name="quality"]:checked');
-        if (!selected) return 'high';
-        
-        switch(selected.value) {
-            case 'high': return { maxWidth: 800, quality: 0.8 };
-            case 'medium': return { maxWidth: 600, quality: 0.6 };
-            case 'low': return { maxWidth: 400, quality: 0.4 };
-            default: return { maxWidth: 800, quality: 0.8 };
-        }
-    }
-
-    // Compress image function
-    function compressImage(file) {
-        return new Promise((resolve) => {
-            const settings = getSelectedQuality();
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    let width = img.width;
-                    let height = img.height;
-                    
-                    if (width > settings.maxWidth) {
-                        height = (height * settings.maxWidth) / width;
-                        width = settings.maxWidth;
-                    }
-                    
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    const base64 = canvas.toDataURL('image/jpeg', settings.quality);
-                    const sizeKB = Math.round((base64.length * 3/4) / 1024);
-                    
-                    resolve({ 
-                        base64, 
-                        sizeKB, 
-                        width: Math.round(width), 
-                        height: Math.round(height),
-                        originalSize: Math.round(file.size / 1024)
-                    });
-                };
-                img.src = e.target.result;
-            };
-        });
-    }
-
-    // Test database connection
-    function testConnection() {
-        const connectedRef = ref(db, '.info/connected');
-        onValue(connectedRef, (snap) => {
-            if (snap.val() === true) {
-                statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Connected to Firebase';
-                statusBadge.className = 'status connected';
-                showToast('✅ Connected to Firebase Realtime Database!');
-                loadPosts();
-                // Create a demo post if no posts exist
-                setTimeout(checkAndCreateDemoPost, 1000);
-            } else {
-                statusBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Connection Error';
-                statusBadge.className = 'status error';
-                showToast('❌ Connection failed. Check database rules.', true);
-            }
-        });
-    }
-
-    // Check if posts exist, if not create a demo
-    async function checkAndCreateDemoPost() {
-        const postsRef = ref(db, 'posts');
-        const snapshot = await get(postsRef);
-        if (!snapshot.exists()) {
-            const demoRef = push(postsRef);
-            await set(demoRef, {
-                text: "🎉 Welcome to MHMSocial! This is a demo post. Try adding a photo or writing something!",
-                authorName: "MHM Bot",
-                timestamp: Date.now(),
-                likes: 0,
-                likedBy: {},
-                comments: {}
-            });
-            showToast("✨ Demo post created!");
-        }
-    }
-
-    // Image preview and upload
-    const imageInput = document.getElementById('imageInput');
-    const previewArea = document.getElementById('previewArea');
-
-    imageInput.addEventListener('change', async (e) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            if (!file.type.startsWith('image/')) {
-                showToast("Please select an image file", true);
-                return;
-            }
-            
-            showToast(`Compressing image...`);
-            const compressed = await compressImage(file);
-            currentImageBase64 = compressed.base64;
-            currentImageSize = compressed.sizeKB;
-            
-            previewArea.innerHTML = `
-                <div style="position: relative; display: inline-block;">
-                    <img src="${compressed.base64}" class="preview-image" style="max-height: 150px; border-radius: 10px; border: 2px solid #667eea;">
-                    <div style="font-size: 12px; margin-top: 5px; background: #f1f5f9; padding: 3px 8px; border-radius: 20px; display: inline-block;">
-                        📸 ${compressed.width}×${compressed.height} · ${compressed.sizeKB}KB (saved ${Math.round((1 - compressed.sizeKB/compressed.originalSize)*100)}%)
-                    </div>
-                    <button onclick="clearImage()" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 14px;">×</button>
-                </div>
-            `;
-            showToast(`✅ Image compressed to ${compressed.sizeKB}KB (${Math.round((1 - compressed.sizeKB/compressed.originalSize)*100)}% smaller!)`);
-        }
-    });
-
-    window.clearImage = function() {
-        currentImageBase64 = null;
-        currentImageSize = 0;
-        previewArea.innerHTML = '';
-        imageInput.value = '';
-    };
-
-    // Publish post
-    document.getElementById('publishBtn').addEventListener('click', async () => {
-        const text = document.getElementById('postText').value.trim();
-        if (!text && !currentImageBase64) {
-            showToast("Please write something or add a photo", true);
-            return;
-        }
-
-        const btn = document.getElementById('publishBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Publishing...';
-
-        try {
-            const postsRef = ref(db, 'posts');
-            const newPostRef = push(postsRef);
-            
-            await set(newPostRef, {
-                text: text || "📸 Shared a photo",
-                imageBase64: currentImageBase64 || null,
-                imageSize: currentImageSize || null,
-                authorName: "User_" + currentUser.slice(0, 6),
-                userId: currentUser,
-                timestamp: Date.now(),
-                likes: 0,
-                likedBy: {},
-                comments: {}
-            });
-
-            document.getElementById('postText').value = '';
-            clearImage();
-            showToast("✅ Post published successfully!");
-            
-            // Scroll to top to see new post
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        } catch (error) {
-            console.error("Error:", error);
-            showToast("Error: " + error.message, true);
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
-        }
-    });
-
-    // Like post
-    window.likePost = async (postId, currentLikes) => {
-        const postRef = ref(db, `posts/${postId}`);
-        const likedByRef = ref(db, `posts/${postId}/likedBy/${currentUser}`);
-        
-        try {
-            const snapshot = await get(likedByRef);
-            if (snapshot.exists()) {
-                await update(postRef, { likes: currentLikes - 1 });
-                await remove(likedByRef);
-            } else {
-                await update(postRef, { likes: currentLikes + 1 });
-                await set(likedByRef, true);
-            }
-        } catch (error) {
-            console.error("Like error:", error);
-        }
-    };
-
-    // Add comment
-    window.addComment = async (postId) => {
-        const input = document.getElementById(`comment_${postId}`);
-        const text = input.value.trim();
-        if (!text) return;
-        
-        try {
-            const commentsRef = ref(db, `posts/${postId}/comments`);
-            const newCommentRef = push(commentsRef);
-            await set(newCommentRef, {
-                author: "User_" + currentUser.slice(0, 6),
-                text: text,
-                timestamp: Date.now()
-            });
-            input.value = '';
-            showToast("💬 Comment added!");
-        } catch (error) {
-            console.error("Comment error:", error);
-        }
-    };
-
-    // Delete post
-    window.deletePost = async (postId) => {
-        if (!confirm("Delete this post permanently?")) return;
-        try {
-            await remove(ref(db, `posts/${postId}`));
-            showToast("Post deleted");
-        } catch (error) {
-            showToast("Error deleting post", true);
-        }
-    };
-
-    // Toggle comments
-    window.toggleComments = (postId) => {
-        const div = document.getElementById(`comments_${postId}`);
-        if (div) div.style.display = div.style.display === 'none' ? 'block' : 'none';
-    };
+    // Inject CSS animation
+    const style = document.createElement('style');
+    style.textContent = `@keyframes fadeInOut { 0% { opacity: 0; transform: translateX(50px); } 15% { opacity: 1; transform: translateX(0); } 85% { opacity: 1; } 100% { opacity: 0; transform: translateX(50px); } }`;
+    document.head.appendChild(style);
 
     function escapeHtml(str) {
         if (!str) return '';
@@ -639,94 +520,410 @@
         });
     }
 
-    // Load posts
-    function loadPosts() {
-        const postsRef = ref(db, 'posts');
-        onValue(postsRef, (snapshot) => {
-            const posts = [];
-            snapshot.forEach((childSnapshot) => {
-                posts.push({ id: childSnapshot.key, ...childSnapshot.val() });
-            });
-            posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            renderPosts(posts);
-        }, (error) => {
-            console.error("Load error:", error);
-            document.getElementById('feed').innerHTML = `<div class="empty-feed"><i class="fas fa-exclamation-triangle"></i> Error: ${error.message}</div>`;
+    // Image compression
+    function compressImage(file, maxWidth = 700, quality = 0.7) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const base64 = canvas.toDataURL('image/jpeg', quality);
+                    const sizeKB = Math.round((base64.length * 3/4) / 1024);
+                    resolve({ base64, sizeKB });
+                };
+                img.src = e.target.result;
+            };
         });
     }
 
-    function renderPosts(posts) {
-        const feed = document.getElementById('feed');
-        if (!posts.length) {
-            feed.innerHTML = `
-                <div class="empty-feed">
-                    <i class="fas fa-comment" style="font-size: 48px; margin-bottom: 15px;"></i><br>
-                    No posts yet.<br>
-                    <small>Be the first to share something!</small>
+    // Render Social Feed
+    function renderFeed() {
+        if (!postsList.length) {
+            socialContainer.innerHTML = `
+                <div class="create-card">
+                    <div class="create-header">
+                        <div class="avatar-icon"><i class="fas fa-user-astronaut"></i></div>
+                        <div><h3>Create a post</h3><small>Share text or photos</small></div>
+                    </div>
+                    <textarea id="postText" rows="2" placeholder="What's on your mind? 🌍"></textarea>
+                    <div class="media-actions">
+                        <label class="media-btn" for="imageUpload"><i class="fas fa-camera"></i> Add Photo</label>
+                        <input type="file" id="imageUpload" accept="image/*" style="display:none">
+                    </div>
+                    <div id="previewArea" class="preview-area"></div>
+                    <div class="clearfix"></div>
+                    <button id="publishBtn" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish</button>
+                    <div class="clearfix"></div>
                 </div>
+                <div class="empty-feed"><i class="fas fa-comment"></i> No posts yet. Be the first!</div>
             `;
+            attachCreatePostEvents();
             return;
         }
 
-        feed.innerHTML = posts.map(post => {
-            const commentCount = post.comments ? Object.keys(post.comments).length : 0;
-            const likedByCurrent = post.likedBy && post.likedBy[currentUser];
-            
-            return `
-                <div class="post-card">
+        let feedHtml = `
+            <div class="create-card">
+                <div class="create-header">
+                    <div class="avatar-icon"><i class="fas fa-user-astronaut"></i></div>
+                    <div><h3>Create a post</h3><small>Share text or photos</small></div>
+                </div>
+                <textarea id="postText" rows="2" placeholder="What's on your mind? 🌍"></textarea>
+                <div class="media-actions">
+                    <label class="media-btn" for="imageUpload"><i class="fas fa-camera"></i> Add Photo</label>
+                    <input type="file" id="imageUpload" accept="image/*" style="display:none">
+                </div>
+                <div id="previewArea" class="preview-area"></div>
+                <div class="clearfix"></div>
+                <button id="publishBtn" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish</button>
+                <div class="clearfix"></div>
+            </div>
+        `;
+
+        postsList.forEach(post => {
+            feedHtml += `
+                <div class="post-card" data-post-id="${post.id}">
                     <div class="post-header">
                         <div class="post-avatar"><i class="fas fa-user-circle"></i></div>
-                        <div class="post-info">
-                            <div class="username">${escapeHtml(post.authorName)}</div>
-                            <div class="time">${new Date(post.timestamp).toLocaleString()}</div>
+                        <div class="post-user-info">
+                            <div class="post-username">${escapeHtml(post.authorName)}</div>
+                            <div class="post-time">${new Date(post.timestamp).toLocaleString()}</div>
                         </div>
-                        <button class="delete-btn" onclick="deletePost('${post.id}')" title="Delete post">🗑️</button>
                     </div>
                     <div class="post-text">${escapeHtml(post.text).replace(/\n/g, '<br>')}</div>
-                    ${post.imageBase64 ? `
-                        <div class="post-image">
-                            <img src="${post.imageBase64}" alt="Post image" loading="lazy">
-                            ${post.imageSize ? `<div class="image-size">📸 Compressed: ${post.imageSize}KB</div>` : ''}
-                        </div>
-                    ` : ''}
-                    <div class="actions">
-                        <button class="action-btn ${likedByCurrent ? 'liked' : ''}" onclick="likePost('${post.id}', ${post.likes || 0})">
-                            <i class="fa-${likedByCurrent ? 'solid' : 'regular'} fa-heart"></i> ${post.likes || 0} Likes
+                    ${post.imageBase64 ? `<div class="post-image"><img src="${post.imageBase64}" loading="lazy"></div>` : ''}
+                    <div class="post-actions">
+                        <button class="action-btn like-btn" data-id="${post.id}" data-likes="${post.likes || 0}">
+                            <i class="fa-regular fa-heart"></i> <span class="like-count">${post.likes || 0}</span> Likes
                         </button>
-                        <button class="action-btn" onclick="toggleComments('${post.id}')">
-                            <i class="far fa-comment"></i> ${commentCount} Comments
+                        <button class="action-btn comment-toggle" data-id="${post.id}">
+                            <i class="fa-regular fa-comment"></i> Comments (${post.comments ? Object.keys(post.comments).length : 0})
                         </button>
                     </div>
-                    <div class="comments-section" id="comments_${post.id}">
-                        <div id="commentList_${post.id}">
+                    <div class="comments-section" id="comments-${post.id}">
+                        <div id="commentList-${post.id}">
                             ${renderComments(post.comments)}
                         </div>
                         <div class="add-comment-form">
-                            <input type="text" class="comment-input" id="comment_${post.id}" placeholder="Write a comment..." onkeypress="if(event.key==='Enter') addComment('${post.id}')">
-                            <button onclick="addComment('${post.id}')" style="background: #667eea; color: white; border: none; border-radius: 20px; padding: 8px 20px; cursor: pointer;">Post</button>
+                            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="Write a comment...">
+                            <button class="comment-submit" data-id="${post.id}">Post</button>
                         </div>
                     </div>
                 </div>
             `;
-        }).join('');
+        });
+
+        socialContainer.innerHTML = feedHtml;
+        attachCreatePostEvents();
+        attachPostEvents();
     }
 
     function renderComments(comments) {
-        if (!comments) return '<div style="padding: 8px;">No comments yet</div>';
+        if (!comments) return '<div style="padding:8px;">No comments yet</div>';
         const commentsArray = Object.values(comments);
-        if (!commentsArray.length) return '<div style="padding: 8px;">No comments yet</div>';
+        if (!commentsArray.length) return '<div style="padding:8px;">No comments yet</div>';
         return commentsArray.map(c => `
-            <div class="comment">
+            <div class="comment-item">
                 <span class="comment-author">${escapeHtml(c.author)}</span>
                 <span>${escapeHtml(c.text)}</span>
             </div>
         `).join('');
     }
 
-    // Start the app
-    console.log("🚀 MHMSocial starting...");
-    console.log("Database URL:", firebaseConfig.databaseURL);
-    testConnection();
+    function attachCreatePostEvents() {
+        const publishBtn = document.getElementById('publishBtn');
+        if (!publishBtn) return;
+
+        // Image upload
+        const imageInput = document.getElementById('imageUpload');
+        const previewArea = document.getElementById('previewArea');
+        
+        if (imageInput) {
+            imageInput.onchange = async (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    const compressed = await compressImage(file, 700, 0.7);
+                    currentImageBase64 = compressed.base64;
+                    previewArea.innerHTML = `
+                        <div class="preview-item">
+                            <img src="${compressed.base64}" style="max-height:100px;">
+                            <div class="remove-preview" onclick="document.getElementById('previewArea').innerHTML = ''; currentImageBase64 = null;">×</div>
+                        </div>
+                    `;
+                }
+            };
+        }
+
+        publishBtn.onclick = async () => {
+            const text = document.getElementById('postText')?.value.trim();
+            if (!text && !currentImageBase64) {
+                showToast("Please write something or add a photo", true);
+                return;
+            }
+            if (!currentUser) {
+                showToast("Please sign in first", true);
+                return;
+            }
+
+            publishBtn.disabled = true;
+            publishBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Publishing...';
+
+            try {
+                const postsRef = ref(rtdb, 'posts');
+                const newPostRef = push(postsRef);
+                await set(newPostRef, {
+                    text: text || "📸 Shared a photo",
+                    imageBase64: currentImageBase64 || null,
+                    authorName: currentUser.email.split('@')[0],
+                    userId: currentUser.uid,
+                    timestamp: Date.now(),
+                    likes: 0,
+                    likedBy: {},
+                    comments: {}
+                });
+                document.getElementById('postText').value = '';
+                if (previewArea) previewArea.innerHTML = '';
+                currentImageBase64 = null;
+                showToast("✅ Post published!");
+            } catch (error) {
+                showToast("Error: " + error.message, true);
+            } finally {
+                publishBtn.disabled = false;
+                publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Publish';
+            }
+        };
+    }
+
+    function attachPostEvents() {
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.onclick = async () => {
+                if (!currentUser) { showToast("Sign in to like", true); return; }
+                const postId = btn.getAttribute('data-id');
+                const currentLikes = parseInt(btn.getAttribute('data-likes'));
+                const postRef = ref(rtdb, `posts/${postId}`);
+                const likedByRef = ref(rtdb, `posts/${postId}/likedBy/${currentUser.uid}`);
+                const snap = await get(likedByRef);
+                if (snap.exists()) {
+                    await update(postRef, { likes: currentLikes - 1 });
+                    await remove(likedByRef);
+                } else {
+                    await update(postRef, { likes: currentLikes + 1 });
+                    await set(likedByRef, true);
+                }
+            };
+        });
+
+        document.querySelectorAll('.comment-toggle').forEach(btn => {
+            btn.onclick = () => {
+                const postId = btn.getAttribute('data-id');
+                const div = document.getElementById(`comments-${postId}`);
+                if (div) div.style.display = div.style.display === 'none' ? 'block' : 'none';
+            };
+        });
+
+        document.querySelectorAll('.comment-submit').forEach(btn => {
+            btn.onclick = async () => {
+                if (!currentUser) { showToast("Sign in to comment", true); return; }
+                const postId = btn.getAttribute('data-id');
+                const input = document.getElementById(`commentInput-${postId}`);
+                const text = input.value.trim();
+                if (!text) return;
+                const commentId = Date.now().toString();
+                const commentRef = ref(rtdb, `posts/${postId}/comments/${commentId}`);
+                await set(commentRef, {
+                    author: currentUser.email.split('@')[0],
+                    text: text,
+                    timestamp: Date.now()
+                });
+                input.value = '';
+                showToast("Comment added!");
+            };
+        });
+    }
+
+    // Load posts from Realtime DB
+    function loadPostsRealtime() {
+        const postsRef = ref(rtdb, 'posts');
+        onValue(postsRef, (snapshot) => {
+            const posts = [];
+            snapshot.forEach((child) => {
+                posts.push({ id: child.key, ...child.val() });
+            });
+            posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            postsList = posts;
+            renderFeed();
+            statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Connected';
+            statusBadge.classList.remove('offline');
+        }, (error) => {
+            console.error("Feed error:", error);
+            statusBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Connection issue';
+            statusBadge.classList.add('offline');
+        });
+    }
+
+    // Auth state listener
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUser = user;
+            userNameDisplay.textContent = user.email.split('@')[0];
+            userEmailDisplay.textContent = user.email;
+            logoutBtn.style.display = 'block';
+            loginPromptBtn.style.display = 'none';
+            statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Connected';
+        } else {
+            currentUser = null;
+            userNameDisplay.textContent = 'Guest';
+            userEmailDisplay.textContent = 'Not signed in';
+            logoutBtn.style.display = 'none';
+            loginPromptBtn.style.display = 'block';
+        }
+    });
+
+    // Logout
+    logoutBtn.onclick = async () => {
+        await signOut(auth);
+        showToast("Logged out");
+        // Also close chat iframe to clear session
+        const iframe = document.getElementById('chatIframe');
+        if (iframe && iframe.contentWindow) {
+            iframe.src = 'about:blank';
+        }
+    };
+
+    // Login prompt (redirect to chat modal for unified auth)
+    loginPromptBtn.onclick = () => {
+        showToast("Please use the chat popup to sign in/up", false);
+        document.getElementById('chatPopupBtn').click();
+    };
+
+    // Chat Popup Integration
+    const chatModal = document.getElementById('chatModal');
+    const chatPopupBtn = document.getElementById('chatPopupBtn');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+    const chatIframe = document.getElementById('chatIframe');
+
+    // Build the standalone MHMChat HTML content with same Firebase config and shared auth
+    // This creates a self-contained chat app that shares the same Firebase project
+    function buildChatHTML() {
+        return `<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+            <title>MHMChat</title>
+            <style>
+                * { margin:0; padding:0; box-sizing:border-box; }
+                body { font-family: system-ui, sans-serif; background: #f1f5f9; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:10px; }
+                #auth-screen { background:white; border-radius:20px; padding:2rem; max-width:400px; width:100%; text-align:center; }
+                #auth-screen h2 { margin-bottom:1.5rem; color:#4f46e5; }
+                #auth-screen input { width:100%; padding:0.8rem; margin:0.4rem 0; border:1px solid #ddd; border-radius:25px; }
+                #auth-screen button { width:100%; padding:0.8rem; background:#4f46e5; color:white; border:none; border-radius:25px; font-weight:600; cursor:pointer; margin-top:0.5rem; }
+                #app-screen { display:none; width:100%; max-width:500px; height:100%; background:white; border-radius:20px; overflow:hidden; flex-direction:column; }
+                .top-bar { background:#1e293b; color:white; padding:0.7rem 1rem; display:flex; justify-content:space-between; align-items:center; }
+                .tabs { display:flex; background:#f8fafc; }
+                .tab { flex:1; padding:0.8rem; text-align:center; cursor:pointer; font-weight:600; color:#94a3b8; border-bottom:2px solid transparent; }
+                .tab.active { color:#4f46e5; border-bottom-color:#4f46e5; }
+                .search-bar { padding:0.5rem 1rem; background:#f8fafc; display:flex; gap:8px; }
+                .search-bar input { flex:1; padding:0.6rem; border:1px solid #ddd; border-radius:20px; }
+                .panels-wrap { flex:1; overflow-y:auto; }
+                .panel { display:none; }
+                .panel.active { display:block; }
+                .list-item { padding:0.7rem 1rem; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f1f5f9; }
+                .avatar { width:42px; height:42px; border-radius:50%; background:#4f46e5; color:white; display:flex; align-items:center; justify-content:center; font-weight:700; }
+                .info { flex:1; }
+                .name { font-weight:600; font-size:0.9rem; }
+                .chat-btn { background:#4f46e5; color:white; border:none; padding:0.5rem 1rem; border-radius:20px; cursor:pointer; }
+                .chat-overlay { display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:white; flex-direction:column; z-index:200; }
+                .chat-overlay.active { display:flex; }
+                .chat-header { background:#1e293b; color:white; padding:0.7rem 1rem; display:flex; align-items:center; gap:10px; }
+                .chat-messages { flex:1; padding:1rem; overflow-y:auto; }
+                .msg { max-width:80%; padding:0.6rem 0.9rem; border-radius:18px; margin-bottom:8px; }
+                .msg.sent { background:#4f46e5; color:white; align-self:flex-end; margin-left:auto; }
+                .msg.received { background:white; align-self:flex-start; }
+                .chat-input-row { padding:0.7rem 1rem; display:flex; gap:6px; border-top:1px solid #eee; }
+                .chat-input-row input { flex:1; padding:0.6rem; border:1px solid #ddd; border-radius:20px; }
+                .chat-input-row button { padding:0.5rem 1.2rem; background:#4f46e5; color:white; border:none; border-radius:20px; cursor:pointer; }
+                .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:0.5rem 1rem; border-radius:10px; font-size:12px; z-index:9999; }
+            </style>
+        </head>
+        <body>
+        <div id="auth-screen">
+            <h2>💬 MHMChat</h2>
+            <input type="email" id="login-email" placeholder="Email">
+            <input type="password" id="login-password" placeholder="Password">
+            <button onclick="doLogin()">Log In</button>
+            <div class="link" onclick="showSignup()" style="margin-top:10px;color:#4f46e5;cursor:pointer;">Create Account</div>
+            <div class="error" id="auth-error" style="color:red;font-size:12px;margin-top:8px;"></div>
+        </div>
+        <div id="app-screen">
+            <div class="top-bar"><span id="userEmail">User</span><button onclick="doLogout()" style="background:#ef4444;border:none;padding:4px 12px;border-radius:6px;color:white;">Logout</button></div>
+            <div class="tabs"><div class="tab active" id="tab-chats">Chats</div><div class="tab" id="tab-contacts">Contacts</div></div>
+            <div class="search-bar"><input id="search-input" placeholder="Search by email..."><button id="search-btn">Add</button></div>
+            <div class="panels-wrap"><div class="panel active" id="panel-chats"><div id="chats-list"></div></div><div class="panel" id="panel-contacts"><div id="contacts-list"></div></div></div>
+            <div class="chat-overlay" id="chat-overlay"><div class="chat-header"><button id="back-btn">←</button><span id="chat-title">Chat</span></div><div class="chat-messages" id="chat-messages"></div><div class="chat-input-row"><input id="chat-input" placeholder="Message"><button id="send-btn">Send</button></div></div>
+        </div>
+        <script type="importmap">
+            {"imports":{"firebase/app":"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js","firebase/auth":"https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js","firebase/database":"https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"}}
+        <\/script>
+        <script type="module">
+            const config = ${JSON.stringify(firebaseConfig)};
+            import { initializeApp } from "firebase/app";
+            import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+            import { getDatabase, ref, push, set, onValue } from "firebase/database";
+            const app = initializeApp(config);
+            const auth = getAuth(app);
+            const rtdb = getDatabase(app);
+            let currentUser = null;
+            function toast(m) { const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000); }
+            window.doLogin = async()=>{ try{ await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value); }catch(e){ document.getElementById('auth-error').textContent=e.message; } };
+            window.showSignup = ()=>{ document.getElementById('auth-screen').innerHTML='<h2>Sign Up</h2><input id="signup-email" placeholder="Email"><input id="signup-password" type="password" placeholder="Password"><button onclick="doSignup()">Create</button><div class="link" onclick="location.reload()">Back</div><div class="error" id="auth-error"></div>'; };
+            window.doSignup = async()=>{ try{ await createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-password').value); }catch(e){ document.getElementById('auth-error').textContent=e.message; } };
+            window.doLogout = ()=> signOut(auth);
+            onAuthStateChanged(auth, user=>{ if(user){ currentUser=user; document.getElementById('auth-screen').style.display='none'; document.getElementById('app-screen').style.display='flex'; document.getElementById('userEmail').innerHTML=user.email; loadChats(); } else { currentUser=null; document.getElementById('auth-screen').style.display='block'; document.getElementById('app-screen').style.display='none'; } });
+            function loadChats(){ const chatsDiv=document.getElementById('chats-list'); chatsDiv.innerHTML='<div>Use search to add contacts</div>'; }
+            document.getElementById('tab-chats')?.addEventListener('click',()=>{ document.getElementById('panel-chats').classList.add('active'); document.getElementById('panel-contacts').classList.remove('active'); });
+            document.getElementById('tab-contacts')?.addEventListener('click',()=>{ document.getElementById('panel-contacts').classList.add('active'); document.getElementById('panel-chats').classList.remove('active'); });
+        <\/script>
+        </body>
+        </html>`;
+    }
+
+    // Set iframe content
+    const chatHTML = buildChatHTML();
+    const blob = new Blob([chatHTML], { type: 'text/html' });
+    const chatUrl = URL.createObjectURL(blob);
+    chatIframe.src = chatUrl;
+
+    // Open/Close chat modal
+    chatPopupBtn.onclick = () => {
+        chatModal.classList.add('active');
+        // Refresh iframe if needed
+        if (chatIframe.src !== chatUrl) {
+            chatIframe.src = chatUrl;
+        }
+    };
+    closeChatBtn.onclick = () => {
+        chatModal.classList.remove('active');
+    };
+    chatModal.onclick = (e) => {
+        if (e.target === chatModal) chatModal.classList.remove('active');
+    };
+
+    // Initialize social feed
+    loadPostsRealtime();
+
+    console.log("🔥 MHMSocial + MHMChat Integrated! Chat opens as popup, unified Firebase auth.");
 </script>
 </body>
 </html>

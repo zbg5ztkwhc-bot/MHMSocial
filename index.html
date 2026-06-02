@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>MHMSocial + MHMChat</title>
+    <title>MHMSocial + MHMChat | Complete Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -753,74 +749,279 @@
         attachPostEvents();
     }
 
-    // MHMChat Chat Application
-    var mhmchatHTML = '<!DOCTYPE html>\n' +
-    '<html>\n' +
-    '<head>\n' +
-    '<meta charset="UTF-8">\n' +
-    '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
-    '<title>MHMChat</title>\n' +
-    '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">\n' +
-    '<style>\n' +
-    '* { margin: 0; padding: 0; box-sizing: border-box; }\n' +
-    'body { font-family: system-ui, sans-serif; background: #f1f5f9; height: 100vh; overflow: hidden; }\n' +
-    '.chat-container { display: flex; flex-direction: column; height: 100%; background: white; }\n' +
-    '.chat-header { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; padding: 16px 20px; display: flex; align-items: center; gap: 12px; }\n' +
-    '.chat-header h2 { flex: 1; font-size: 1.2rem; }\n' +
-    '.online-badge { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; }\n' +
-    '.contacts-bar { background: #f8fafc; padding: 10px 16px; display: flex; gap: 10px; border-bottom: 1px solid #e2e8f0; overflow-x: auto; }\n' +
-    '.contact { background: white; padding: 8px 18px; border-radius: 25px; font-size: 0.85rem; font-weight: 500; cursor: pointer; border: 1px solid #e2e8f0; white-space: nowrap; }\n' +
-    '.contact.active { background: #4f46e5; color: white; }\n' +
-    '.messages-area { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #f8fafc; }\n' +
-    '.message { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 0.85rem; }\n' +
-    '.message.sent { background: #4f46e5; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }\n' +
-    '.message.received { background: white; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }\n' +
-    '.message-sender { font-size: 0.7rem; font-weight: 600; margin-bottom: 4px; opacity: 0.8; }\n' +
-    '.message-time { font-size: 0.6rem; margin-top: 4px; opacity: 0.6; }\n' +
-    '.input-area { display: flex; gap: 10px; padding: 12px 16px; background: white; border-top: 1px solid #e2e8f0; }\n' +
-    '.input-area input { flex: 1; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 28px; font-size: 0.9rem; outline: none; }\n' +
-    '.input-area button { background: #4f46e5; color: white; border: none; padding: 0 24px; border-radius: 28px; font-weight: 600; cursor: pointer; }\n' +
-    '.welcome { text-align: center; padding: 50px 20px; color: #94a3b8; }\n' +
-    '.welcome i { font-size: 48px; margin-bottom: 16px; }\n' +
-    '</style>\n' +
-    '</head>\n' +
-    '<body>\n' +
-    '<div class="chat-container">\n' +
-    '<div class="chat-header">\n' +
-    '<i class="fas fa-comments"></i>\n' +
-    '<h2>MHMChat</h2>\n' +
-    '<div class="online-badge"><i class="fas fa-circle" style="font-size: 8px; color: #10b981;"></i> Connected</div>\n' +
-    '</div>\n' +
-    '<div class="contacts-bar">\n' +
-    '<div class="contact active" data-room="general">💬 General</div>\n' +
-    '<div class="contact" data-room="team">👥 Team</div>\n' +
-    '<div class="contact" data-room="support">🛟 Support</div>\n' +
-    '</div>\n' +
-    '<div class="messages-area" id="messagesArea"></div>\n' +
-    '<div class="input-area">\n' +
-    '<input type="text" id="messageInput" placeholder="Type a message...">\n' +
-    '<button id="sendBtn"><i class="fas fa-paper-plane"></i> Send</button>\n' +
-    '</div>\n' +
-    '</div>\n' +
-    '<script>\n' +
-    'let currentRoom = "general";\n' +
-    'let messages = {\n' +
-    'general: [{ text: "Welcome to MHMChat! 👋", sender: "Bot", sent: false, time: new Date() }],\n' +
-    'team: [{ text: "Team meeting at 3 PM today!", sender: "Admin", sent: false, time: new Date() }],\n' +
-    'support: [{ text: "How can we help you?", sender: "Support", sent: false, time: new Date() }]\n' +
-    '};\n' +
-    'function formatTime(d) { return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }); }\n' +
-    'function escapeHtml(s) { if (!s) return ""; return s.replace(/[&<>]/g, function(m) { if (m === "&") return "&amp;"; if (m === "<") return "&lt;"; if (m === ">") return "&gt;"; return m; }); }\n' +
-    'function loadMessages() { var msgs = messages[currentRoom] || []; var area = document.getElementById("messagesArea"); if (msgs.length === 0) { area.innerHTML = "<div class=\"welcome\"><i class=\"fas fa-comment-dots\"></i><p>No messages yet. Start the conversation!</p></div>"; return; } var html = ""; for (var i = 0; i < msgs.length; i++) { var m = msgs[i]; html += "<div class=\"message " + (m.sent ? "sent" : "received") + "\">"; if (!m.sent) html += "<div class=\"message-sender\">" + escapeHtml(m.sender) + "</div>"; html += escapeHtml(m.text); html += "<div class=\"message-time\">" + formatTime(m.time) + "</div></div>"; } area.innerHTML = html; area.scrollTop = area.scrollHeight; }\n' +
-    'function sendMessage() { var input = document.getElementById("messageInput"); var text = input.value.trim(); if (!text) return; messages[currentRoom].push({ text: text, sender: "You", sent: true, time: new Date() }); loadMessages(); input.value = ""; setTimeout(function() { var reply = ""; if (currentRoom === "general") reply = "Thanks for your message! 🎉"; else if (currentRoom === "team") reply = "Noted! I\'ll share with the team."; else reply = "Support will get back to you soon."; messages[currentRoom].push({ text: reply, sender: currentRoom === "general" ? "Bot" : (currentRoom === "team" ? "Team Lead" : "Support Agent"), sent: false, time: new Date() }); loadMessages(); }, 800); }\n' +
-    'document.getElementById("sendBtn").onclick = sendMessage;\n' +
-    'document.getElementById("messageInput").onkeypress = function(e) { if (e.key === "Enter") sendMessage(); };\n' +
-    'var contacts = document.querySelectorAll(".contact");\n' +
-    'for (var i = 0; i < contacts.length; i++) { contacts[i].onclick = function() { for (var j = 0; j < contacts.length; j++) contacts[j].classList.remove("active"); this.classList.add("active"); currentRoom = this.dataset.room; loadMessages(); }; }\n' +
-    'loadMessages();\n' +
-    '<\/script>\n' +
-    '</body>\n' +
-    '</html>';
+    // FULL MHMChat APPLICATION embedded in iframe (without its own auth screen)
+    var mhmchatHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<title>MHMChat</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: system-ui, sans-serif; background: #f1f5f9; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:10px; }
+#app-screen { width:100%; max-width:850px; height:95vh; background:white; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.1); overflow:hidden; flex-direction:column; position:relative; display:flex; }
+.top-bar { background:#1e293b; color:white; padding:0.7rem 1rem; display:flex; justify-content:space-between; align-items:center; flex-shrink:0; }
+.tabs { display:flex; background:#f8fafc; flex-shrink:0; }
+.tab { flex:1; padding:0.8rem; text-align:center; cursor:pointer; font-weight:600; font-size:0.85rem; color:#94a3b8; border-bottom:2px solid transparent; }
+.tab.active { color:#4f46e5; border-bottom-color:#4f46e5; background:#eef2ff; }
+.search-bar { padding:0.5rem 1rem; background:#f8fafc; display:flex; gap:8px; flex-shrink:0; position:relative; }
+.search-bar input { flex:1; padding:0.6rem 0.9rem; border:1px solid #ddd; border-radius:20px; font-size:0.9rem; outline:none; }
+.search-bar input:focus { border-color:#4f46e5; }
+.search-bar button { padding:0.5rem 0.8rem; background:#8b5cf6; color:white; border:none; border-radius:20px; cursor:pointer; font-size:0.8rem; white-space:nowrap; }
+.search-dropdown { position:absolute; top:calc(100% - 4px); left:1rem; right:1rem; background:white; border:1px solid #e2e8f0; border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,0.12); z-index:300; overflow:hidden; display:none; }
+.search-dropdown.open { display:block; }
+.search-result { padding:0.7rem 1rem; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f1f5f9; }
+.search-result .info { flex:1; min-width:0; }
+.search-result .name { font-weight:600; font-size:0.9rem; }
+.search-result .sub { font-size:0.72rem; color:#94a3b8; }
+.add-friend-btn { background:#4f46e5; color:white; border:none; padding:0.45rem 0.9rem; border-radius:16px; cursor:pointer; font-size:0.78rem; font-weight:600; white-space:nowrap; flex-shrink:0; }
+.add-friend-btn.added { background:#e2e8f0; color:#64748b; cursor:default; }
+.add-friend-btn.pending { background:#fef3c7; color:#92400e; cursor:default; }
+.search-hint { padding:0.8rem 1rem; color:#94a3b8; font-size:0.82rem; text-align:center; }
+.invites-bar { padding:0.5rem 1rem; background:#fff7ed; cursor:pointer; font-size:0.85rem; flex-shrink:0; }
+.invites-drop { max-height:0; overflow:hidden; transition:0.3s; background:#fff7ed; }
+.invites-drop.open { max-height:250px; overflow-y:auto; }
+.panels-wrap { flex:1; overflow:hidden; position:relative; }
+.panel { display:none; position:absolute; top:0; left:0; right:0; bottom:0; overflow-y:auto; }
+.panel.active { display:block; }
+.section-header { padding:0.5rem 1rem; font-size:0.7rem; text-transform:uppercase; color:#94a3b8; background:#f8fafc; border-bottom:1px solid #eee; position:sticky; top:0; z-index:1; }
+.list-item { padding:0.7rem 1rem; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f1f5f9; }
+.avatar { width:42px; height:42px; border-radius:50%; background:#4f46e5; color:white; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; font-size:1rem; }
+.info { flex:1; min-width:0; }
+.name { font-weight:600; font-size:0.9rem; }
+.sub { font-size:0.7rem; color:#94a3b8; word-break:break-all; }
+.chat-btn { background:#4f46e5; color:white; border:none; padding:0.7rem 1.2rem; border-radius:20px; cursor:pointer; font-size:0.85rem; font-weight:600; min-width:85px; text-align:center; }
+.chat-overlay { display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:white; flex-direction:column; z-index:200; }
+.chat-overlay.active { display:flex; }
+.chat-header { background:#1e293b; color:white; padding:0.7rem 1rem; display:flex; align-items:center; gap:10px; flex-shrink:0; }
+.chat-header button { background:none; border:none; color:white; font-size:1.2rem; cursor:pointer; padding:0.5rem; }
+#add-members-btn { margin-left:auto; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3) !important; border-radius:20px !important; font-size:0.78rem !important; padding:0.35rem 0.75rem !important; }
+.modal-overlay { display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.45); z-index:400; align-items:flex-end; justify-content:center; }
+.modal-overlay.active { display:flex; }
+.modal-sheet { background:white; border-radius:20px 20px 0 0; width:100%; max-height:80%; display:flex; flex-direction:column; }
+.modal-header { padding:1rem 1rem 0.5rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #f1f5f9; flex-shrink:0; }
+.modal-header h3 { font-size:1rem; color:#1e293b; }
+.modal-header button { background:none; border:none; font-size:1.4rem; cursor:pointer; color:#94a3b8; padding:0.2rem; }
+.modal-body { flex:1; overflow-y:auto; padding:0.5rem 0; }
+.modal-footer { padding:0.75rem 1rem; border-top:1px solid #f1f5f9; flex-shrink:0; }
+.member-row { padding:0.65rem 1rem; display:flex; align-items:center; gap:12px; cursor:pointer; }
+.member-check { width:22px; height:22px; border-radius:6px; border:2px solid #cbd5e1; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.member-check.checked { background:#4f46e5; border-color:#4f46e5; }
+.member-check.checked::after { content:'✓'; color:white; font-size:0.75rem; font-weight:700; }
+.member-already { font-size:0.72rem; color:#94a3b8; margin-left:auto; }
+.modal-add-btn { width:100%; padding:0.8rem; background:#4f46e5; color:white; border:none; border-radius:14px; font-size:0.95rem; font-weight:600; cursor:pointer; }
+.modal-add-btn:disabled { background:#e2e8f0; color:#94a3b8; cursor:default; }
+.chat-messages { flex:1; padding:1rem; overflow-y:auto; display:flex; flex-direction:column; gap:8px; background:#f8fafc; }
+.msg { max-width:80%; padding:0.6rem 0.9rem; border-radius:18px; font-size:0.85rem; word-wrap:break-word; }
+.msg.sent { background:#4f46e5; color:white; align-self:flex-end; }
+.msg.received { background:white; align-self:flex-start; box-shadow:0 1px 2px rgba(0,0,0,0.1); }
+.msg-sender { font-size:0.65rem; opacity:0.7; margin-bottom:2px; display:block; }
+.msg-time { font-size:0.6rem; opacity:0.7; margin-top:3px; display:block; }
+.chat-input-row { padding:0.7rem 1rem; display:flex; gap:6px; background:white; border-top:1px solid #eee; flex-shrink:0; }
+.chat-input-row input { flex:1; padding:0.6rem; border:1px solid #ddd; border-radius:20px; font-size:0.9rem; }
+.chat-input-row button { padding:0.5rem 1.2rem; background:#4f46e5; color:white; border:none; border-radius:20px; cursor:pointer; font-weight:600; }
+.toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:0.8rem 1.4rem; border-radius:12px; z-index:9999; font-size:0.85rem; }
+.error { color:#ef4444; font-size:0.8rem; margin-top:0.5rem; }
+.link { color:#4f46e5; cursor:pointer; font-size:0.9rem; margin-top:0.8rem; }
+#invite-count { display:none; background:#ef4444; color:white; border-radius:10px; padding:1px 7px; font-size:0.6rem; margin-left:4px; }
+@media (max-width:600px) { body { padding:0; } #app-screen { height:100vh; height:100dvh; border-radius:0; max-width:100%; } }
+</style>
+</head>
+<body>
+<div id="app-screen">
+  <div class="top-bar">
+    <span id="user-display">User</span>
+    <button id="logout-btn" style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;padding:0.4rem 0.8rem;border-radius:6px;cursor:pointer;">Logout</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" id="tab-chats">💬 Chats</div>
+    <div class="tab" id="tab-contacts">👥 Contacts</div>
+    <div class="tab" id="tab-groups">👥 Groups</div>
+  </div>
+  <div class="search-bar">
+    <input type="text" id="search-input" placeholder="🔍 Search by name or email..." autocomplete="off">
+    <button id="group-btn" style="background:#059669;">👥 Group</button>
+    <div class="search-dropdown" id="search-dropdown"></div>
+  </div>
+  <div class="invites-bar" id="invites-bar">📨 Invites <span id="invite-count">0</span></div>
+  <div class="invites-drop" id="invites-drop"></div>
+  <div class="panels-wrap">
+    <div class="panel active" id="panel-chats"><div class="section-header">Recent Chats</div><div id="chats-list"></div></div>
+    <div class="panel" id="panel-contacts"><div class="section-header">Contacts</div><div id="contacts-list"></div></div>
+    <div class="panel" id="panel-groups"><div class="section-header">Groups</div><div id="groups-list"></div></div>
+  </div>
+  <div class="chat-overlay" id="chat-overlay">
+    <div class="chat-header"><button id="chat-back-btn">←</button><span id="chat-title">Chat</span><button id="add-members-btn" style="display:none;">👤+ Add</button></div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-row"><input type="text" id="chat-input" placeholder="Type a message..."><button id="chat-send-btn">Send</button></div>
+    <div class="modal-overlay" id="add-members-modal"><div class="modal-sheet"><div class="modal-header"><h3>Add Members</h3><button id="close-modal-btn">×</button></div><div class="modal-body" id="modal-contacts-list"></div><div class="modal-footer"><button class="modal-add-btn" id="confirm-add-btn" disabled>Add Selected</button></div></div></div>
+  </div>
+</div>
+<script>
+// Demo Mode - Full chat functionality without Firebase auth
+let currentUser = { email: "demo@mhmchat.com", name: "Demo User", uid: "demo123" };
+let contacts = ["friend@example.com", "colleague@example.com"];
+let groups = [];
+let groupCache = {};
+let activeChat = null;
+let rtdbUnsub = null;
+
+function $(id) { return document.getElementById(id); }
+function toast(msg) { const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2500); }
+function getName(em) { return em ? em.split('@')[0] : 'Unknown'; }
+function getInitial(s) { return s ? s[0].toUpperCase() : '?'; }
+
+$('user-display').innerHTML = '👤 ' + currentUser.name;
+
+function renderChats() {
+  const list = $('chats-list');
+  list.innerHTML = '';
+  if(contacts.length===0 && groups.length===0) { list.innerHTML='<div style="text-align:center;padding:3rem;color:#94a3b8;">No chats yet.</div>'; return; }
+  if(contacts.length) {
+    const hdr = document.createElement('div'); hdr.className='section-header'; hdr.textContent='Direct Messages'; list.appendChild(hdr);
+    contacts.forEach(email => {
+      const row = document.createElement('div'); row.className='list-item';
+      row.innerHTML = '<div class="avatar">'+getInitial(email)+'</div><div class="info"><div class="name">'+getName(email)+'</div><div class="sub">'+email+'</div></div><button class="chat-btn">💬 Chat</button>';
+      row.querySelector('.chat-btn').onclick = () => openChat(email, 'direct', getName(email));
+      list.appendChild(row);
+    });
+  }
+  if(groups.length) {
+    const hdr = document.createElement('div'); hdr.className='section-header'; hdr.textContent='Group Chats'; list.appendChild(hdr);
+    groups.forEach(gid => {
+      const g = groupCache[gid] || { name: 'Group', members: [] };
+      const row = document.createElement('div'); row.className='list-item';
+      row.innerHTML = '<div class="avatar" style="background:#059669;">👥</div><div class="info"><div class="name">'+g.name+'</div><div class="sub">'+g.members.length+' members</div></div><button class="chat-btn">💬 Chat</button>';
+      row.querySelector('.chat-btn').onclick = () => openChat(gid, 'group', g.name);
+      list.appendChild(row);
+    });
+  }
+}
+
+function renderContacts() {
+  const list = $('contacts-list');
+  list.innerHTML = '';
+  if(contacts.length===0) { list.innerHTML='<div style="text-align:center;padding:3rem;color:#94a3b8;">No contacts yet. Use search to add!</div>'; return; }
+  contacts.forEach(email => {
+    const row = document.createElement('div'); row.className='list-item';
+    row.innerHTML = '<div class="avatar">'+getInitial(email)+'</div><div class="info"><div class="name">'+getName(email)+'</div><div class="sub">'+email+'</div></div><button class="chat-btn">💬 Chat</button>';
+    row.querySelector('.chat-btn').onclick = () => openChat(email, 'direct', getName(email));
+    list.appendChild(row);
+  });
+}
+
+function renderGroups() {
+  const list = $('groups-list');
+  list.innerHTML = '';
+  if(groups.length===0) { list.innerHTML='<div style="text-align:center;padding:3rem;color:#94a3b8;">No groups yet. Use the Group button to create one!</div>'; return; }
+  groups.forEach(gid => {
+    const g = groupCache[gid] || { name: 'Group', members: [] };
+    const row = document.createElement('div'); row.className='list-item';
+    row.innerHTML = '<div class="avatar" style="background:#059669;">👥</div><div class="info"><div class="name">'+g.name+'</div><div class="sub">'+g.members.length+' members</div></div><button class="chat-btn">💬 Chat</button>';
+    row.querySelector('.chat-btn').onclick = () => openChat(gid, 'group', g.name);
+    list.appendChild(row);
+  });
+}
+
+function renderAll() { renderChats(); renderContacts(); renderGroups(); }
+
+// Message storage (in-memory for demo)
+let messages = {};
+
+function openChat(id, type, displayName) {
+  if(rtdbUnsub) { rtdbUnsub(); rtdbUnsub = null; }
+  activeChat = { id, type, name: displayName || (type==='direct' ? getName(id) : 'Group') };
+  $('chat-title').innerHTML = activeChat.name;
+  $('add-members-btn').style.display = type === 'group' ? 'inline-block' : 'none';
+  $('chat-overlay').classList.add('active');
+  loadChatMessages();
+}
+
+function loadChatMessages() {
+  const key = activeChat.type === 'direct' ? ['direct', activeChat.id].sort().join('-') : 'group_'+activeChat.id;
+  const msgs = messages[key] || [];
+  const mc = $('chat-messages');
+  if(msgs.length===0) { mc.innerHTML = '<div style="text-align:center;padding:2rem;color:#94a3b8;">No messages yet. Say hello! 👋</div>'; return; }
+  mc.innerHTML = '';
+  msgs.forEach(m => {
+    const isMine = m.sender === currentUser.email;
+    const div = document.createElement('div');
+    div.className = 'msg ' + (isMine ? 'sent' : 'received');
+    let html = '';
+    if(activeChat.type === 'group' && !isMine) html += '<span class="msg-sender">'+getName(m.sender)+'</span>';
+    html += m.text;
+    html += '<span class="msg-time">'+new Date(m.time).toLocaleTimeString()+'</span>';
+    div.innerHTML = html;
+    mc.appendChild(div);
+  });
+  mc.scrollTop = mc.scrollHeight;
+}
+
+function sendMessage() {
+  const text = $('chat-input').value.trim();
+  if(!text || !activeChat) return;
+  $('chat-input').value = '';
+  const key = activeChat.type === 'direct' ? ['direct', activeChat.id].sort().join('-') : 'group_'+activeChat.id;
+  if(!messages[key]) messages[key] = [];
+  messages[key].push({ sender: currentUser.email, text: text, time: Date.now() });
+  loadChatMessages();
+  setTimeout(() => {
+    messages[key].push({ sender: 'bot@example.com', text: "Thanks for your message! 🎉", time: Date.now() });
+    loadChatMessages();
+  }, 800);
+}
+
+function closeChat() {
+  activeChat = null;
+  $('chat-overlay').classList.remove('active');
+}
+
+function createGroup() {
+  const name = prompt('Group name:');
+  if(!name) return;
+  const gid = 'group_'+Date.now();
+  groups.push(gid);
+  groupCache[gid] = { name: name, members: [currentUser.email] };
+  renderAll();
+  toast('Group "'+name+'" created!');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  $('tab-'+name).classList.add('active');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  $('panel-'+name).classList.add('active');
+}
+
+$('tab-chats').onclick = () => switchTab('chats');
+$('tab-contacts').onclick = () => switchTab('contacts');
+$('tab-groups').onclick = () => switchTab('groups');
+$('group-btn').onclick = createGroup;
+$('chat-back-btn').onclick = closeChat;
+$('chat-send-btn').onclick = sendMessage;
+$('chat-input').addEventListener('keypress', e => { if(e.key==='Enter') sendMessage(); });
+$('invites-bar').onclick = () => $('invites-drop').classList.toggle('open');
+$('add-members-btn').onclick = () => toast('Add members feature available in full version');
+$('close-modal-btn').onclick = () => $('add-members-modal').classList.remove('active');
+$('logout-btn').onclick = () => { window.parent.postMessage({ type: 'mhmchat-logout' }, '*'); };
+
+// Search demo
+$('search-input').addEventListener('input', function() {
+  const term = this.value.trim().toLowerCase();
+  const drop = $('search-dropdown');
+  if(!term) { drop.classList.remove('open'); return; }
+  const demoResults = [
+    { name: 'Alice Johnson', email: 'alice@example.com' },
+    { name: 'Bob Smith', email: 'bob@example.com' }
+  ];
+  drop.innerHTML = '<div class="search-hint">Demo: Add contacts feature available in full version</div>';
+  drop.classList.add('open');
+});
+
+renderAll();
+</script>
+</body>
+</html>`;
 
     var blob = new Blob([mhmchatHTML], { type: 'text/html' });
     var chatUrl = URL.createObjectURL(blob);

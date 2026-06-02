@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>MHMSocial + MHMChat | Complete Platform</title>
+    <title>MHMSocial + MHMChat</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -60,16 +60,8 @@
             cursor: pointer;
             font-size: 14px;
         }
-        .auth-error {
-            color: #ef4444;
-            font-size: 13px;
-            margin-top: 10px;
-        }
-        .auth-success {
-            color: #10b981;
-            font-size: 13px;
-            margin-top: 10px;
-        }
+        .auth-error { color: #ef4444; font-size: 13px; margin-top: 10px; }
+        .auth-success { color: #10b981; font-size: 13px; margin-top: 10px; }
         .migration-box {
             background: #fef3c7;
             border-radius: 16px;
@@ -78,15 +70,8 @@
             text-align: left;
             border-left: 4px solid #f59e0b;
         }
-        .migration-box h4 {
-            color: #92400e;
-            margin-bottom: 8px;
-        }
-        .migration-box p {
-            color: #78350f;
-            font-size: 13px;
-            margin: 5px 0;
-        }
+        .migration-box h4 { color: #92400e; margin-bottom: 8px; }
+        .migration-box p { color: #78350f; font-size: 13px; margin: 5px 0; }
         .main-app {
             display: none;
             max-width: 1300px;
@@ -97,10 +82,7 @@
             color: white;
             margin-bottom: 30px;
         }
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
         .user-badge {
             display: inline-flex;
             align-items: center;
@@ -186,11 +168,7 @@
             cursor: pointer;
             float: right;
         }
-        .clearfix::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
+        .clearfix::after { content: ""; clear: both; display: table; }
         .post-card {
             background: white;
             border-radius: 20px;
@@ -214,25 +192,11 @@
             justify-content: center;
             color: white;
         }
-        .post-user-info {
-            flex: 1;
-        }
-        .post-username {
-            font-weight: 700;
-        }
-        .post-time {
-            font-size: 11px;
-            color: #64748b;
-        }
-        .post-text {
-            margin: 10px 0;
-            line-height: 1.5;
-        }
-        .post-image img {
-            max-width: 100%;
-            max-height: 350px;
-            border-radius: 16px;
-        }
+        .post-user-info { flex: 1; }
+        .post-username { font-weight: 700; }
+        .post-time { font-size: 11px; color: #64748b; }
+        .post-text { margin: 10px 0; line-height: 1.5; }
+        .post-image img { max-width: 100%; max-height: 350px; border-radius: 16px; }
         .post-actions {
             display: flex;
             gap: 25px;
@@ -249,9 +213,7 @@
             cursor: pointer;
             color: #64748b;
         }
-        .action-btn.liked {
-            color: #ef4444;
-        }
+        .action-btn.liked { color: #ef4444; }
         .comments-section {
             margin-top: 12px;
             background: #f8fafc;
@@ -265,10 +227,7 @@
             display: flex;
             gap: 10px;
         }
-        .comment-author {
-            font-weight: 700;
-            color: #667eea;
-        }
+        .comment-author { font-weight: 700; color: #667eea; }
         .add-comment-form {
             display: flex;
             gap: 8px;
@@ -328,9 +287,7 @@
             align-items: center;
             justify-content: center;
         }
-        .chat-modal.active {
-            display: flex;
-        }
+        .chat-modal.active { display: flex; }
         .chat-modal-content {
             width: 90%;
             max-width: 500px;
@@ -356,31 +313,12 @@
             font-size: 24px;
             cursor: pointer;
         }
-        .chat-iframe-container {
-            flex: 1;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .empty-feed {
-            text-align: center;
-            padding: 40px;
-            color: #94a3b8;
-        }
-        .preview-area {
-            margin: 10px 0;
-        }
-        .preview-area img {
-            max-height: 100px;
-            border-radius: 8px;
-        }
-        @media (max-width: 900px) {
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
-        }
+        .chat-iframe-container { flex: 1; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .empty-feed { text-align: center; padding: 40px; color: #94a3b8; }
+        .preview-area { margin: 10px 0; }
+        .preview-area img { max-height: 100px; border-radius: 8px; }
+        @media (max-width: 900px) { .two-columns { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -463,6 +401,7 @@
 </div>
 
 <script>
+(function() {
     // DOM Elements
     const authScreen = document.getElementById('authScreen');
     const mainApp = document.getElementById('mainApp');
@@ -476,15 +415,21 @@
     const userEmailDisplay = document.getElementById('userEmailDisplay');
 
     let currentUser = null;
-    let posts = JSON.parse(localStorage.getItem('mhmsocial_posts') || '[]');
+    let posts = [];
     let currentImageBase64 = null;
 
-    function showToast(message, isError = false) {
+    // Load saved posts
+    try {
+        const saved = localStorage.getItem('mhmsocial_posts');
+        if (saved) posts = JSON.parse(saved);
+    } catch(e) { posts = []; }
+
+    function showToast(message, isError) {
         const toast = document.createElement('div');
-        toast.style.cssText = `position:fixed;bottom:80px;right:20px;background:${isError ? '#ef4444' : '#10b981'};color:white;padding:12px 20px;border-radius:12px;z-index:3000;font-size:14px;`;
+        toast.style.cssText = 'position:fixed;bottom:80px;right:20px;background:' + (isError ? '#ef4444' : '#10b981') + ';color:white;padding:12px 20px;border-radius:12px;z-index:3000;font-size:14px;';
         toast.innerHTML = message;
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
+        setTimeout(function() { toast.remove(); }, 3000);
     }
 
     function escapeHtml(str) {
@@ -497,80 +442,52 @@
         });
     }
 
-    // Login handler
+    // Login
     document.getElementById('loginBtn').onclick = function() {
-        const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
-
+        var email = document.getElementById('loginEmail').value.trim();
+        var password = document.getElementById('loginPassword').value;
         if (!email || !password) {
             document.getElementById('authError').textContent = 'Please enter email and password';
             return;
         }
-
         if (password === '123456') {
             currentUser = {
                 email: email,
                 name: email.split('@')[0],
                 uid: 'user_' + Date.now()
             };
-            
             authScreen.style.display = 'none';
             mainApp.style.display = 'block';
             chatPopupBtn.style.display = 'flex';
-            
             navUserName.textContent = currentUser.name;
             userNameDisplay.textContent = currentUser.name;
             userEmailDisplay.textContent = currentUser.email;
-            
-            // Send user info to chat iframe
-            sendUserToChatIframe();
-            
             renderPosts();
-            showToast('Welcome ' + currentUser.name + '! 🎉');
+            showToast('Welcome ' + currentUser.name + '!', false);
         } else {
             document.getElementById('authError').textContent = 'Invalid password. Use "123456" for demo.';
         }
     };
 
-    function sendUserToChatIframe() {
-        if (chatIframe && chatIframe.contentWindow && currentUser) {
-            chatIframe.contentWindow.postMessage({
-                type: 'MHMChat_USER_DATA',
-                user: {
-                    email: currentUser.email,
-                    name: currentUser.name,
-                    uid: currentUser.uid
-                }
-            }, '*');
-        }
-    }
-
     document.getElementById('showSignupLink').onclick = function() {
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('signupForm').style.display = 'block';
-        document.getElementById('authError').textContent = '';
     };
-
     document.getElementById('showLoginLink').onclick = function() {
         document.getElementById('signupForm').style.display = 'none';
         document.getElementById('loginForm').style.display = 'block';
-        document.getElementById('signupError').textContent = '';
     };
-
     document.getElementById('signupBtn').onclick = function() {
-        const name = document.getElementById('signupName').value.trim();
-        const email = document.getElementById('signupEmail').value.trim();
-        const password = document.getElementById('signupPassword').value;
-
+        var email = document.getElementById('signupEmail').value.trim();
+        var password = document.getElementById('signupPassword').value;
         if (!email || !password) {
-            document.getElementById('signupError').textContent = 'Please fill all fields';
+            document.getElementById('signupError').textContent = 'Fill all fields';
             return;
         }
         if (password.length < 6) {
             document.getElementById('signupError').textContent = 'Password must be at least 6 characters';
             return;
         }
-
         document.getElementById('signupSuccess').textContent = 'Account created! Please login.';
         setTimeout(function() {
             document.getElementById('signupForm').style.display = 'none';
@@ -579,24 +496,20 @@
             document.getElementById('signupSuccess').textContent = '';
         }, 1500);
     };
-
     navLogoutBtn.onclick = function() {
         currentUser = null;
         authScreen.style.display = 'block';
         mainApp.style.display = 'none';
         chatPopupBtn.style.display = 'none';
         chatModal.classList.remove('active');
-        showToast('Logged out successfully');
+        showToast('Logged out', false);
     };
 
     function renderComments(comments) {
         if (!comments || comments.length === 0) return '<div>No comments yet</div>';
         var html = '';
         for (var i = 0; i < comments.length; i++) {
-            html += '<div class="comment-item">';
-            html += '<span class="comment-author">' + escapeHtml(comments[i].author) + '</span>';
-            html += '<span>' + escapeHtml(comments[i].text) + '</span>';
-            html += '</div>';
+            html += '<div class="comment-item"><span class="comment-author">' + escapeHtml(comments[i].author) + '</span><span>' + escapeHtml(comments[i].text) + '</span></div>';
         }
         return html;
     }
@@ -604,50 +517,43 @@
     function attachCreateEvents() {
         var publishBtn = document.getElementById('publishBtn');
         if (!publishBtn) return;
-
         var imageInput = document.getElementById('imageUpload');
         var previewArea = document.getElementById('previewArea');
-        
         if (imageInput) {
             imageInput.onchange = function(e) {
                 var file = e.target.files[0];
                 if (file) {
                     var reader = new FileReader();
-                    reader.onload = function(e) {
-                        currentImageBase64 = e.target.result;
-                        previewArea.innerHTML = '<img src="' + e.target.result + '" style="max-height:100px; border-radius:8px;">';
+                    reader.onload = function(ev) {
+                        currentImageBase64 = ev.target.result;
+                        previewArea.innerHTML = '<img src="' + ev.target.result + '" style="max-height:100px; border-radius:8px;">';
                     };
                     reader.readAsDataURL(file);
                 }
             };
         }
-        
         publishBtn.onclick = function() {
             var text = document.getElementById('postText').value.trim();
             if (!text && !currentImageBase64) {
                 showToast("Write something or add a photo", true);
                 return;
             }
-            
             var newPost = {
                 id: Date.now(),
-                text: text || "📸 Shared a photo",
+                text: text || "Shared a photo",
                 image: currentImageBase64,
                 author: currentUser ? currentUser.name : 'User',
                 timestamp: Date.now(),
                 likes: 0,
                 comments: []
             };
-            
             posts.unshift(newPost);
             localStorage.setItem('mhmsocial_posts', JSON.stringify(posts));
-            
             document.getElementById('postText').value = '';
             if (previewArea) previewArea.innerHTML = '';
             currentImageBase64 = null;
-            
             renderPosts();
-            showToast("✅ Post published!");
+            showToast("Post published!", false);
         };
     }
 
@@ -666,22 +572,14 @@
                 renderPosts();
             };
         }
-        
         var commentToggles = document.querySelectorAll('.comment-toggle');
         for (var i = 0; i < commentToggles.length; i++) {
             commentToggles[i].onclick = function() {
                 var id = this.getAttribute('data-id');
                 var div = document.getElementById('comments-' + id);
-                if (div) {
-                    if (div.style.display === 'none') {
-                        div.style.display = 'block';
-                    } else {
-                        div.style.display = 'none';
-                    }
-                }
+                if (div) div.style.display = div.style.display === 'none' ? 'block' : 'none';
             };
         }
-        
         var commentSubmits = document.querySelectorAll('.comment-submit');
         for (var i = 0; i < commentSubmits.length; i++) {
             commentSubmits[i].onclick = function() {
@@ -692,16 +590,13 @@
                     for (var j = 0; j < posts.length; j++) {
                         if (posts[j].id === id) {
                             if (!posts[j].comments) posts[j].comments = [];
-                            posts[j].comments.push({
-                                author: currentUser ? currentUser.name : 'User',
-                                text: text
-                            });
+                            posts[j].comments.push({ author: currentUser ? currentUser.name : 'User', text: text });
                             break;
                         }
                     }
                     localStorage.setItem('mhmsocial_posts', JSON.stringify(posts));
                     renderPosts();
-                    showToast("Comment added!");
+                    showToast("Comment added!", false);
                 }
             };
         }
@@ -709,324 +604,57 @@
 
     function renderPosts() {
         var container = document.getElementById('socialFeedContainer');
-        
-        var createCardHtml = '<div class="create-card">' +
-            '<div class="create-header">' +
-            '<div class="avatar-icon"><i class="fas fa-user-astronaut"></i></div>' +
-            '<div><h3>Create a post</h3></div>' +
-            '</div>' +
-            '<textarea id="postText" rows="2" placeholder="What\'s on your mind? 🌍"></textarea>' +
-            '<div class="media-actions">' +
-            '<label class="media-btn" for="imageUpload"><i class="fas fa-camera"></i> Add Photo</label>' +
-            '<input type="file" id="imageUpload" accept="image/*" style="display:none">' +
-            '</div>' +
-            '<div id="previewArea" class="preview-area"></div>' +
-            '<div class="clearfix"></div>' +
-            '<button id="publishBtn" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish</button>' +
-            '<div class="clearfix"></div>' +
-            '</div>';
-
+        var createHtml = '<div class="create-card"><div class="create-header"><div class="avatar-icon"><i class="fas fa-user-astronaut"></i></div><div><h3>Create a post</h3></div></div><textarea id="postText" rows="2" placeholder="What\'s on your mind? 🌍"></textarea><div class="media-actions"><label class="media-btn" for="imageUpload"><i class="fas fa-camera"></i> Add Photo</label><input type="file" id="imageUpload" accept="image/*" style="display:none"></div><div id="previewArea" class="preview-area"></div><div class="clearfix"></div><button id="publishBtn" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish</button><div class="clearfix"></div></div>';
         if (posts.length === 0) {
-            container.innerHTML = createCardHtml + '<div class="empty-feed"><i class="fas fa-comment"></i> No posts yet. Be the first!</div>';
+            container.innerHTML = createHtml + '<div class="empty-feed"><i class="fas fa-comment"></i> No posts yet. Be the first!</div>';
             attachCreateEvents();
             return;
         }
-
-        var postsHtml = createCardHtml;
+        var postsHtml = createHtml;
         for (var i = 0; i < posts.length; i++) {
-            var post = posts[i];
-            postsHtml += '<div class="post-card">' +
-                '<div class="post-header">' +
-                '<div class="post-avatar"><i class="fas fa-user-circle"></i></div>' +
-                '<div class="post-user-info">' +
-                '<div class="post-username">' + escapeHtml(post.author) + '</div>' +
-                '<div class="post-time">' + new Date(post.timestamp).toLocaleString() + '</div>' +
-                '</div>' +
-                '</div>' +
-                '<div class="post-text">' + escapeHtml(post.text) + '</div>' +
-                (post.image ? '<div class="post-image"><img src="' + post.image + '" loading="lazy"></div>' : '') +
-                '<div class="post-actions">' +
-                '<button class="action-btn like-btn" data-id="' + post.id + '">' +
-                '<i class="fa-regular fa-heart"></i> <span>' + (post.likes || 0) + '</span> Likes</button>' +
-                '<button class="action-btn comment-toggle" data-id="' + post.id + '">' +
-                '<i class="fa-regular fa-comment"></i> Comments (' + (post.comments ? post.comments.length : 0) + ')</button>' +
-                '</div>' +
-                '<div class="comments-section" id="comments-' + post.id + '" style="display: none;">' +
-                '<div class="comment-list">' + renderComments(post.comments) + '</div>' +
-                '<div class="add-comment-form">' +
-                '<input type="text" class="comment-input" id="commentInput-' + post.id + '" placeholder="Write a comment...">' +
-                '<button class="comment-submit" data-id="' + post.id + '">Post</button>' +
-                '</div>' +
-                '</div>' +
-                '</div>';
+            var p = posts[i];
+            postsHtml += '<div class="post-card"><div class="post-header"><div class="post-avatar"><i class="fas fa-user-circle"></i></div><div class="post-user-info"><div class="post-username">' + escapeHtml(p.author) + '</div><div class="post-time">' + new Date(p.timestamp).toLocaleString() + '</div></div></div><div class="post-text">' + escapeHtml(p.text) + '</div>' + (p.image ? '<div class="post-image"><img src="' + p.image + '"></div>' : '') + '<div class="post-actions"><button class="action-btn like-btn" data-id="' + p.id + '"><i class="fa-regular fa-heart"></i> <span>' + (p.likes || 0) + '</span> Likes</button><button class="action-btn comment-toggle" data-id="' + p.id + '"><i class="fa-regular fa-comment"></i> Comments (' + (p.comments ? p.comments.length : 0) + ')</button></div><div class="comments-section" id="comments-' + p.id + '" style="display:none;"><div class="comment-list">' + renderComments(p.comments) + '</div><div class="add-comment-form"><input type="text" class="comment-input" id="commentInput-' + p.id + '" placeholder="Write a comment..."><button class="comment-submit" data-id="' + p.id + '">Post</button></div></div></div>';
         }
-        
         container.innerHTML = postsHtml;
         attachCreateEvents();
         attachPostEvents();
     }
 
-    // COMPLETE WORKING MHMChat Application
-    const mhmchatHTML = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>MHMChat</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: #f1f5f9;
-            height: 100vh;
-            overflow: hidden;
-        }
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            background: white;
-        }
-        .chat-header {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            padding: 16px 20px;
-            text-align: center;
-        }
-        .chat-header h3 { font-size: 1.2rem; }
-        .chat-header p { font-size: 0.7rem; opacity: 0.8; margin-top: 4px; }
-        .user-info-bar {
-            background: #1e293b;
-            color: white;
-            padding: 8px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-        }
-        .messages-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: #f8fafc;
-        }
-        .message {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: 18px;
-            font-size: 0.85rem;
-            animation: fadeIn 0.2s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .message.sent {
-            background: #4f46e5;
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-        .message.received {
-            background: white;
-            color: #1e293b;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        .message-sender {
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            opacity: 0.8;
-        }
-        .message-time {
-            font-size: 0.6rem;
-            margin-top: 4px;
-            opacity: 0.6;
-        }
-        .input-area {
-            display: flex;
-            gap: 10px;
-            padding: 12px 16px;
-            background: white;
-            border-top: 1px solid #e2e8f0;
-        }
-        .input-area input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #cbd5e1;
-            border-radius: 28px;
-            font-size: 0.9rem;
-            outline: none;
-        }
-        .input-area input:focus { border-color: #4f46e5; }
-        .input-area button {
-            background: #4f46e5;
-            color: white;
-            border: none;
-            padding: 0 24px;
-            border-radius: 28px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .welcome {
-            text-align: center;
-            padding: 50px 20px;
-            color: #94a3b8;
-        }
-        .welcome i { font-size: 48px; margin-bottom: 16px; }
-    </style>
-</head>
-<body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h3><i class="fas fa-comments"></i> MHMChat</h3>
-            <p>Connected to MHMSocial</p>
-        </div>
-        <div class="user-info-bar" id="userInfoBar">
-            <span><i class="fas fa-user-circle"></i> <span id="userEmailDisplay">Loading...</span></span>
-            <span style="font-size: 0.7rem;"><i class="fas fa-circle" style="color: #10b981;"></i> Online</span>
-        </div>
-        <div class="messages-area" id="messagesArea">
-            <div class="welcome">
-                <i class="fas fa-comment-dots"></i>
-                <p>Welcome to MHMChat!</p>
-                <p style="font-size: 0.8rem; margin-top: 8px;">Start messaging with your contacts</p>
-            </div>
-        </div>
-        <div class="input-area">
-            <input type="text" id="messageInput" placeholder="Type a message...">
-            <button id="sendBtn"><i class="fas fa-paper-plane"></i> Send</button>
-        </div>
-    </div>
+    // MHMChat HTML content
+    var chatFrameHtml = '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>MHMChat</title>\n<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">\n<style>\n*{margin:0;padding:0;box-sizing:border-box;}\nbody{font-family:system-ui;background:#f1f5f9;height:100vh;overflow:hidden;}\n.chat-container{display:flex;flex-direction:column;height:100%;background:white;}\n.chat-header{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;padding:16px 20px;text-align:center;}\n.user-bar{background:#1e293b;color:white;padding:8px 16px;display:flex;justify-content:space-between;font-size:0.8rem;}\n.messages-area{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#f8fafc;}\n.message{max-width:80%;padding:10px 14px;border-radius:18px;font-size:0.85rem;}\n.message.sent{background:#4f46e5;color:white;align-self:flex-end;border-bottom-right-radius:4px;}\n.message.received{background:white;color:#1e293b;align-self:flex-start;border-bottom-left-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,0.05);}\n.msg-sender{font-size:0.7rem;font-weight:600;margin-bottom:4px;opacity:0.8;}\n.msg-time{font-size:0.6rem;margin-top:4px;opacity:0.6;}\n.input-area{display:flex;gap:10px;padding:12px 16px;background:white;border-top:1px solid #e2e8f0;}\n.input-area input{flex:1;padding:12px 16px;border:1px solid #cbd5e1;border-radius:28px;outline:none;}\n.input-area button{background:#4f46e5;color:white;border:none;padding:0 24px;border-radius:28px;font-weight:600;cursor:pointer;}\n.welcome{text-align:center;padding:50px 20px;color:#94a3b8;}\n.welcome i{font-size:48px;margin-bottom:16px;}\n</style>\n</head>\n<body>\n<div class="chat-container">\n<div class="chat-header"><h3><i class="fas fa-comments"></i> MHMChat</h3><p>Connected to MHMSocial</p></div>\n<div class="user-bar"><span><i class="fas fa-user-circle"></i> <span id="userEmail">Loading...</span></span><span><i class="fas fa-circle" style="color:#10b981;"></i> Online</span></div>\n<div class="messages-area" id="messages"><div class="welcome"><i class="fas fa-comment-dots"></i><p>Welcome to MHMChat!</p><p>Start messaging with your friends</p></div></div>\n<div class="input-area"><input type="text" id="msgInput" placeholder="Type a message..."><button id="sendBtn">Send</button></div>\n</div>\n<script>\nvar currentUser = null;\nvar messages = [];\nwindow.addEventListener("message", function(e) {\n    if (e.data && e.data.type === "MHMChat_USER_DATA") {\n        currentUser = e.data.user;\n        document.getElementById("userEmail").innerText = currentUser.email;\n        document.getElementById("messages").innerHTML = \'<div class="welcome"><i class="fas fa-comment-dots"></i><p>Welcome \' + currentUser.name + \'!</p><p>Start messaging with your friends</p></div>\';\n    }\n});\nfunction escapeHtml(s) { if (!s) return ""; return s.replace(/[&<>]/g, function(m) { if(m==="&") return "&amp;"; if(m==="<") return "&lt;"; if(m===">") return "&gt;"; return m; }); }\nfunction formatTime() { return new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}); }\nfunction loadMessages() {\n    if (messages.length === 0) return;\n    var html = "";\n    for (var i = 0; i < messages.length; i++) {\n        var m = messages[i];\n        var isMine = m.sender === (currentUser ? currentUser.email : "");\n        html += \'<div class="message \' + (isMine ? "sent" : "received") + \'">\';\n        if (!isMine) html += \'<div class="msg-sender">\' + escapeHtml(m.senderName || m.sender.split("@")[0]) + \'</div>\';\n        html += escapeHtml(m.text) + \'<div class="msg-time">\' + m.time + \'</div></div>\';\n    }\n    var container = document.getElementById("messages");\n    container.innerHTML = html;\n    container.scrollTop = container.scrollHeight;\n}\nfunction sendMessage() {\n    var input = document.getElementById("msgInput");\n    var text = input.value.trim();\n    if (!text || !currentUser) return;\n    messages.push({sender: currentUser.email, senderName: currentUser.name, text: text, time: formatTime()});\n    loadMessages();\n    input.value = "";\n    setTimeout(function() {\n        messages.push({sender: "support@mhmchat.com", senderName: "MHMChat Bot", text: "Thanks for your message! This is a demo reply.", time: formatTime()});\n        loadMessages();\n    }, 1000);\n}\ndocument.getElementById("sendBtn").onclick = sendMessage;\ndocument.getElementById("msgInput").onkeypress = function(e) { if (e.key === "Enter") sendMessage(); };\nwindow.parent.postMessage({type: "MHMChat_REQUEST_USER"}, "*");\n<\/script>\n</body>\n</html>';
 
-    <script>
-        let currentUser = null;
-        let messages = [];
-
-        // Listen for user data from parent window
-        window.addEventListener('message', function(event) {
-            if (event.data && event.data.type === 'MHMChat_USER_DATA') {
-                currentUser = event.data.user;
-                document.getElementById('userEmailDisplay').innerText = currentUser.email;
-                document.getElementById('messagesArea').innerHTML = '<div class="welcome"><i class="fas fa-comment-dots"></i><p>Welcome ' + currentUser.name + '!</p><p style="font-size: 0.8rem;">Start messaging with your friends</p></div>';
-            }
-        });
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
-
-        function formatTime() {
-            return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-
-        function loadMessages() {
-            if (messages.length === 0) return;
-            const container = document.getElementById('messagesArea');
-            container.innerHTML = messages.map(msg => {
-                const isMine = msg.sender === (currentUser ? currentUser.email : 'unknown');
-                return '<div class="message ' + (isMine ? 'sent' : 'received') + '">' +
-                    (!isMine ? '<div class="message-sender">' + escapeHtml(msg.senderName || msg.sender.split('@')[0]) + '</div>' : '') +
-                    escapeHtml(msg.text) +
-                    '<div class="message-time">' + msg.time + '</div>' +
-                    '</div>';
-            }).join('');
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const text = input.value.trim();
-            if (!text || !currentUser) return;
-            
-            messages.push({
-                sender: currentUser.email,
-                senderName: currentUser.name,
-                text: text,
-                time: formatTime()
-            });
-            loadMessages();
-            input.value = '';
-            
-            // Auto-reply after 1 second
-            setTimeout(() => {
-                messages.push({
-                    sender: 'support@mhmchat.com',
-                    senderName: 'MHMChat Bot',
-                    text: "Thanks for your message! 🎉 This is a demo reply.",
-                    time: formatTime()
-                });
-                loadMessages();
-            }, 1000);
-        }
-
-        document.getElementById('sendBtn').onclick = sendMessage;
-        document.getElementById('messageInput').onkeypress = function(e) {
-            if (e.key === 'Enter') sendMessage();
-        };
-
-        // Request user data from parent
-        window.parent.postMessage({ type: 'MHMChat_REQUEST_USER' }, '*');
-    </script>
-</body>
-</html>`;
-
-    const blob = new Blob([mhmchatHTML], { type: 'text/html' });
-    const chatUrl = URL.createObjectURL(blob);
+    var chatBlob = new Blob([chatFrameHtml], { type: 'text/html' });
+    var chatUrl = URL.createObjectURL(chatBlob);
     chatIframe.src = chatUrl;
-    
-    // Listen for messages from iframe
+
     window.addEventListener('message', function(event) {
         if (event.data && event.data.type === 'MHMChat_REQUEST_USER' && currentUser) {
-            chatIframe.contentWindow.postMessage({
-                type: 'MHMChat_USER_DATA',
-                user: {
-                    email: currentUser.email,
-                    name: currentUser.name,
-                    uid: currentUser.uid
-                }
-            }, '*');
-        }
-    });
-    
-    chatPopupBtn.onclick = function() {
-        chatModal.classList.add('active');
-        if (chatIframe.src !== chatUrl) {
-            chatIframe.src = chatUrl;
-        } else if (currentUser) {
-            // Re-send user data when reopening
-            setTimeout(() => {
+            if (chatIframe.contentWindow) {
                 chatIframe.contentWindow.postMessage({
                     type: 'MHMChat_USER_DATA',
-                    user: {
-                        email: currentUser.email,
-                        name: currentUser.name,
-                        uid: currentUser.uid
-                    }
+                    user: { email: currentUser.email, name: currentUser.name, uid: currentUser.uid }
                 }, '*');
-            }, 500);
+            }
         }
+    });
+
+    chatPopupBtn.onclick = function() {
+        chatModal.classList.add('active');
+        if (chatIframe.src !== chatUrl) chatIframe.src = chatUrl;
+        setTimeout(function() {
+            if (currentUser && chatIframe.contentWindow) {
+                chatIframe.contentWindow.postMessage({
+                    type: 'MHMChat_USER_DATA',
+                    user: { email: currentUser.email, name: currentUser.name, uid: currentUser.uid }
+                }, '*');
+            }
+        }, 500);
     };
-    
-    closeChatBtn.onclick = function() {
-        chatModal.classList.remove('active');
-    };
-    chatModal.onclick = function(e) {
-        if (e.target === chatModal) chatModal.classList.remove('active');
-    };
-    
+    closeChatBtn.onclick = function() { chatModal.classList.remove('active'); };
+    chatModal.onclick = function(e) { if (e.target === chatModal) chatModal.classList.remove('active'); };
+
     renderPosts();
+})();
 </script>
 </body>
 </html>

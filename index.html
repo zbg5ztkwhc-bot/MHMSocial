@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>SocialFlow - Create, Share & Engage</title>
-    <!-- Font Awesome 6 (free) -->
+    <title>SocialCanvas | Post, Share & Engage</title>
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts: Poppins & Inter mix -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -17,129 +17,94 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(125deg, #f5f7fc 0%, #eef2f8 100%);
-            color: #1e2a3a;
+            background: linear-gradient(145deg, #f8fafc 0%, #eef2f6 100%);
+            color: #0f172a;
             padding: 2rem 1.5rem;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
-        /* header */
-        .app-header {
+        /* Header */
+        .header {
             text-align: center;
             margin-bottom: 2rem;
         }
-        .app-header h1 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 2.2rem;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
+        .header h1 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e3a5f, #3b82f6);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             letter-spacing: -0.5px;
         }
-        .app-header p {
-            color: #4b5563;
+        .header p {
+            color: #475569;
             margin-top: 0.3rem;
         }
-
-        /* create post card */
-        .create-card {
-            background: rgba(255,255,255,0.96);
-            backdrop-filter: blur(2px);
-            border-radius: 2rem;
-            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
-            padding: 1.5rem 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid #ffffffaa;
-            transition: all 0.2s;
+        .storage-status {
+            display: inline-block;
+            background: #e6f0ff;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            margin-top: 0.8rem;
+            color: #1e4a76;
         }
 
+        /* Create Post Card */
+        .create-card {
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(2px);
+            border-radius: 1.8rem;
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.08);
+            padding: 1.6rem 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #ffffffcc;
+            transition: 0.2s;
+        }
         .create-header {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 1rem;
             margin-bottom: 1rem;
         }
-        .avatar {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(145deg, #3b82f6, #2563eb);
+        .avatar-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(145deg, #3b82f6, #1e40af);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
         }
         .create-header h3 {
             font-weight: 600;
         }
-
-        textarea {
+        .post-input {
             width: 100%;
             border-radius: 1.5rem;
             border: 1.5px solid #e2e8f0;
             padding: 1rem 1.2rem;
             font-family: 'Inter', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             resize: vertical;
-            background: #fefefe;
-            transition: 0.2s;
+            background: #ffffff;
         }
-        textarea:focus {
+        .post-input:focus {
             outline: none;
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
         }
-
-        /* media preview */
-        .media-preview {
-            margin: 1rem 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            align-items: center;
-        }
-        .preview-item {
-            position: relative;
-            display: inline-block;
-            border-radius: 1rem;
-            overflow: hidden;
-            background: #f1f5f9;
-            max-width: 180px;
-        }
-        .preview-item img, .preview-item video {
-            width: 100%;
-            max-height: 140px;
-            object-fit: cover;
-            border-radius: 1rem;
-            border: 1px solid #ddd;
-        }
-        .remove-media {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .media-buttons {
+        .media-actions {
             display: flex;
             gap: 1rem;
-            margin: 0.7rem 0;
+            margin: 1rem 0;
             flex-wrap: wrap;
         }
         .media-btn {
@@ -158,109 +123,150 @@
         .media-btn:hover {
             background: #e2e8f0;
         }
+        .preview-area {
+            margin: 0.8rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .preview-item {
+            position: relative;
+            background: #f1f5f9;
+            border-radius: 1rem;
+            overflow: hidden;
+            max-width: 180px;
+        }
+        .preview-item img, .preview-item video {
+            width: 100%;
+            max-height: 140px;
+            object-fit: cover;
+            border-radius: 0.8rem;
+        }
+        .remove-preview {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
         .publish-btn {
             background: linear-gradient(95deg, #2563eb, #3b82f6);
             color: white;
             border: none;
-            padding: 0.7rem 1.8rem;
+            padding: 0.7rem 2rem;
             border-radius: 2.5rem;
             font-weight: 600;
             font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(37,99,235,0.3);
-            margin-top: 0.5rem;
+            transition: 0.2s;
+            margin-top: 0.2rem;
+            float: right;
         }
         .publish-btn:hover {
             transform: scale(0.97);
             background: linear-gradient(95deg, #1d4ed8, #2563eb);
         }
 
-        /* feed posts */
-        .feed-title {
+        /* Feed section */
+        .feed-header {
             display: flex;
-            align-items: baseline;
             justify-content: space-between;
+            align-items: baseline;
             margin: 1.5rem 0 1rem;
             flex-wrap: wrap;
         }
-        .feed-title h2 {
+        .feed-header h2 {
             font-weight: 700;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
         }
-        .stats-badge {
+        .post-counter {
             background: #eef3ff;
             padding: 0.3rem 1rem;
             border-radius: 30px;
             font-size: 0.8rem;
         }
-
         .posts-container {
             display: flex;
             flex-direction: column;
-            gap: 1.8rem;
+            gap: 1.6rem;
         }
-
         .post-card {
             background: white;
-            border-radius: 1.8rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border-radius: 1.6rem;
             padding: 1.3rem 1.5rem;
-            transition: 0.2s;
-            border: 1px solid #eef2f6;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f8;
+            transition: 0.1s;
         }
-
         .post-header {
             display: flex;
-            gap: 12px;
+            gap: 0.8rem;
             align-items: center;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.7rem;
         }
         .post-avatar {
             width: 44px;
             height: 44px;
-            background: #cbd5e1;
+            background: linear-gradient(145deg, #f97316, #ea580c);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            background: linear-gradient(135deg, #f59e0b, #d97706);
             color: white;
+            font-weight: bold;
         }
-        .post-user {
+        .post-user-info {
+            flex: 1;
+        }
+        .post-username {
             font-weight: 700;
         }
         .post-time {
             font-size: 0.7rem;
             color: #6c757d;
         }
+        .delete-post {
+            background: none;
+            border: none;
+            color: #cbd5e1;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.1s;
+        }
+        .delete-post:hover {
+            color: #ef4444;
+        }
         .post-text {
-            font-size: 0.98rem;
-            line-height: 1.4;
-            margin: 0.8rem 0;
-            color: #1e293b;
+            margin: 0.5rem 0 0.7rem;
+            line-height: 1.5;
+            word-break: break-word;
         }
         .post-media {
-            margin: 0.8rem 0;
-            border-radius: 1.2rem;
+            margin: 0.7rem 0;
+            border-radius: 1rem;
             overflow: hidden;
-            max-width: 100%;
         }
         .post-media img, .post-media video {
             max-width: 100%;
             max-height: 380px;
             border-radius: 1rem;
-            object-fit: cover;
-            width: auto;
-            border: 1px solid #eef2f0;
+            object-fit: contain;
+            background: #f1f5f9;
         }
-        .actions {
+        .action-bar {
             display: flex;
             gap: 1.8rem;
             margin: 0.7rem 0 0.5rem;
+            padding-top: 0.5rem;
             border-top: 1px solid #edf2f7;
-            padding-top: 0.8rem;
         }
         .action-btn {
             background: none;
@@ -270,43 +276,37 @@
             gap: 0.5rem;
             font-weight: 500;
             font-size: 0.85rem;
-            color: #4a5568;
+            color: #475569;
             cursor: pointer;
             transition: 0.1s;
         }
         .action-btn.liked {
             color: #ef4444;
         }
-        .action-btn i {
-            font-size: 1.1rem;
-        }
-
-        .comments-section {
+        .comments-area {
             margin-top: 0.8rem;
-            background: #fafcff;
+            background: #fafdff;
             border-radius: 1.2rem;
-            padding: 0.6rem 0.2rem 0.2rem;
+            padding: 0.6rem;
         }
         .comment-list {
-            max-height: 180px;
+            max-height: 160px;
             overflow-y: auto;
             margin-bottom: 0.5rem;
             font-size: 0.8rem;
         }
-        .single-comment {
-            padding: 0.3rem 0;
-            border-bottom: 1px solid #ecf3f9;
+        .comment-item {
             display: flex;
             gap: 8px;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #ecf3f9;
         }
-        .comment-user {
+        .comment-author {
             font-weight: 700;
             min-width: 70px;
+            color: #1e40af;
         }
-        .comment-text {
-            color: #2d3a4b;
-        }
-        .add-comment {
+        .add-comment-form {
             display: flex;
             gap: 8px;
             margin-top: 6px;
@@ -315,25 +315,16 @@
             flex: 1;
             border-radius: 2rem;
             border: 1px solid #cbd5e1;
-            padding: 0.4rem 0.8rem;
+            padding: 0.5rem 0.9rem;
             font-size: 0.8rem;
         }
         .comment-submit {
             background: #eef2ff;
             border: none;
             border-radius: 2rem;
-            padding: 0.2rem 1rem;
+            padding: 0.2rem 1.2rem;
             cursor: pointer;
             font-weight: 500;
-        }
-
-        @media (max-width: 680px) {
-            body {
-                padding: 1rem;
-            }
-            .create-card {
-                padding: 1rem;
-            }
         }
         .empty-feed {
             text-align: center;
@@ -342,174 +333,224 @@
             border-radius: 2rem;
             color: #94a3b8;
         }
-        .delete-post {
-            margin-left: auto;
-            background: none;
+        footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #62748c;
+        }
+        @media (max-width: 650px) {
+            body { padding: 1rem; }
+            .create-card { padding: 1rem; }
+        }
+        .clear-storage {
+            background: #fee2e2;
             border: none;
-            color: #a0aec0;
+            padding: 0.2rem 0.9rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            margin-left: 0.8rem;
             cursor: pointer;
-            font-size: 1rem;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="app-header">
-        <h1><i class="fas fa-feather-alt"></i> SocialFlow</h1>
-        <p>Write posts, upload media, comment & like — all in one creative space</p>
+    <div class="header">
+        <h1><i class="fas fa-hashtag"></i> SocialCanvas</h1>
+        <p>Express yourself — posts, images, videos, comments & likes</p>
+        <div class="storage-status">
+            <i class="fas fa-database"></i> Persistent storage active · All data saved locally
+            <button id="globalClearBtn" class="clear-storage"><i class="fas fa-trash-alt"></i> Reset all data</button>
+        </div>
     </div>
 
     <!-- CREATE POST SECTION -->
     <div class="create-card">
         <div class="create-header">
-            <div class="avatar"><i class="fas fa-user-astronaut"></i></div>
-            <div><h3>Create new post</h3><span style="font-size:0.75rem;">Share what's on your mind</span></div>
+            <div class="avatar-icon"><i class="fas fa-feather-alt"></i></div>
+            <div><h3>Create new post</h3><span style="font-size:0.75rem;">Share text, photos or videos</span></div>
         </div>
-        <textarea id="postTextarea" rows="2" placeholder="Write something inspiring..."></textarea>
+        <textarea id="postContent" class="post-input" rows="2" placeholder="What's happening? Write your thoughts..."></textarea>
         
-        <!-- Media upload -->
-        <div class="media-buttons">
-            <label class="media-btn" for="imageUpload"><i class="fas fa-image"></i> Upload Photo</label>
-            <input type="file" id="imageUpload" accept="image/*" style="display:none">
-            <label class="media-btn" for="videoUpload"><i class="fas fa-video"></i> Upload Video</label>
-            <input type="file" id="videoUpload" accept="video/mp4,video/webm,video/quicktime" style="display:none">
+        <div class="media-actions">
+            <label class="media-btn" for="photoUpload"><i class="fas fa-camera"></i> Add Photo</label>
+            <input type="file" id="photoUpload" accept="image/*" style="display:none">
+            <label class="media-btn" for="videoUploadFile"><i class="fas fa-video"></i> Add Video</label>
+            <input type="file" id="videoUploadFile" accept="video/mp4,video/webm" style="display:none">
         </div>
-        <div id="mediaPreviewArea" class="media-preview"></div>
-        
-        <div style="display: flex; justify-content: flex-end;">
-            <button id="publishPostBtn" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish post</button>
-        </div>
+        <div id="mediaPreview" class="preview-area"></div>
+        <div style="clear:both"></div>
+        <button id="publishPost" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish post</button>
+        <div style="clear:both"></div>
     </div>
 
     <!-- FEED SECTION -->
-    <div class="feed-title">
-        <h2><i class="fas fa-newspaper"></i> Community Feed</h2>
-        <div class="stats-badge" id="postCountBadge">0 posts</div>
+    <div class="feed-header">
+        <h2><i class="fas fa-stream"></i> Community feed</h2>
+        <div class="post-counter" id="postCountDisplay">0 posts</div>
     </div>
     <div id="postsFeed" class="posts-container">
-        <!-- dynamic posts injected here -->
-        <div class="empty-feed"><i class="fas fa-comment-dots"></i> No posts yet. Create the first one! ✨</div>
+        <div class="empty-feed"><i class="fas fa-spinner fa-pulse"></i> Loading posts...</div>
     </div>
+    <footer>
+        <i class="fas fa-shield-alt"></i> All posts, comments and likes are saved automatically in your browser (localStorage)
+    </footer>
 </div>
 
 <script>
-    // ----- DATA MODEL -----
-    let posts = [];   // each post: { id, text, mediaType, mediaDataURL, likes, comments, timestamp, userName }
+    // ---------- DATA MODEL ----------
+    let posts = [];          // each post: { id, text, mediaType, mediaURL, likes, likedBy, comments, timestamp, authorName }
 
-    // Helper: generate random username for demo
-    const usernames = ["Alex Rivera", "Jamie Chen", "Taylor Swiftie", "Morgan Reed", "Casey Kim", "Jordan Lee", "Sam Parker"];
-    function randomUsername() {
-        return usernames[Math.floor(Math.random() * usernames.length)];
+    // Helper: random usernames for demo (you can customize)
+    const namePool = ["Alex Morgan", "Jamie Wren", "Taylor Chen", "Jordan Blake", "Riley Santos", "Casey Lin", "Samira Kahn", "Morgan James"];
+    function getRandomName() {
+        return namePool[Math.floor(Math.random() * namePool.length)];
     }
 
-    // Storage keys
-    const STORAGE_KEY = "socialflow_posts";
+    // Unique user ID for like tracking (persistent)
+    let currentUserId = localStorage.getItem("socialcanvas_user_id");
+    if (!currentUserId) {
+        currentUserId = "user_" + Math.random().toString(36).substr(2, 10);
+        localStorage.setItem("socialcanvas_user_id", currentUserId);
+    }
 
-    // load from localStorage
+    // Storage key
+    const STORAGE_POSTS_KEY = "socialcanvas_posts_data";
+
+    // Save to localStorage
+    function persistPosts() {
+        localStorage.setItem(STORAGE_POSTS_KEY, JSON.stringify(posts));
+    }
+
+    // Load posts from localStorage
     function loadPostsFromStorage() {
-        const stored = localStorage.getItem(STORAGE_KEY);
+        const stored = localStorage.getItem(STORAGE_POSTS_KEY);
         if (stored) {
             try {
-                posts = JSON.parse(stored);
-                // ensure each post has comments array & likes count structure (migration)
-                posts = posts.map(p => ({
-                    ...p,
-                    comments: p.comments || [],
+                let parsed = JSON.parse(stored);
+                // ensure each post has required fields (migration)
+                posts = parsed.map(p => ({
+                    id: p.id,
+                    text: p.text || "",
+                    mediaType: p.mediaType || null,
+                    mediaURL: p.mediaURL || null,
                     likes: typeof p.likes === 'number' ? p.likes : 0,
-                    likedBy: p.likedBy || []
+                    likedBy: Array.isArray(p.likedBy) ? p.likedBy : [],
+                    comments: Array.isArray(p.comments) ? p.comments : [],
+                    timestamp: p.timestamp || new Date().toLocaleString(),
+                    authorName: p.authorName || getRandomName()
                 }));
             } catch(e) { posts = []; }
-        } else {
-            // demo seed post with media sample (just text)
-            posts = [];
-            // optional seed to showcase
-            const demoPost = {
-                id: Date.now() + 1,
-                text: "Welcome to SocialFlow! 🎉 You can upload photos, videos, leave comments and like posts. Everything saves automatically.",
-                mediaType: null,
-                mediaDataURL: null,
-                likes: 5,
-                likedBy: [],
-                comments: [{ username: "Moderator", text: "Awesome platform!" }],
-                timestamp: new Date().toLocaleString(),
-                userName: "SocialFlow Team"
-            };
-            posts.push(demoPost);
         }
+        if (!posts.length) {
+            // Seed demo post
+            posts = [{
+                id: Date.now(),
+                text: "🎉 Welcome to SocialCanvas! Create posts, upload photos/videos, comment and like. Everything stays saved!",
+                mediaType: null,
+                mediaURL: null,
+                likes: 4,
+                likedBy: [],
+                comments: [{ author: "Community", text: "This is awesome!" }],
+                timestamp: new Date().toLocaleString(),
+                authorName: "SocialCanvas Team"
+            }];
+            persistPosts();
+        }
+        updatePostCounter();
         renderFeed();
-        updateStats();
-        saveToLocalStorage();
     }
 
-    function saveToLocalStorage() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+    function updatePostCounter() {
+        document.getElementById("postCountDisplay").innerText = `${posts.length} post${posts.length !== 1 ? 's' : ''}`;
     }
 
-    function updateStats() {
-        document.getElementById("postCountBadge").innerHTML = `${posts.length} post${posts.length !== 1 ? 's' : ''}`;
+    // escape HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) { return c; });
     }
 
-    // Render all posts
+    // render comments HTML
+    function renderCommentsList(commentsArray) {
+        if (!commentsArray.length) return '<div style="padding:5px; color:#8ba0bc;">💬 No comments yet. Be the first!</div>';
+        return commentsArray.map(c => `
+            <div class="comment-item">
+                <span class="comment-author">${escapeHtml(c.author)}</span>
+                <span>${escapeHtml(c.text)}</span>
+            </div>
+        `).join('');
+    }
+
+    // main render feed
     function renderFeed() {
         const feedContainer = document.getElementById("postsFeed");
         if (!posts.length) {
-            feedContainer.innerHTML = `<div class="empty-feed"><i class="fas fa-comment-dots"></i> No posts yet. Create the first one! ✨</div>`;
+            feedContainer.innerHTML = `<div class="empty-feed"><i class="far fa-newspaper"></i> No posts yet. Create the first one!</div>`;
             return;
         }
 
-        feedContainer.innerHTML = posts.map(post => `
+        feedContainer.innerHTML = posts.map(post => {
+            const userLiked = post.likedBy && post.likedBy.includes(currentUserId);
+            return `
             <div class="post-card" data-post-id="${post.id}">
                 <div class="post-header">
-                    <div class="post-avatar"><i class="fas fa-user-circle"></i></div>
-                    <div>
-                        <div class="post-user">${escapeHtml(post.userName || "Anonymous")}</div>
+                    <div class="post-avatar"><i class="fas fa-user-astronaut"></i></div>
+                    <div class="post-user-info">
+                        <div class="post-username">${escapeHtml(post.authorName)}</div>
                         <div class="post-time">${escapeHtml(post.timestamp)}</div>
                     </div>
                     <button class="delete-post" data-id="${post.id}" title="Delete post"><i class="fas fa-trash-alt"></i></button>
                 </div>
                 <div class="post-text">${escapeHtml(post.text).replace(/\n/g, '<br>')}</div>
-                ${post.mediaDataURL ? `
+                ${post.mediaURL ? `
                     <div class="post-media">
-                        ${post.mediaType === 'image' ? `<img src="${post.mediaDataURL}" alt="post media">` : 
-                          post.mediaType === 'video' ? `<video controls src="${post.mediaDataURL}"></video>` : ''}
+                        ${post.mediaType === 'image' ? `<img src="${post.mediaURL}" alt="post media" loading="lazy">` : 
+                          post.mediaType === 'video' ? `<video controls src="${post.mediaURL}" style="max-width:100%"></video>` : ''}
                     </div>
                 ` : ''}
-                <div class="actions">
-                    <button class="action-btn like-btn" data-id="${post.id}">
-                        <i class="fa-${post.likedBy && post.likedBy.includes(getCurrentUserId()) ? 'solid' : 'regular'} fa-heart"></i> 
+                <div class="action-bar">
+                    <button class="action-btn like-button ${userLiked ? 'liked' : ''}" data-id="${post.id}">
+                        <i class="fa-${userLiked ? 'solid' : 'regular'} fa-heart"></i> 
                         <span class="like-count">${post.likes || 0}</span> Likes
                     </button>
-                    <button class="action-btn comment-toggle" data-id="${post.id}">
+                    <button class="action-btn toggle-comments" data-id="${post.id}">
                         <i class="far fa-comment-dots"></i> Comments (${post.comments?.length || 0})
                     </button>
                 </div>
-                <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                <div class="comments-area" id="commentsArea-${post.id}" style="display: none;">
                     <div class="comment-list" id="commentList-${post.id}">
-                        ${renderComments(post.comments || [])}
+                        ${renderCommentsList(post.comments || [])}
                     </div>
-                    <div class="add-comment">
+                    <div class="add-comment-form">
                         <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="Write a comment...">
                         <button class="comment-submit" data-id="${post.id}">Post</button>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
 
-        // attach like listeners
-        document.querySelectorAll('.like-btn').forEach(btn => {
+        // attach like event
+        document.querySelectorAll('.like-button').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const postId = parseInt(btn.getAttribute('data-id'));
-                handleLike(postId);
+                handleLikeToggle(postId);
             });
         });
         // attach comment toggle
-        document.querySelectorAll('.comment-toggle').forEach(btn => {
+        document.querySelectorAll('.toggle-comments').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const postId = parseInt(btn.getAttribute('data-id'));
-                const commentDiv = document.getElementById(`comments-${postId}`);
-                if (commentDiv.style.display === 'none') commentDiv.style.display = 'block';
-                else commentDiv.style.display = 'none';
+                const commentsDiv = document.getElementById(`commentsArea-${postId}`);
+                if (commentsDiv.style.display === 'none') commentsDiv.style.display = 'block';
+                else commentsDiv.style.display = 'none';
             });
         });
         // attach comment submit
@@ -521,59 +562,39 @@
                 if (commentText) {
                     addCommentToPost(postId, commentText);
                     inputField.value = '';
-                } else alert("Write a comment first.");
+                } else alert("Please write a comment.");
             });
         });
-        // delete post listeners
+        // delete post
         document.querySelectorAll('.delete-post').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const id = parseInt(btn.getAttribute('data-id'));
+                const postId = parseInt(btn.getAttribute('data-id'));
                 if (confirm("Delete this post permanently?")) {
-                    posts = posts.filter(p => p.id !== id);
-                    saveToLocalStorage();
+                    posts = posts.filter(p => p.id !== postId);
+                    persistPosts();
                     renderFeed();
-                    updateStats();
+                    updatePostCounter();
                 }
             });
         });
     }
 
-    function renderComments(commentsArray) {
-        if (!commentsArray.length) return '<div style="padding:5px; color:#8ba0bc;">No comments yet. Be the first!</div>';
-        return commentsArray.map(c => `
-            <div class="single-comment">
-                <span class="comment-user">${escapeHtml(c.username)}</span>
-                <span class="comment-text">${escapeHtml(c.text)}</span>
-            </div>
-        `).join('');
-    }
-
-    function getCurrentUserId() {
-        let userId = localStorage.getItem("socialflow_userId");
-        if (!userId) {
-            userId = "user_" + Math.floor(Math.random() * 1000000);
-            localStorage.setItem("socialflow_userId", userId);
-        }
-        return userId;
-    }
-
-    function handleLike(postId) {
+    function handleLikeToggle(postId) {
         const postIndex = posts.findIndex(p => p.id === postId);
         if (postIndex === -1) return;
         const post = posts[postIndex];
-        const userId = getCurrentUserId();
         if (!post.likedBy) post.likedBy = [];
-        const hasLiked = post.likedBy.includes(userId);
-        if (hasLiked) {
-            post.likes = Math.max(0, (post.likes || 0) - 1);
-            post.likedBy = post.likedBy.filter(id => id !== userId);
+        const alreadyLiked = post.likedBy.includes(currentUserId);
+        if (alreadyLiked) {
+            post.likes = Math.max(0, post.likes - 1);
+            post.likedBy = post.likedBy.filter(uid => uid !== currentUserId);
         } else {
             post.likes = (post.likes || 0) + 1;
-            post.likedBy.push(userId);
+            post.likedBy.push(currentUserId);
         }
-        saveToLocalStorage();
-        renderFeed();  // re-render to update button states
+        persistPosts();
+        renderFeed();  // re-render to update UI
     }
 
     function addCommentToPost(postId, commentText) {
@@ -581,51 +602,39 @@
         if (!post) return;
         if (!post.comments) post.comments = [];
         const newComment = {
-            username: randomUsername(),
-            text: commentText.substring(0, 180),
-            timestamp: new Date().toISOString()
+            author: getRandomName(),
+            text: commentText.substring(0, 200),
+            timestamp: Date.now()
         };
         post.comments.push(newComment);
-        saveToLocalStorage();
-        // refresh only comments part without full rerender? but full rerender is safe
+        persistPosts();
         renderFeed();
-        // auto expand comments section after comment
-        const commentDiv = document.getElementById(`comments-${postId}`);
-        if (commentDiv) commentDiv.style.display = 'block';
+        // automatically expand comments section
+        const commentsDiv = document.getElementById(`commentsArea-${postId}`);
+        if (commentsDiv) commentsDiv.style.display = 'block';
     }
 
-    // Helper for escaping
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) { return c; });
-    }
-
-    // ----- MEDIA UPLOAD & PREVIEW HANDLING -----
+    // ------- MEDIA UPLOAD & PREVIEW -------
     let currentMediaFile = null;
-    let currentMediaType = null;  // 'image' or 'video'
-    let currentMediaDataURL = null;
+    let currentMediaType = null;   // 'image' or 'video'
+    let currentMediaURL = null;
 
-    const imageInput = document.getElementById("imageUpload");
-    const videoInput = document.getElementById("videoUpload");
-    const previewArea = document.getElementById("mediaPreviewArea");
+    const photoInput = document.getElementById("photoUpload");
+    const videoInput = document.getElementById("videoUploadFile");
+    const previewContainer = document.getElementById("mediaPreview");
 
-    function clearPreview() {
-        previewArea.innerHTML = '';
+    function clearMediaPreview() {
+        previewContainer.innerHTML = '';
         currentMediaFile = null;
         currentMediaType = null;
-        currentMediaDataURL = null;
+        currentMediaURL = null;
     }
 
-    function displayPreview(file, type) {
-        clearPreview();
+    function showPreview(file, type) {
+        clearMediaPreview();
         const reader = new FileReader();
         reader.onload = function(e) {
-            currentMediaDataURL = e.target.result;
+            currentMediaURL = e.target.result;
             const previewDiv = document.createElement('div');
             previewDiv.className = 'preview-item';
             if (type === 'image') {
@@ -633,87 +642,116 @@
                 img.src = e.target.result;
                 previewDiv.appendChild(img);
             } else if (type === 'video') {
-                const video = document.createElement('video');
-                video.src = e.target.result;
-                video.controls = true;
-                video.style.maxHeight = '140px';
-                previewDiv.appendChild(video);
+                const vid = document.createElement('video');
+                vid.src = e.target.result;
+                vid.controls = true;
+                vid.style.maxHeight = '140px';
+                previewDiv.appendChild(vid);
             }
             const removeBtn = document.createElement('div');
-            removeBtn.className = 'remove-media';
+            removeBtn.className = 'remove-preview';
             removeBtn.innerHTML = '<i class="fas fa-times-circle"></i>';
-            removeBtn.onclick = () => clearPreview();
+            removeBtn.onclick = () => clearMediaPreview();
             previewDiv.appendChild(removeBtn);
-            previewArea.appendChild(previewDiv);
+            previewContainer.appendChild(previewDiv);
         };
         reader.readAsDataURL(file);
         currentMediaFile = file;
         currentMediaType = type;
     }
 
-    imageInput.addEventListener('change', (e) => {
+    photoInput.addEventListener('change', (e) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             if (file.type.startsWith('image/')) {
-                displayPreview(file, 'image');
-            } else alert("Please select a valid image file.");
+                showPreview(file, 'image');
+            } else alert("Please select a valid image.");
         }
-        imageInput.value = '';
+        photoInput.value = '';
     });
 
     videoInput.addEventListener('change', (e) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             if (file.type.startsWith('video/')) {
-                displayPreview(file, 'video');
-            } else alert("Please select a valid video file (mp4, webm).");
+                showPreview(file, 'video');
+            } else alert("Please select a valid video (mp4, webm).");
         }
         videoInput.value = '';
     });
 
-    // publish post logic
-    document.getElementById("publishPostBtn").addEventListener("click", () => {
-        const postText = document.getElementById("postTextarea").value.trim();
-        if (!postText && !currentMediaDataURL) {
-            alert("Please write something or attach a photo/video.");
+    // Publish post logic
+    document.getElementById("publishPost").addEventListener("click", () => {
+        const postText = document.getElementById("postContent").value.trim();
+        if (!postText && !currentMediaURL) {
+            alert("Please write something or add a photo/video.");
             return;
         }
         const newPost = {
             id: Date.now(),
-            text: postText || "📸 Shared media",
+            text: postText || "📎 Shared media",
             mediaType: currentMediaType,
-            mediaDataURL: currentMediaDataURL,
+            mediaURL: currentMediaURL,
             likes: 0,
             likedBy: [],
             comments: [],
             timestamp: new Date().toLocaleString(),
-            userName: randomUsername(),
+            authorName: getRandomName(),
         };
-        posts.unshift(newPost);  // newest first
-        saveToLocalStorage();
+        posts.unshift(newPost);
+        persistPosts();
         // reset form
-        document.getElementById("postTextarea").value = '';
-        clearPreview();
+        document.getElementById("postContent").value = '';
+        clearMediaPreview();
         renderFeed();
-        updateStats();
-        // optional small scroll
+        updatePostCounter();
+        // scroll to top to see new post
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // initial load and event listeners for storage options: persistence already active
-    loadPostsFromStorage();
-    // Additional feature: double check that posts array always has correct fields
-    window.addEventListener('load', () => {
-        // fallback for any old posts without comments array
-        let changed = false;
-        posts.forEach(p => {
-            if (!p.comments) { p.comments = []; changed = true; }
-            if (p.likes === undefined) { p.likes = 0; changed = true; }
-            if (!p.likedBy) { p.likedBy = []; changed = true; }
-        });
-        if (changed) saveToLocalStorage();
-        renderFeed();
+    // Global reset all data
+    document.getElementById("globalClearBtn").addEventListener("click", () => {
+        if (confirm("⚠️ WARNING: This will delete ALL posts, comments and likes permanently. This action cannot be undone. Continue?")) {
+            posts = [];
+            persistPosts();
+            // optional re-add a welcome seed post
+            posts = [{
+                id: Date.now(),
+                text: "✨ Fresh start! Create new posts, add images or videos. All data saved automatically.",
+                mediaType: null,
+                mediaURL: null,
+                likes: 1,
+                likedBy: [currentUserId],
+                comments: [],
+                timestamp: new Date().toLocaleString(),
+                authorName: "SocialCanvas"
+            }];
+            persistPosts();
+            renderFeed();
+            updatePostCounter();
+            clearMediaPreview();
+            document.getElementById("postContent").value = '';
+        }
     });
+
+    // ---------- INITIAL LOAD ----------
+    loadPostsFromStorage();
+
+    // explanation: what you need to save the posted data
+    console.log("=== DATA PERSISTENCE EXPLANATION ===");
+    console.log("To save all posted data, this application uses browser's localStorage API.");
+    console.log("Required data structure for each post:");
+    console.log("  - id: unique identifier (number)");
+    console.log("  - text: post content (string)");
+    console.log("  - mediaType: 'image', 'video' or null");
+    console.log("  - mediaURL: base64 data URL or null (stores image/video inline)");
+    console.log("  - likes: number of likes");
+    console.log("  - likedBy: array of user IDs (to prevent duplicate likes)");
+    console.log("  - comments: array of objects { author, text, timestamp }");
+    console.log("  - timestamp: readable date string");
+    console.log("  - authorName: display name");
+    console.log("Additionally, we store currentUserId for like tracking.");
+    console.log("All data is saved under localStorage key 'socialcanvas_posts_data'.");
 </script>
 </body>
 </html>

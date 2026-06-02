@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Social Hub | Connect, Share & Store</title>
-    <!-- Font Awesome 6 (free icons) -->
+    <title>SocialFlow - Create, Share & Engage</title>
+    <!-- Font Awesome 6 (free) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts: Inter for modern look -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Poppins & Inter mix -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -17,695 +17,703 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #f0f4fc 0%, #e6edf7 100%);
-            color: #1a2634;
-            padding: 1.5rem;
-            min-height: 100vh;
+            background: linear-gradient(125deg, #f5f7fc 0%, #eef2f8 100%);
+            color: #1e2a3a;
+            padding: 2rem 1.5rem;
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* header section */
-        .main-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
+        /* header */
+        .app-header {
+            text-align: center;
             margin-bottom: 2rem;
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(6px);
-            padding: 1rem 2rem;
-            border-radius: 2rem;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
-            border: 1px solid rgba(255,255,255,0.8);
         }
-
-        .logo h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #1e3c72, #2b4c7c);
+        .app-header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.5px;
         }
-        .logo span {
-            font-size: 0.9rem;
-            font-weight: 400;
-            background: none;
-            color: #4a627a;
-            display: block;
+        .app-header p {
+            color: #4b5563;
+            margin-top: 0.3rem;
         }
 
-        .storage-badge {
-            background: #ffffffcc;
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: #1e4663;
-            border: 1px solid #cbdde9;
-        }
-
-        /* grid layout */
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 0.9fr;
-            gap: 1.8rem;
-        }
-
-        /* cards */
-        .card {
-            background: rgba(255,255,255,0.92);
+        /* create post card */
+        .create-card {
+            background: rgba(255,255,255,0.96);
             backdrop-filter: blur(2px);
             border-radius: 2rem;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.05);
-            padding: 1.5rem 1.8rem;
-            transition: transform 0.2s ease, box-shadow 0.2s;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
             border: 1px solid #ffffffaa;
+            transition: all 0.2s;
         }
 
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 18px 32px rgba(0,0,0,0.08);
-        }
-
-        .card h2 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            margin-bottom: 1.2rem;
+        .create-header {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            color: #1e2f3e;
-            border-left: 4px solid #2b6a9f;
-            padding-left: 1rem;
+            gap: 12px;
+            margin-bottom: 1rem;
         }
-
-        /* social platforms grid */
-        .platforms-grid {
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            border-radius: 50%;
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
-
-        .platform-card {
-            flex: 1 1 140px;
-            background: white;
-            border-radius: 1.5rem;
-            padding: 1rem 0.7rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid #e2edf2;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-        }
-        .platform-card:hover {
-            border-color: #2b6a9f;
-            background: #fafdff;
-            transform: scale(0.98);
-        }
-        .platform-card.selected {
-            background: #eef4fc;
-            border-color: #2b6a9f;
-            box-shadow: 0 6px 12px rgba(43,106,159,0.15);
-        }
-        .platform-icon {
-            font-size: 2.3rem;
-            margin-bottom: 0.5rem;
-        }
-        .platform-name {
+        .create-header h3 {
             font-weight: 600;
-            font-size: 0.9rem;
-        }
-        .status {
-            font-size: 0.7rem;
-            color: #2c7a4d;
-            margin-top: 5px;
         }
 
-        /* shared post area */
-        .post-area {
-            margin: 1.5rem 0;
-        }
         textarea {
             width: 100%;
             border-radius: 1.5rem;
-            border: 1px solid #cfdfe8;
-            padding: 1rem;
-            font-family: 'Inter', monospace;
-            font-size: 0.95rem;
+            border: 1.5px solid #e2e8f0;
+            padding: 1rem 1.2rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
             resize: vertical;
-            background: #ffffff;
+            background: #fefefe;
+            transition: 0.2s;
         }
         textarea:focus {
             outline: none;
-            border-color: #2b6a9f;
-            box-shadow: 0 0 0 2px rgba(43,106,159,0.2);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
         }
 
-        .btn-group {
+        /* media preview */
+        .media-preview {
+            margin: 1rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .preview-item {
+            position: relative;
+            display: inline-block;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: #f1f5f9;
+            max-width: 180px;
+        }
+        .preview-item img, .preview-item video {
+            width: 100%;
+            max-height: 140px;
+            object-fit: cover;
+            border-radius: 1rem;
+            border: 1px solid #ddd;
+        }
+        .remove-media {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .media-buttons {
             display: flex;
             gap: 1rem;
+            margin: 0.7rem 0;
             flex-wrap: wrap;
-            margin: 1rem 0 0.8rem;
         }
-        .btn {
+        .media-btn {
+            background: #f1f5f9;
             border: none;
-            background: #eef2f7;
-            padding: 0.6rem 1.4rem;
-            border-radius: 3rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
             font-weight: 500;
-            font-size: 0.85rem;
             cursor: pointer;
-            transition: all 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-        .btn-primary {
-            background: #2b6a9f;
-            color: white;
-            box-shadow: 0 2px 6px rgba(43,106,159,0.2);
-        }
-        .btn-primary:hover {
-            background: #1f537e;
-            transform: scale(0.97);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #b7cfdf;
-        }
-        .btn-outline:hover {
-            background: #e4edf5;
-        }
-
-        /* storage options */
-        .storage-options {
-            display: flex;
-            gap: 1rem;
-            margin: 1rem 0 1rem;
-            flex-wrap: wrap;
-        }
-        .storage-option {
-            background: #f1f5f9;
-            border-radius: 2rem;
-            padding: 0.5rem 1.2rem;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.1s;
-            border: 1px solid transparent;
-        }
-        .storage-option.active {
-            background: #2b6a9f;
-            color: white;
-            border-color: #ffffff80;
-        }
-        .saved-items {
-            background: #f8fafd;
-            border-radius: 1.5rem;
-            padding: 1rem;
-            margin-top: 1.2rem;
-            max-height: 240px;
-            overflow-y: auto;
-        }
-        .saved-item {
-            background: white;
-            border-radius: 1rem;
-            padding: 0.8rem;
-            margin-bottom: 0.7rem;
-            border-left: 4px solid #2b6a9f;
-            word-break: break-word;
+            gap: 8px;
             font-size: 0.85rem;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            transition: 0.2s;
         }
-        .meta-info {
-            font-size: 0.7rem;
-            color: #5c7c93;
-            margin-top: 5px;
-            display: flex;
-            justify-content: space-between;
+        .media-btn:hover {
+            background: #e2e8f0;
         }
-        .delete-item {
-            color: #bc6c6c;
-            cursor: pointer;
-            background: none;
+        .publish-btn {
+            background: linear-gradient(95deg, #2563eb, #3b82f6);
+            color: white;
             border: none;
-            font-size: 0.8rem;
-        }
-
-        /* chat integration panel */
-        .chat-panel {
-            margin-top: 1.2rem;
-            border-top: 1px solid #cfe0ea;
-            padding-top: 1rem;
-        }
-        .chat-apps {
-            display: flex;
-            gap: 1rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-        .chat-app-card {
-            background: #ffffffd9;
-            border-radius: 1.8rem;
-            padding: 0.75rem 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
+            padding: 0.7rem 1.8rem;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s;
-            border: 1px solid #dae9f0;
-            flex: 1;
-            justify-content: center;
+            box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+            margin-top: 0.5rem;
         }
-        .chat-app-card:hover {
-            background: #eef3fc;
-            border-color: #2b6a9f;
-        }
-        .chat-icon {
-            font-size: 1.6rem;
-        }
-        .connection-status {
-            background: #eef2fa;
-            border-radius: 2rem;
-            padding: 0.8rem;
-            text-align: center;
-            font-size: 0.85rem;
-            margin-top: 0.7rem;
-        }
-        .mock-chat-window {
-            background: #f1f6fe;
-            border-radius: 1.2rem;
-            padding: 0.8rem;
-            margin-top: 1rem;
-            font-size: 0.8rem;
-            color: #2c506e;
+        .publish-btn:hover {
+            transform: scale(0.97);
+            background: linear-gradient(95deg, #1d4ed8, #2563eb);
         }
 
-        footer {
-            margin-top: 2.5rem;
-            text-align: center;
-            font-size: 0.75rem;
-            color: #6082a0;
+        /* feed posts */
+        .feed-title {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin: 1.5rem 0 1rem;
+            flex-wrap: wrap;
         }
-        @media (max-width: 780px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
+        .feed-title h2 {
+            font-weight: 700;
+            font-size: 1.6rem;
+        }
+        .stats-badge {
+            background: #eef3ff;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+
+        .posts-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 1.8rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            padding: 1.3rem 1.5rem;
+            transition: 0.2s;
+            border: 1px solid #eef2f6;
+        }
+
+        .post-header {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        .post-avatar {
+            width: 44px;
+            height: 44px;
+            background: #cbd5e1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        .post-user {
+            font-weight: 700;
+        }
+        .post-time {
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+        .post-text {
+            font-size: 0.98rem;
+            line-height: 1.4;
+            margin: 0.8rem 0;
+            color: #1e293b;
+        }
+        .post-media {
+            margin: 0.8rem 0;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            max-width: 100%;
+        }
+        .post-media img, .post-media video {
+            max-width: 100%;
+            max-height: 380px;
+            border-radius: 1rem;
+            object-fit: cover;
+            width: auto;
+            border: 1px solid #eef2f0;
+        }
+        .actions {
+            display: flex;
+            gap: 1.8rem;
+            margin: 0.7rem 0 0.5rem;
+            border-top: 1px solid #edf2f7;
+            padding-top: 0.8rem;
+        }
+        .action-btn {
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #4a5568;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .action-btn.liked {
+            color: #ef4444;
+        }
+        .action-btn i {
+            font-size: 1.1rem;
+        }
+
+        .comments-section {
+            margin-top: 0.8rem;
+            background: #fafcff;
+            border-radius: 1.2rem;
+            padding: 0.6rem 0.2rem 0.2rem;
+        }
+        .comment-list {
+            max-height: 180px;
+            overflow-y: auto;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+        .single-comment {
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #ecf3f9;
+            display: flex;
+            gap: 8px;
+        }
+        .comment-user {
+            font-weight: 700;
+            min-width: 70px;
+        }
+        .comment-text {
+            color: #2d3a4b;
+        }
+        .add-comment {
+            display: flex;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .comment-input {
+            flex: 1;
+            border-radius: 2rem;
+            border: 1px solid #cbd5e1;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+        .comment-submit {
+            background: #eef2ff;
+            border: none;
+            border-radius: 2rem;
+            padding: 0.2rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        @media (max-width: 680px) {
             body {
                 padding: 1rem;
             }
+            .create-card {
+                padding: 1rem;
+            }
         }
-        .clear-btn {
-            background: #fff0e8;
-            color: #b45a3b;
+        .empty-feed {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 2rem;
+            color: #94a3b8;
+        }
+        .delete-post {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="main-header">
-        <div class="logo">
-            <h1>🌐 SocialSphere <span>connect · share · vault</span></h1>
+    <div class="app-header">
+        <h1><i class="fas fa-feather-alt"></i> SocialFlow</h1>
+        <p>Write posts, upload media, comment & like — all in one creative space</p>
+    </div>
+
+    <!-- CREATE POST SECTION -->
+    <div class="create-card">
+        <div class="create-header">
+            <div class="avatar"><i class="fas fa-user-astronaut"></i></div>
+            <div><h3>Create new post</h3><span style="font-size:0.75rem;">Share what's on your mind</span></div>
         </div>
-        <div class="storage-badge">
-            <i class="fas fa-database"></i> Persistent Storage Ready
+        <textarea id="postTextarea" rows="2" placeholder="Write something inspiring..."></textarea>
+        
+        <!-- Media upload -->
+        <div class="media-buttons">
+            <label class="media-btn" for="imageUpload"><i class="fas fa-image"></i> Upload Photo</label>
+            <input type="file" id="imageUpload" accept="image/*" style="display:none">
+            <label class="media-btn" for="videoUpload"><i class="fas fa-video"></i> Upload Video</label>
+            <input type="file" id="videoUpload" accept="video/mp4,video/webm,video/quicktime" style="display:none">
+        </div>
+        <div id="mediaPreviewArea" class="media-preview"></div>
+        
+        <div style="display: flex; justify-content: flex-end;">
+            <button id="publishPostBtn" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish post</button>
         </div>
     </div>
 
-    <div class="dashboard">
-        <!-- LEFT: Social Media Platforms + Post + Storage -->
-        <div class="card">
-            <h2><i class="fab fa-buffer"></i> Social Platforms</h2>
-            <div class="platforms-grid" id="platformsContainer">
-                <!-- dynamic platforms from JS -->
-            </div>
-            <div class="post-area">
-                <label style="font-weight:500; margin-bottom: 8px; display:block;"><i class="far fa-comment-dots"></i> Create a post / note</label>
-                <textarea id="postContent" rows="3" placeholder="What's on your mind? Share updates, thoughts, or media ideas..."></textarea>
-                <div class="btn-group">
-                    <button id="shareBtn" class="btn btn-primary"><i class="fas fa-share-alt"></i> Share to selected</button>
-                    <button id="saveToStorageBtn" class="btn btn-outline"><i class="fas fa-save"></i> Save to Storage</button>
-                </div>
-            </div>
-
-            <h2 style="margin-top: 0.5rem;"><i class="fas fa-box-archive"></i> Storage Options</h2>
-            <div class="storage-options" id="storageOptionsContainer">
-                <!-- localStorage, sessionStorage -->
-            </div>
-            <div class="btn-group" style="margin-top: 0;">
-                <button id="loadFromStorageBtn" class="btn btn-outline"><i class="fas fa-folder-open"></i> Load saved posts</button>
-                <button id="clearAllStorageBtn" class="btn clear-btn"><i class="fas fa-trash-alt"></i> Clear all saved</button>
-            </div>
-            <div id="savedEntriesArea" class="saved-items">
-                <div style="color:#8aaec0; text-align:center; padding:1rem;"><i class="fas fa-cloud-upload-alt"></i> Saved items will appear here</div>
-            </div>
-        </div>
-
-        <!-- RIGHT: Chat integration + connection panel -->
-        <div class="card">
-            <h2><i class="fas fa-comments"></i> Connect to Chat Apps</h2>
-            <p style="margin-bottom: 0.8rem; font-size:0.9rem;">Choose a messaging platform & integrate with external chat (demo bridge)</p>
-            <div class="chat-apps" id="chatAppsList">
-                <!-- chat apps: slack, discord, telegram, WhatsApp, custom -->
-            </div>
-            <div id="chatConnectionStatus" class="connection-status">
-                <i class="fas fa-plug"></i> No chat connected. Click any app to simulate connection.
-            </div>
-            <div class="chat-panel">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span><strong><i class="fas fa-exchange-alt"></i> Bridge message</strong></span>
-                    <span style="font-size:0.7rem;">(sync with storage)</span>
-                </div>
-                <div class="mock-chat-window" id="mockChatLog">
-                    💬 Chat bridge ready — send a post or storage item to chat.
-                </div>
-                <div class="btn-group" style="margin-top: 0.7rem;">
-                    <button id="sendSelectedPostToChat" class="btn btn-outline"><i class="fab fa-telegram-plane"></i> Send latest post to chat</button>
-                    <button id="sendStorageToChat" class="btn btn-outline"><i class="fas fa-archive"></i> Send saved items to chat</button>
-                </div>
-            </div>
-            <div style="margin-top: 1rem; font-size:0.75rem; background:#eef2f5; border-radius:1rem; padding:0.5rem 1rem;">
-                <i class="fas fa-info-circle"></i> Storage: choose LocalStorage (persistent) or SessionStorage (tab session). All shared posts & notes can be stored and retrieved.
-            </div>
-        </div>
+    <!-- FEED SECTION -->
+    <div class="feed-title">
+        <h2><i class="fas fa-newspaper"></i> Community Feed</h2>
+        <div class="stats-badge" id="postCountBadge">0 posts</div>
     </div>
-    <footer>
-        <i class="fas fa-shield-alt"></i> Your content stays in browser storage • Connect chat simulates external integration
-    </footer>
+    <div id="postsFeed" class="posts-container">
+        <!-- dynamic posts injected here -->
+        <div class="empty-feed"><i class="fas fa-comment-dots"></i> No posts yet. Create the first one! ✨</div>
+    </div>
 </div>
 
 <script>
-    // ---------- SOCIAL PLATFORMS DATA ----------
-    const platforms = [
-        { name: "Twitter", iconClass: "fab fa-twitter", color: "#1DA1F2" },
-        { name: "Instagram", iconClass: "fab fa-instagram", color: "#E4405F" },
-        { name: "Facebook", iconClass: "fab fa-facebook", color: "#1877F2" },
-        { name: "LinkedIn", iconClass: "fab fa-linkedin", color: "#0A66C2" },
-        { name: "TikTok", iconClass: "fab fa-tiktok", color: "#000000" },
-        { name: "Pinterest", iconClass: "fab fa-pinterest", color: "#BD081C" }
-    ];
+    // ----- DATA MODEL -----
+    let posts = [];   // each post: { id, text, mediaType, mediaDataURL, likes, comments, timestamp, userName }
 
-    let selectedPlatform = "Twitter";   // default selected
-    let currentStorageType = "localStorage";   // 'localStorage' or 'sessionStorage'
-    
-    // Helper: get storage object
-    function getStorageEngine() {
-        return currentStorageType === "localStorage" ? localStorage : sessionStorage;
+    // Helper: generate random username for demo
+    const usernames = ["Alex Rivera", "Jamie Chen", "Taylor Swiftie", "Morgan Reed", "Casey Kim", "Jordan Lee", "Sam Parker"];
+    function randomUsername() {
+        return usernames[Math.floor(Math.random() * usernames.length)];
     }
 
-    // Storage key for saved posts
-    const STORAGE_KEY = "social_hub_posts";
+    // Storage keys
+    const STORAGE_KEY = "socialflow_posts";
 
-    // Load posts from current storage
-    function loadSavedPosts() {
-        const storage = getStorageEngine();
-        const raw = storage.getItem(STORAGE_KEY);
-        if (!raw) return [];
-        try {
-            return JSON.parse(raw);
-        } catch(e) { return []; }
-    }
-
-    // Save posts array to current storage
-    function persistPosts(posts) {
-        const storage = getStorageEngine();
-        storage.setItem(STORAGE_KEY, JSON.stringify(posts));
-    }
-
-    // Add a new post item (text, source platform, timestamp)
-    function addNewPost(content, sourcePlatform = "Manual") {
-        if (!content.trim()) {
-            alert("Cannot save empty post.");
-            return false;
+    // load from localStorage
+    function loadPostsFromStorage() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            try {
+                posts = JSON.parse(stored);
+                // ensure each post has comments array & likes count structure (migration)
+                posts = posts.map(p => ({
+                    ...p,
+                    comments: p.comments || [],
+                    likes: typeof p.likes === 'number' ? p.likes : 0,
+                    likedBy: p.likedBy || []
+                }));
+            } catch(e) { posts = []; }
+        } else {
+            // demo seed post with media sample (just text)
+            posts = [];
+            // optional seed to showcase
+            const demoPost = {
+                id: Date.now() + 1,
+                text: "Welcome to SocialFlow! 🎉 You can upload photos, videos, leave comments and like posts. Everything saves automatically.",
+                mediaType: null,
+                mediaDataURL: null,
+                likes: 5,
+                likedBy: [],
+                comments: [{ username: "Moderator", text: "Awesome platform!" }],
+                timestamp: new Date().toLocaleString(),
+                userName: "SocialFlow Team"
+            };
+            posts.push(demoPost);
         }
-        const posts = loadSavedPosts();
-        const newPost = {
-            id: Date.now(),
-            content: content.trim(),
-            platform: sourcePlatform,
-            timestamp: new Date().toLocaleString(),
-            storageType: currentStorageType
-        };
-        posts.unshift(newPost); // newest first
-        persistPosts(posts);
-        return true;
+        renderFeed();
+        updateStats();
+        saveToLocalStorage();
     }
 
-    // Render saved items in the left panel
-    function renderSavedItems() {
-        const container = document.getElementById("savedEntriesArea");
-        const posts = loadSavedPosts();
+    function saveToLocalStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+    }
+
+    function updateStats() {
+        document.getElementById("postCountBadge").innerHTML = `${posts.length} post${posts.length !== 1 ? 's' : ''}`;
+    }
+
+    // Render all posts
+    function renderFeed() {
+        const feedContainer = document.getElementById("postsFeed");
         if (!posts.length) {
-            container.innerHTML = `<div style="color:#8aaec0; text-align:center; padding:1rem;"><i class="fas fa-inbox"></i> No saved posts. Write something & save!</div>`;
+            feedContainer.innerHTML = `<div class="empty-feed"><i class="fas fa-comment-dots"></i> No posts yet. Create the first one! ✨</div>`;
             return;
         }
-        container.innerHTML = posts.map(post => `
-            <div class="saved-item">
-                <div>📝 ${escapeHtml(post.content.length > 110 ? post.content.substring(0,110)+'...' : post.content)}</div>
-                <div class="meta-info">
-                    <span><i class="fas fa-hashtag"></i> ${escapeHtml(post.platform)}</span>
-                    <span><i class="far fa-clock"></i> ${escapeHtml(post.timestamp)}</span>
-                    <button class="delete-item" data-id="${post.id}"><i class="fas fa-times-circle"></i> delete</button>
+
+        feedContainer.innerHTML = posts.map(post => `
+            <div class="post-card" data-post-id="${post.id}">
+                <div class="post-header">
+                    <div class="post-avatar"><i class="fas fa-user-circle"></i></div>
+                    <div>
+                        <div class="post-user">${escapeHtml(post.userName || "Anonymous")}</div>
+                        <div class="post-time">${escapeHtml(post.timestamp)}</div>
+                    </div>
+                    <button class="delete-post" data-id="${post.id}" title="Delete post"><i class="fas fa-trash-alt"></i></button>
+                </div>
+                <div class="post-text">${escapeHtml(post.text).replace(/\n/g, '<br>')}</div>
+                ${post.mediaDataURL ? `
+                    <div class="post-media">
+                        ${post.mediaType === 'image' ? `<img src="${post.mediaDataURL}" alt="post media">` : 
+                          post.mediaType === 'video' ? `<video controls src="${post.mediaDataURL}"></video>` : ''}
+                    </div>
+                ` : ''}
+                <div class="actions">
+                    <button class="action-btn like-btn" data-id="${post.id}">
+                        <i class="fa-${post.likedBy && post.likedBy.includes(getCurrentUserId()) ? 'solid' : 'regular'} fa-heart"></i> 
+                        <span class="like-count">${post.likes || 0}</span> Likes
+                    </button>
+                    <button class="action-btn comment-toggle" data-id="${post.id}">
+                        <i class="far fa-comment-dots"></i> Comments (${post.comments?.length || 0})
+                    </button>
+                </div>
+                <div class="comments-section" id="comments-${post.id}" style="display: none;">
+                    <div class="comment-list" id="commentList-${post.id}">
+                        ${renderComments(post.comments || [])}
+                    </div>
+                    <div class="add-comment">
+                        <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="Write a comment...">
+                        <button class="comment-submit" data-id="${post.id}">Post</button>
+                    </div>
                 </div>
             </div>
         `).join('');
-        // attach delete events
-        document.querySelectorAll('.delete-item').forEach(btn => {
+
+        // attach like listeners
+        document.querySelectorAll('.like-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const postId = parseInt(btn.getAttribute('data-id'));
+                handleLike(postId);
+            });
+        });
+        // attach comment toggle
+        document.querySelectorAll('.comment-toggle').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const postId = parseInt(btn.getAttribute('data-id'));
+                const commentDiv = document.getElementById(`comments-${postId}`);
+                if (commentDiv.style.display === 'none') commentDiv.style.display = 'block';
+                else commentDiv.style.display = 'none';
+            });
+        });
+        // attach comment submit
+        document.querySelectorAll('.comment-submit').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const postId = parseInt(btn.getAttribute('data-id'));
+                const inputField = document.getElementById(`commentInput-${postId}`);
+                const commentText = inputField.value.trim();
+                if (commentText) {
+                    addCommentToPost(postId, commentText);
+                    inputField.value = '';
+                } else alert("Write a comment first.");
+            });
+        });
+        // delete post listeners
+        document.querySelectorAll('.delete-post').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const id = parseInt(btn.getAttribute('data-id'));
-                deletePostById(id);
+                if (confirm("Delete this post permanently?")) {
+                    posts = posts.filter(p => p.id !== id);
+                    saveToLocalStorage();
+                    renderFeed();
+                    updateStats();
+                }
             });
         });
     }
-    
-    function deletePostById(id) {
-        let posts = loadSavedPosts();
-        posts = posts.filter(p => p.id !== id);
-        persistPosts(posts);
-        renderSavedItems();
-        showChatMessage(`🗑️ Deleted a saved post from ${currentStorageType}.`, "system");
-    }
-    
-    function clearAllStorage() {
-        if (confirm(`Are you sure you want to delete ALL saved posts from ${currentStorageType === 'localStorage' ? 'LocalStorage (persistent)' : 'SessionStorage'}?`)) {
-            const storage = getStorageEngine();
-            storage.removeItem(STORAGE_KEY);
-            renderSavedItems();
-            showChatMessage(`🧹 Cleared all saved posts from ${currentStorageType}.`, "system");
-        }
+
+    function renderComments(commentsArray) {
+        if (!commentsArray.length) return '<div style="padding:5px; color:#8ba0bc;">No comments yet. Be the first!</div>';
+        return commentsArray.map(c => `
+            <div class="single-comment">
+                <span class="comment-user">${escapeHtml(c.username)}</span>
+                <span class="comment-text">${escapeHtml(c.text)}</span>
+            </div>
+        `).join('');
     }
 
-    // simple escape helper
+    function getCurrentUserId() {
+        let userId = localStorage.getItem("socialflow_userId");
+        if (!userId) {
+            userId = "user_" + Math.floor(Math.random() * 1000000);
+            localStorage.setItem("socialflow_userId", userId);
+        }
+        return userId;
+    }
+
+    function handleLike(postId) {
+        const postIndex = posts.findIndex(p => p.id === postId);
+        if (postIndex === -1) return;
+        const post = posts[postIndex];
+        const userId = getCurrentUserId();
+        if (!post.likedBy) post.likedBy = [];
+        const hasLiked = post.likedBy.includes(userId);
+        if (hasLiked) {
+            post.likes = Math.max(0, (post.likes || 0) - 1);
+            post.likedBy = post.likedBy.filter(id => id !== userId);
+        } else {
+            post.likes = (post.likes || 0) + 1;
+            post.likedBy.push(userId);
+        }
+        saveToLocalStorage();
+        renderFeed();  // re-render to update button states
+    }
+
+    function addCommentToPost(postId, commentText) {
+        const post = posts.find(p => p.id === postId);
+        if (!post) return;
+        if (!post.comments) post.comments = [];
+        const newComment = {
+            username: randomUsername(),
+            text: commentText.substring(0, 180),
+            timestamp: new Date().toISOString()
+        };
+        post.comments.push(newComment);
+        saveToLocalStorage();
+        // refresh only comments part without full rerender? but full rerender is safe
+        renderFeed();
+        // auto expand comments section after comment
+        const commentDiv = document.getElementById(`comments-${postId}`);
+        if (commentDiv) commentDiv.style.display = 'block';
+    }
+
+    // Helper for escaping
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
-            if(m === '&') return '&amp;';
-            if(m === '<') return '&lt;';
-            if(m === '>') return '&gt;';
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
-        });
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) { return c; });
     }
 
-    // Share current post to selected platform (simulated)
-    function shareToPlatform(content) {
-        if (!content.trim()) {
-            alert("Write something to share!");
-            return false;
-        }
-        alert(`✨ Shared to ${selectedPlatform}:\n\n"${content.substring(0, 120)}${content.length>120 ? '...' : ''}"`);
-        // optional: add also to storage as shared post?
-        return true;
+    // ----- MEDIA UPLOAD & PREVIEW HANDLING -----
+    let currentMediaFile = null;
+    let currentMediaType = null;  // 'image' or 'video'
+    let currentMediaDataURL = null;
+
+    const imageInput = document.getElementById("imageUpload");
+    const videoInput = document.getElementById("videoUpload");
+    const previewArea = document.getElementById("mediaPreviewArea");
+
+    function clearPreview() {
+        previewArea.innerHTML = '';
+        currentMediaFile = null;
+        currentMediaType = null;
+        currentMediaDataURL = null;
     }
 
-    // ---------- CHAT INTEGRATION (simulate external connection) ----------
-    let activeChatApp = null;   // holds connected app name
-    
-    const chatApps = [
-        { name: "Slack", icon: "fab fa-slack", color: "#4A154B" },
-        { name: "Discord", icon: "fab fa-discord", color: "#5865F2" },
-        { name: "Telegram", icon: "fab fa-telegram", color: "#26A5E4" },
-        { name: "WhatsApp", icon: "fab fa-whatsapp", color: "#25D366" },
-        { name: "Matrix (custom)", icon: "fas fa-comment-dots", color: "#0dbd8b" }
-    ];
-    
-    function connectToChat(appName) {
-        activeChatApp = appName;
-        const statusDiv = document.getElementById("chatConnectionStatus");
-        statusDiv.innerHTML = `<i class="fab fa-${appName.toLowerCase() === 'matrix (custom)' ? 'comment-dots' : appName.toLowerCase()}"></i> ✅ Connected to <strong>${appName}</strong> (simulated). You can now send messages.`;
-        statusDiv.style.background = "#e0f0ea";
-        showChatMessage(`🔌 Connected to ${appName} chat bridge. Send posts or saved items.`, "info");
+    function displayPreview(file, type) {
+        clearPreview();
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentMediaDataURL = e.target.result;
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'preview-item';
+            if (type === 'image') {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                previewDiv.appendChild(img);
+            } else if (type === 'video') {
+                const video = document.createElement('video');
+                video.src = e.target.result;
+                video.controls = true;
+                video.style.maxHeight = '140px';
+                previewDiv.appendChild(video);
+            }
+            const removeBtn = document.createElement('div');
+            removeBtn.className = 'remove-media';
+            removeBtn.innerHTML = '<i class="fas fa-times-circle"></i>';
+            removeBtn.onclick = () => clearPreview();
+            previewDiv.appendChild(removeBtn);
+            previewArea.appendChild(previewDiv);
+        };
+        reader.readAsDataURL(file);
+        currentMediaFile = file;
+        currentMediaType = type;
     }
-    
-    function showChatMessage(msg, type = "user") {
-        const chatLog = document.getElementById("mockChatLog");
-        const prefix = type === "user" ? "📱 You → " : (type === "system" ? "🤖 System: " : "💬 Bridge: ");
-        const msgHtml = `<div style="border-bottom: 1px solid #cddfe8; padding: 4px 0; font-size:0.8rem;"><span style="font-weight:500;">${prefix}</span>${escapeHtml(msg)}</div>`;
-        chatLog.innerHTML = msgHtml + chatLog.innerHTML;
-        if (chatLog.children.length > 12) {
-            while(chatLog.children.length > 12) chatLog.removeChild(chatLog.lastChild);
+
+    imageInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            if (file.type.startsWith('image/')) {
+                displayPreview(file, 'image');
+            } else alert("Please select a valid image file.");
         }
-    }
-    
-    function sendToActiveChat(messageContent, sourceLabel = "Note") {
-        if (!activeChatApp) {
-            alert("Please connect to a chat application first (click on any chat app)");
-            return false;
+        imageInput.value = '';
+    });
+
+    videoInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            if (file.type.startsWith('video/')) {
+                displayPreview(file, 'video');
+            } else alert("Please select a valid video file (mp4, webm).");
         }
-        const finalMessage = `[${sourceLabel}] ${messageContent}`;
-        showChatMessage(`Sent to ${activeChatApp}: "${finalMessage.substring(0, 100)}${finalMessage.length > 100 ? '…' : ''}"`, "user");
-        // Also simulate external integration notification
-        return true;
-    }
-    
-    // Send the most recent unsaved post OR current textarea content (if any)
-    function sendCurrentPostToChat() {
-        const postText = document.getElementById("postContent").value.trim();
-        if (!postText) {
-            alert("Write something in the post area before sending to chat.");
+        videoInput.value = '';
+    });
+
+    // publish post logic
+    document.getElementById("publishPostBtn").addEventListener("click", () => {
+        const postText = document.getElementById("postTextarea").value.trim();
+        if (!postText && !currentMediaDataURL) {
+            alert("Please write something or attach a photo/video.");
             return;
         }
-        sendToActiveChat(postText, "Post from SocialHub");
-    }
-    
-    function sendSavedItemsToChat() {
-        const posts = loadSavedPosts();
-        if (!posts.length) {
-            alert("No saved posts in current storage. Save something first!");
-            return;
-        }
-        if (!activeChatApp) {
-            alert("Connect to a chat app first to send saved items.");
-            return;
-        }
-        const latestThree = posts.slice(0, 3);
-        latestThree.forEach((post, idx) => {
-            setTimeout(() => {
-                sendToActiveChat(post.content, `Saved #${idx+1} (${post.platform})`);
-            }, idx * 200);
+        const newPost = {
+            id: Date.now(),
+            text: postText || "📸 Shared media",
+            mediaType: currentMediaType,
+            mediaDataURL: currentMediaDataURL,
+            likes: 0,
+            likedBy: [],
+            comments: [],
+            timestamp: new Date().toLocaleString(),
+            userName: randomUsername(),
+        };
+        posts.unshift(newPost);  // newest first
+        saveToLocalStorage();
+        // reset form
+        document.getElementById("postTextarea").value = '';
+        clearPreview();
+        renderFeed();
+        updateStats();
+        // optional small scroll
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // initial load and event listeners for storage options: persistence already active
+    loadPostsFromStorage();
+    // Additional feature: double check that posts array always has correct fields
+    window.addEventListener('load', () => {
+        // fallback for any old posts without comments array
+        let changed = false;
+        posts.forEach(p => {
+            if (!p.comments) { p.comments = []; changed = true; }
+            if (p.likes === undefined) { p.likes = 0; changed = true; }
+            if (!p.likedBy) { p.likedBy = []; changed = true; }
         });
-        if (latestThree.length < posts.length) {
-            setTimeout(() => {
-                showChatMessage(`✨ +${posts.length - latestThree.length} more saved items. Use load to see all.`, "system");
-            }, latestThree.length * 200 + 50);
-        }
-    }
-    
-    // ----- UI Rendering & event binding -----
-    function renderPlatforms() {
-        const container = document.getElementById("platformsContainer");
-        container.innerHTML = platforms.map(p => `
-            <div class="platform-card ${selectedPlatform === p.name ? 'selected' : ''}" data-platform="${p.name}">
-                <div class="platform-icon" style="color: ${p.color}"><i class="${p.iconClass}"></i></div>
-                <div class="platform-name">${p.name}</div>
-                <div class="status">${selectedPlatform === p.name ? '✓ selected' : ''}</div>
-            </div>
-        `).join('');
-        // attach event listeners
-        document.querySelectorAll('.platform-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const plat = card.getAttribute('data-platform');
-                selectedPlatform = plat;
-                renderPlatforms();
-            });
-        });
-    }
-    
-    function renderStorageOptions() {
-        const container = document.getElementById("storageOptionsContainer");
-        container.innerHTML = `
-            <div class="storage-option ${currentStorageType === 'localStorage' ? 'active' : ''}" data-storage="localStorage"><i class="fas fa-database"></i> LocalStorage (persistent)</div>
-            <div class="storage-option ${currentStorageType === 'sessionStorage' ? 'active' : ''}" data-storage="sessionStorage"><i class="fas fa-hourglass-half"></i> SessionStorage (tab only)</div>
-        `;
-        document.querySelectorAll('.storage-option').forEach(opt => {
-            opt.addEventListener('click', (e) => {
-                const newStorage = opt.getAttribute('data-storage');
-                if (newStorage === currentStorageType) return;
-                currentStorageType = newStorage;
-                renderStorageOptions();
-                renderSavedItems();   // refresh display based on new storage
-                showChatMessage(`Switched storage to ${currentStorageType === 'localStorage' ? 'LocalStorage (data remains)' : 'SessionStorage (resets on close)'}`, "system");
-            });
-        });
-    }
-    
-    function renderChatApps() {
-        const container = document.getElementById("chatAppsList");
-        container.innerHTML = chatApps.map(app => `
-            <div class="chat-app-card" data-chat="${app.name}">
-                <i class="${app.icon}" style="font-size:1.7rem; color:${app.color}"></i>
-                <span style="font-weight:500;">${app.name}</span>
-            </div>
-        `).join('');
-        document.querySelectorAll('.chat-app-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const chatName = card.getAttribute('data-chat');
-                connectToChat(chatName);
-            });
-        });
-    }
-    
-    // Share button: share to selected platform + optionally auto save?
-    function initButtons() {
-        document.getElementById("shareBtn").addEventListener("click", () => {
-            const content = document.getElementById("postContent").value;
-            if (!content.trim()) {
-                alert("Enter post content before sharing.");
-                return;
-            }
-            shareToPlatform(content);
-            // also give option to add to storage? We'll optionally ask if they want to save automatically
-            if (confirm("Also save this post to current storage?")) {
-                addNewPost(content, selectedPlatform);
-                renderSavedItems();
-                showChatMessage(`📌 Post saved to ${currentStorageType} under ${selectedPlatform}`, "system");
-            }
-        });
-        
-        document.getElementById("saveToStorageBtn").addEventListener("click", () => {
-            const content = document.getElementById("postContent").value;
-            if (!content.trim()) {
-                alert("Write something to save.");
-                return;
-            }
-            if (addNewPost(content, selectedPlatform)) {
-                renderSavedItems();
-                document.getElementById("postContent").value = "";
-                showChatMessage(`✅ Post saved to ${currentStorageType}`, "system");
-            }
-        });
-        
-        document.getElementById("loadFromStorageBtn").addEventListener("click", () => {
-            renderSavedItems();
-            const posts = loadSavedPosts();
-            if(posts.length) showChatMessage(`Loaded ${posts.length} entries from ${currentStorageType}.`, "system");
-            else showChatMessage(`No entries found in ${currentStorageType}.`, "system");
-        });
-        
-        document.getElementById("clearAllStorageBtn").addEventListener("click", clearAllStorage);
-        document.getElementById("sendSelectedPostToChat").addEventListener("click", sendCurrentPostToChat);
-        document.getElementById("sendStorageToChat").addEventListener("click", sendSavedItemsToChat);
-    }
-    
-    // initial render
-    function init() {
-        renderPlatforms();
-        renderStorageOptions();
-        renderChatApps();
-        initButtons();
-        renderSavedItems();
-        // set default active chat indicator none
-    }
-    
-    init();
+        if (changed) saveToLocalStorage();
+        renderFeed();
+    });
 </script>
 </body>
 </html>

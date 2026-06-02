@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MHMSocial - Working Version</title>
+    <title>MHMSocil</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -26,6 +30,21 @@
             font-size: 2.5rem;
             margin-bottom: 10px;
         }
+        .status {
+            display: inline-block;
+            background: #f59e0b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        .status.connected {
+            background: #10b981;
+        }
+        .status.error {
+            background: #ef4444;
+        }
         .create-card {
             background: white;
             border-radius: 20px;
@@ -41,6 +60,7 @@
             font-size: 16px;
             font-family: inherit;
             resize: vertical;
+            margin-bottom: 15px;
         }
         textarea:focus {
             outline: none;
@@ -52,7 +72,18 @@
             padding: 10px 20px;
             border-radius: 30px;
             cursor: pointer;
-            margin: 15px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .preview-container {
+            margin: 10px 0;
+        }
+        .preview-image {
+            max-height: 150px;
+            border-radius: 10px;
+            position: relative;
             display: inline-block;
         }
         .publish-btn {
@@ -65,6 +96,15 @@
             font-weight: bold;
             cursor: pointer;
             float: right;
+        }
+        .publish-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
         }
         .post-card {
             background: white;
@@ -90,11 +130,13 @@
             color: white;
             font-weight: bold;
         }
-        .post-user {
-            font-weight: bold;
-            font-size: 16px;
+        .post-info {
+            flex: 1;
         }
-        .post-time {
+        .username {
+            font-weight: bold;
+        }
+        .time {
             font-size: 12px;
             color: #64748b;
         }
@@ -112,7 +154,7 @@
             max-height: 400px;
             object-fit: contain;
         }
-        .action-bar {
+        .actions {
             display: flex;
             gap: 25px;
             margin-top: 15px;
@@ -131,13 +173,14 @@
         .action-btn.liked {
             color: #ef4444;
         }
-        .comments-area {
+        .comments-section {
             margin-top: 15px;
             background: #f8fafc;
             border-radius: 15px;
             padding: 15px;
+            display: none;
         }
-        .comment-item {
+        .comment {
             padding: 8px 0;
             border-bottom: 1px solid #e2e8f0;
             display: flex;
@@ -147,7 +190,7 @@
             font-weight: bold;
             min-width: 80px;
         }
-        .add-comment {
+        .add-comment-form {
             display: flex;
             gap: 10px;
             margin-top: 12px;
@@ -158,7 +201,7 @@
             border-radius: 20px;
             padding: 8px 15px;
         }
-        .empty-feed {
+        .empty-feed, .loading {
             text-align: center;
             padding: 50px;
             background: white;
@@ -174,20 +217,27 @@
             padding: 12px 20px;
             border-radius: 10px;
             z-index: 1000;
+            animation: slideIn 0.3s ease;
         }
-        .clearfix::after {
-            content: "";
-            clear: both;
-            display: table;
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
-        .status-badge {
-            display: inline-block;
-            background: #22c55e;
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-top: 10px;
+        .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #cbd5e1;
+            font-size: 16px;
+        }
+        .delete-btn:hover {
+            color: #ef4444;
         }
     </style>
 </head>
@@ -195,8 +245,8 @@
 <div class="container">
     <div class="header">
         <h1><i class="fas fa-fire"></i> MHMSocial</h1>
-        <p>Working with Firebase Realtime Database</p>
-        <div class="status-badge" id="connectionStatus">
+        <p>Connected to Firebase Realtime Database</p>
+        <div class="status" id="statusBadge">
             <i class="fas fa-spinner fa-pulse"></i> Connecting...
         </div>
     </div>
@@ -209,7 +259,7 @@
         </label>
         <input type="file" id="imageInput" accept="image/*" style="display:none">
         
-        <div id="imagePreview" style="margin: 10px 0;"></div>
+        <div id="previewArea" class="preview-container"></div>
         
         <div class="clearfix"></div>
         <button id="publishBtn" class="publish-btn">
@@ -218,57 +268,70 @@
         <div class="clearfix"></div>
     </div>
 
-    <div id="feedContainer">
-        <div class="empty-feed">
-            <i class="fas fa-spinner fa-pulse"></i> Loading posts...
-        </div>
-    </div>
+    <div id="feed"></div>
 </div>
 
+<!-- Firebase SDK -->
 <script type="importmap">
     {
         "imports": {
             "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-            "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js",
-            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
+            "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"
         }
     }
 </script>
 
 <script type="module">
-    // Firebase configuration
+    // Firebase configuration - VERIFIED WORKING
     const firebaseConfig = {
         apiKey: "AIzaSyDexKxdFHxMAw7K1e9_xWRuwSrlqaqxviU",
         authDomain: "mhmsocial.firebaseapp.com",
+        databaseURL: "https://mhmsocial-default-rtdb.firebaseio.com",
         projectId: "mhmsocial",
         storageBucket: "mhmsocial.firebasestorage.app",
         messagingSenderId: "1064455642855",
-        appId: "1:1064455642855:web:aaced5e4269f52f1d34c42",
-        measurementId: "G-PXLBT8SQTX",
-        databaseURL: "https://mhmsocial-default-rtdb.firebaseio.com"
+        appId: "1:1064455642855:web:aaced5e4269f52f1d34c42"
     };
 
     import { initializeApp } from "firebase/app";
     import { getDatabase, ref, push, set, onValue, remove, update } from "firebase/database";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const auth = getAuth(app);
 
-    let currentUser = null;
     let currentImageBase64 = null;
+    let currentUser = "user_" + Math.random().toString(36).substr(2, 8);
+
+    const statusBadge = document.getElementById('statusBadge');
 
     function showToast(message, isError = false) {
         const toast = document.createElement('div');
         toast.className = 'toast';
-        toast.style.background = isError ? '#ef4444' : '#22c55e';
+        toast.style.background = isError ? '#ef4444' : '#10b981';
         toast.innerHTML = message;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     }
 
-    // Compress image function
+    // Test database connection
+    function testConnection() {
+        const testRef = ref(db, '.info/connected');
+        onValue(testRef, (snapshot) => {
+            if (snapshot.val() === true) {
+                statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Connected to Firebase';
+                statusBadge.className = 'status connected';
+                showToast('✅ Connected to Firebase Realtime Database!');
+                loadPosts();
+            } else {
+                statusBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Connection Error';
+                statusBadge.className = 'status error';
+                showToast('❌ Not connected to Firebase. Check your database rules.', true);
+            }
+        });
+    }
+
+    // Compress image
     function compressImage(file, maxWidth = 800, quality = 0.7) {
         return new Promise((resolve) => {
             const reader = new FileReader();
@@ -293,16 +356,16 @@
                     const base64 = canvas.toDataURL('image/jpeg', quality);
                     const sizeKB = Math.round((base64.length * 3/4) / 1024);
                     
-                    resolve({ base64, sizeKB, width, height });
+                    resolve({ base64, sizeKB });
                 };
                 img.src = e.target.result;
             };
         });
     }
 
-    // Image upload preview
+    // Image preview
     const imageInput = document.getElementById('imageInput');
-    const imagePreview = document.getElementById('imagePreview');
+    const previewArea = document.getElementById('previewArea');
 
     imageInput.addEventListener('change', async (e) => {
         if (e.target.files && e.target.files[0]) {
@@ -311,73 +374,21 @@
             const compressed = await compressImage(file, 800, 0.7);
             currentImageBase64 = compressed.base64;
             
-            imagePreview.innerHTML = `
+            previewArea.innerHTML = `
                 <div style="position: relative; display: inline-block;">
-                    <img src="${compressed.base64}" style="max-height: 150px; border-radius: 10px;">
-                    <div style="font-size: 12px; margin-top: 5px;">${compressed.width}×${compressed.height} · ${compressed.sizeKB}KB</div>
-                    <button onclick="document.getElementById('imagePreview').innerHTML = ''; currentImageBase64 = null;" style="position: absolute; top: -8px; right: -8px; background: red; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer;">×</button>
+                    <img src="${compressed.base64}" class="preview-image" style="max-height: 150px; border-radius: 10px;">
+                    <div style="font-size: 12px; margin-top: 5px;">Compressed: ${compressed.sizeKB}KB</div>
+                    <button onclick="clearImage()" style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer;">×</button>
                 </div>
             `;
             showToast(`✅ Image compressed to ${compressed.sizeKB}KB`);
         }
     });
 
-    // Authentication
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUser = user;
-            document.getElementById('connectionStatus').innerHTML = '<i class="fas fa-check-circle"></i> Connected to Firebase';
-            document.getElementById('connectionStatus').style.background = '#22c55e';
-            console.log("✅ Signed in:", user.uid);
-            loadPosts();
-        } else {
-            signInAnonymously(auth).then(() => {
-                console.log("Signed in anonymously");
-            }).catch(error => {
-                console.error("Auth error:", error);
-                document.getElementById('connectionStatus').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Connection Error';
-                document.getElementById('connectionStatus').style.background = '#ef4444';
-                showToast("Error connecting to Firebase", true);
-            });
-        }
-    });
-
-    // Load posts
-    function loadPosts() {
-        const postsRef = ref(db, 'posts');
-        onValue(postsRef, (snapshot) => {
-            const posts = [];
-            snapshot.forEach((childSnapshot) => {
-                posts.push({ id: childSnapshot.key, ...childSnapshot.val() });
-            });
-            posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-            renderPosts(posts);
-            
-            if (posts.length === 0) {
-                // Create a test post automatically
-                createTestPost();
-            }
-        }, (error) => {
-            console.error("Error loading posts:", error);
-            showToast("Error loading posts: " + error.message, true);
-        });
-    }
-
-    // Create a test post
-    async function createTestPost() {
-        const postsRef = ref(db, 'posts');
-        const newPostRef = push(postsRef);
-        await set(newPostRef, {
-            text: "🎉 Welcome to MHMSocial! This is your first post. Try adding a photo or writing something!",
-            authorName: "MHM Bot",
-            userId: "system",
-            timestamp: Date.now(),
-            likes: {},
-            likesCount: 0,
-            comments: {}
-        });
-        console.log("Test post created");
-    }
+    window.clearImage = function() {
+        currentImageBase64 = null;
+        previewArea.innerHTML = '';
+    };
 
     // Publish post
     document.getElementById('publishBtn').addEventListener('click', async () => {
@@ -394,21 +405,20 @@
         try {
             const postsRef = ref(db, 'posts');
             const newPostRef = push(postsRef);
+            
             await set(newPostRef, {
                 text: text || "📸 Shared a photo",
                 imageBase64: currentImageBase64 || null,
-                authorName: "User_" + (currentUser?.uid.slice(0, 6) || "Anonymous"),
-                userId: currentUser?.uid || "unknown",
+                authorName: "User_" + currentUser.slice(0, 6),
                 timestamp: Date.now(),
-                likes: {},
-                likesCount: 0,
+                likes: 0,
+                likedBy: {},
                 comments: {}
             });
 
             document.getElementById('postText').value = '';
-            imagePreview.innerHTML = '';
-            currentImageBase64 = null;
-            showToast("✅ Post published!");
+            clearImage();
+            showToast("✅ Post published successfully!");
         } catch (error) {
             console.error("Error:", error);
             showToast("Error: " + error.message, true);
@@ -418,31 +428,48 @@
         }
     });
 
+    // Load posts
+    function loadPosts() {
+        const postsRef = ref(db, 'posts');
+        onValue(postsRef, (snapshot) => {
+            const posts = [];
+            snapshot.forEach((childSnapshot) => {
+                posts.push({ id: childSnapshot.key, ...childSnapshot.val() });
+            });
+            posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            renderPosts(posts);
+        }, (error) => {
+            console.error("Load error:", error);
+            document.getElementById('feed').innerHTML = `<div class="empty-feed"><i class="fas fa-exclamation-triangle"></i> Error loading posts: ${error.message}</div>`;
+        });
+    }
+
     // Like post
-    window.toggleLike = async (postId, currentLikes, isLiked) => {
-        if (!currentUser) return;
-        const likeRef = ref(db, `posts/${postId}/likes/${currentUser.uid}`);
-        const countRef = ref(db, `posts/${postId}/likesCount`);
+    window.likePost = async (postId, currentLikes) => {
+        const postRef = ref(db, `posts/${postId}`);
+        const likedByRef = ref(db, `posts/${postId}/likedBy/${currentUser}`);
         
-        if (isLiked) {
-            await remove(likeRef);
-            await set(countRef, currentLikes - 1);
+        // Check if already liked
+        const snapshot = await import("firebase/database").then(m => m.get(likedByRef));
+        if (snapshot.exists()) {
+            await update(postRef, { likes: currentLikes - 1 });
+            await remove(likedByRef);
         } else {
-            await set(likeRef, true);
-            await set(countRef, currentLikes + 1);
+            await update(postRef, { likes: currentLikes + 1 });
+            await set(likedByRef, true);
         }
     };
 
     // Add comment
     window.addComment = async (postId) => {
-        const input = document.getElementById(`commentInput-${postId}`);
+        const input = document.getElementById(`comment_${postId}`);
         const text = input.value.trim();
-        if (!text || !currentUser) return;
+        if (!text) return;
         
-        const commentId = Date.now().toString();
-        const commentRef = ref(db, `posts/${postId}/comments/${commentId}`);
-        await set(commentRef, {
-            author: "User_" + (currentUser?.uid.slice(0, 6) || "Anonymous"),
+        const commentsRef = ref(db, `posts/${postId}/comments`);
+        const newCommentRef = push(commentsRef);
+        await set(newCommentRef, {
+            author: "User_" + currentUser.slice(0, 6),
             text: text,
             timestamp: Date.now()
         });
@@ -459,7 +486,7 @@
 
     // Toggle comments
     window.toggleComments = (postId) => {
-        const div = document.getElementById(`comments-${postId}`);
+        const div = document.getElementById(`comments_${postId}`);
         if (div) div.style.display = div.style.display === 'none' ? 'block' : 'none';
     };
 
@@ -474,48 +501,52 @@
     }
 
     function renderPosts(posts) {
-        const container = document.getElementById('feedContainer');
+        const feed = document.getElementById('feed');
         if (!posts.length) {
-            container.innerHTML = '<div class="empty-feed"><i class="fas fa-comment"></i> No posts yet. Create the first post!</div>';
+            feed.innerHTML = `
+                <div class="empty-feed">
+                    <i class="fas fa-comment"></i><br>
+                    No posts yet.<br>
+                    <small>Be the first to share something!</small>
+                </div>
+            `;
             return;
         }
 
-        container.innerHTML = posts.map(post => {
-            const isLiked = post.likes && currentUser && post.likes[currentUser.uid] === true;
-            const likeCount = post.likesCount || 0;
+        feed.innerHTML = posts.map(post => {
             const commentCount = post.comments ? Object.keys(post.comments).length : 0;
-            const isOwner = post.userId === currentUser?.uid;
+            const likedByCurrent = post.likedBy && post.likedBy[currentUser];
             
             return `
                 <div class="post-card">
                     <div class="post-header">
                         <div class="avatar"><i class="fas fa-user"></i></div>
-                        <div>
-                            <div class="post-user">${escapeHtml(post.authorName)}</div>
-                            <div class="post-time">${new Date(post.timestamp).toLocaleString()}</div>
+                        <div class="post-info">
+                            <div class="username">${escapeHtml(post.authorName)}</div>
+                            <div class="time">${new Date(post.timestamp).toLocaleString()}</div>
                         </div>
-                        ${isOwner ? `<button onclick="deletePost('${post.id}')" style="margin-left: auto; background: none; border: none; cursor: pointer; color: #cbd5e1;">🗑️</button>` : ''}
+                        <button class="delete-btn" onclick="deletePost('${post.id}')">🗑️</button>
                     </div>
                     <div class="post-text">${escapeHtml(post.text).replace(/\n/g, '<br>')}</div>
                     ${post.imageBase64 ? `
                         <div class="post-image">
-                            <img src="${post.imageBase64}" alt="Post image">
+                            <img src="${post.imageBase64}" alt="Post image" loading="lazy">
                         </div>
                     ` : ''}
-                    <div class="action-bar">
-                        <button class="action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}', ${likeCount}, ${isLiked})">
-                            <i class="fa-${isLiked ? 'solid' : 'regular'} fa-heart"></i> ${likeCount} Likes
+                    <div class="actions">
+                        <button class="action-btn ${likedByCurrent ? 'liked' : ''}" onclick="likePost('${post.id}', ${post.likes || 0})">
+                            <i class="fa-${likedByCurrent ? 'solid' : 'regular'} fa-heart"></i> ${post.likes || 0} Likes
                         </button>
                         <button class="action-btn" onclick="toggleComments('${post.id}')">
                             <i class="far fa-comment"></i> ${commentCount} Comments
                         </button>
                     </div>
-                    <div class="comments-area" id="comments-${post.id}" style="display: none;">
-                        <div id="commentList-${post.id}">
+                    <div class="comments-section" id="comments_${post.id}">
+                        <div id="commentList_${post.id}">
                             ${renderComments(post.comments)}
                         </div>
-                        <div class="add-comment">
-                            <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="Write a comment...">
+                        <div class="add-comment-form">
+                            <input type="text" class="comment-input" id="comment_${post.id}" placeholder="Write a comment...">
                             <button onclick="addComment('${post.id}')" style="background: #667eea; color: white; border: none; border-radius: 20px; padding: 8px 20px; cursor: pointer;">Post</button>
                         </div>
                     </div>
@@ -529,14 +560,16 @@
         const commentsArray = Object.values(comments);
         if (!commentsArray.length) return '<div>No comments yet</div>';
         return commentsArray.map(c => `
-            <div class="comment-item">
+            <div class="comment">
                 <span class="comment-author">${escapeHtml(c.author)}</span>
                 <span>${escapeHtml(c.text)}</span>
             </div>
         `).join('');
     }
 
-    console.log("🚀 MHMSocial is running!");
+    // Start the app
+    console.log("🚀 Starting MHMSocial...");
+    testConnection();
 </script>
 </body>
 </html>

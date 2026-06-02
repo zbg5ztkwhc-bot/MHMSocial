@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>SocialCanvas | Post, Share & Engage</title>
+    <title>MHMSocial | Live Social Platform</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Fonts -->
@@ -45,14 +45,18 @@
             color: #475569;
             margin-top: 0.3rem;
         }
-        .storage-status {
+        .online-badge {
             display: inline-block;
-            background: #e6f0ff;
+            background: #10b981;
+            color: white;
             padding: 0.3rem 1rem;
             border-radius: 40px;
             font-size: 0.75rem;
             margin-top: 0.8rem;
-            color: #1e4a76;
+            font-weight: 500;
+        }
+        .online-badge i {
+            margin-right: 5px;
         }
 
         /* Create Post Card */
@@ -173,6 +177,10 @@
         .publish-btn:hover {
             transform: scale(0.97);
             background: linear-gradient(95deg, #1d4ed8, #2563eb);
+        }
+        .publish-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         /* Feed section */
@@ -333,45 +341,65 @@
             border-radius: 2rem;
             color: #94a3b8;
         }
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 2rem;
+            color: #3b82f6;
+        }
         footer {
             margin-top: 2.5rem;
             text-align: center;
             font-size: 0.75rem;
             color: #62748c;
         }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
         @media (max-width: 650px) {
             body { padding: 1rem; }
             .create-card { padding: 1rem; }
         }
-        .clear-storage {
-            background: #fee2e2;
-            border: none;
-            padding: 0.2rem 0.9rem;
-            border-radius: 2rem;
-            font-size: 0.7rem;
-            margin-left: 0.8rem;
-            cursor: pointer;
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1f2937;
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 0.8rem;
+            font-size: 0.85rem;
+            z-index: 1000;
+            animation: fadeInOut 3s ease;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(20px); }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1><i class="fas fa-hashtag"></i> SocialCanvas</h1>
-        <p>Express yourself — posts, images, videos, comments & likes</p>
-        <div class="storage-status">
-            <i class="fas fa-database"></i> Persistent storage active · All data saved locally
-            <button id="globalClearBtn" class="clear-storage"><i class="fas fa-trash-alt"></i> Reset all data</button>
+        <h1><i class="fas fa-fire"></i> MHMSocial</h1>
+        <p>Your voice, shared with the world — posts, photos, videos, comments & likes</p>
+        <div class="online-badge">
+            <i class="fas fa-globe"></i> LIVE ON FIREBASE · CLOUD STORAGE ACTIVE
         </div>
     </div>
 
     <!-- CREATE POST SECTION -->
     <div class="create-card">
         <div class="create-header">
-            <div class="avatar-icon"><i class="fas fa-feather-alt"></i></div>
-            <div><h3>Create new post</h3><span style="font-size:0.75rem;">Share text, photos or videos</span></div>
+            <div class="avatar-icon"><i class="fas fa-user-astronaut"></i></div>
+            <div><h3>Create a post</h3><span style="font-size:0.75rem;">Share text, photos or videos — stored in cloud</span></div>
         </div>
-        <textarea id="postContent" class="post-input" rows="2" placeholder="What's happening? Write your thoughts..."></textarea>
+        <textarea id="postContent" class="post-input" rows="2" placeholder="What's happening? Share with everyone... 🌍"></textarea>
         
         <div class="media-actions">
             <label class="media-btn" for="photoUpload"><i class="fas fa-camera"></i> Add Photo</label>
@@ -380,93 +408,236 @@
             <input type="file" id="videoUploadFile" accept="video/mp4,video/webm" style="display:none">
         </div>
         <div id="mediaPreview" class="preview-area"></div>
-        <div style="clear:both"></div>
-        <button id="publishPost" class="publish-btn"><i class="fas fa-paper-plane"></i> Publish post</button>
-        <div style="clear:both"></div>
+        <div class="clearfix"></div>
+        <button id="publishPost" class="publish-btn"><i class="fas fa-cloud-upload-alt"></i> Publish to Cloud</button>
+        <div class="clearfix"></div>
     </div>
 
     <!-- FEED SECTION -->
     <div class="feed-header">
-        <h2><i class="fas fa-stream"></i> Community feed</h2>
+        <h2><i class="fas fa-globe"></i> Global Feed</h2>
         <div class="post-counter" id="postCountDisplay">0 posts</div>
     </div>
     <div id="postsFeed" class="posts-container">
-        <div class="empty-feed"><i class="fas fa-spinner fa-pulse"></i> Loading posts...</div>
+        <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Connecting to Firebase...</div>
     </div>
     <footer>
-        <i class="fas fa-shield-alt"></i> All posts, comments and likes are saved automatically in your browser (localStorage)
+        <i class="fas fa-database"></i> Powered by Firebase Firestore & Storage · All data saved in cloud · Visible to everyone
     </footer>
 </div>
 
-<script>
-    // ---------- DATA MODEL ----------
-    let posts = [];          // each post: { id, text, mediaType, mediaURL, likes, likedBy, comments, timestamp, authorName }
-
-    // Helper: random usernames for demo (you can customize)
-    const namePool = ["Alex Morgan", "Jamie Wren", "Taylor Chen", "Jordan Blake", "Riley Santos", "Casey Lin", "Samira Kahn", "Morgan James"];
-    function getRandomName() {
-        return namePool[Math.floor(Math.random() * namePool.length)];
-    }
-
-    // Unique user ID for like tracking (persistent)
-    let currentUserId = localStorage.getItem("socialcanvas_user_id");
-    if (!currentUserId) {
-        currentUserId = "user_" + Math.random().toString(36).substr(2, 10);
-        localStorage.setItem("socialcanvas_user_id", currentUserId);
-    }
-
-    // Storage key
-    const STORAGE_POSTS_KEY = "socialcanvas_posts_data";
-
-    // Save to localStorage
-    function persistPosts() {
-        localStorage.setItem(STORAGE_POSTS_KEY, JSON.stringify(posts));
-    }
-
-    // Load posts from localStorage
-    function loadPostsFromStorage() {
-        const stored = localStorage.getItem(STORAGE_POSTS_KEY);
-        if (stored) {
-            try {
-                let parsed = JSON.parse(stored);
-                // ensure each post has required fields (migration)
-                posts = parsed.map(p => ({
-                    id: p.id,
-                    text: p.text || "",
-                    mediaType: p.mediaType || null,
-                    mediaURL: p.mediaURL || null,
-                    likes: typeof p.likes === 'number' ? p.likes : 0,
-                    likedBy: Array.isArray(p.likedBy) ? p.likedBy : [],
-                    comments: Array.isArray(p.comments) ? p.comments : [],
-                    timestamp: p.timestamp || new Date().toLocaleString(),
-                    authorName: p.authorName || getRandomName()
-                }));
-            } catch(e) { posts = []; }
+<!-- Import Firebase SDKs and Initialize -->
+<script type="importmap">
+    {
+        "imports": {
+            "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+            "firebase/storage": "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
         }
-        if (!posts.length) {
-            // Seed demo post
-            posts = [{
-                id: Date.now(),
-                text: "🎉 Welcome to SocialCanvas! Create posts, upload photos/videos, comment and like. Everything stays saved!",
-                mediaType: null,
-                mediaURL: null,
-                likes: 4,
-                likedBy: [],
-                comments: [{ author: "Community", text: "This is awesome!" }],
-                timestamp: new Date().toLocaleString(),
-                authorName: "SocialCanvas Team"
-            }];
-            persistPosts();
+    }
+</script>
+
+<script type="module">
+    // Firebase configuration (YOUR CONFIGURATION)
+    const firebaseConfig = {
+        apiKey: "AIzaSyDexKxdFHxMAw7K1e9_xWRuwSrlqaqxviU",
+        authDomain: "mhmsocial.firebaseapp.com",
+        projectId: "mhmsocial",
+        storageBucket: "mhmsocial.firebasestorage.app",
+        messagingSenderId: "1064455642855",
+        appId: "1:1064455642855:web:aaced5e4269f52f1d34c42",
+        measurementId: "G-PXLBT8SQTX"
+    };
+
+    import { initializeApp } from "firebase/app";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, updateDoc, doc, arrayUnion, arrayRemove, deleteDoc, serverTimestamp } from "firebase/firestore";
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let unsubscribePosts = null;
+
+    // Show toast notification
+    function showToast(message, isError = false) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.style.background = isError ? '#dc2626' : '#10b981';
+        toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Sign in anonymously
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUser = user;
+            console.log("✅ Signed in as:", user.uid);
+            showToast("Connected to Firebase! Posts are live.", false);
+            setupRealtimeListener();
+        } else {
+            signInAnonymously(auth).catch(error => {
+                console.error("Auth error:", error);
+                showToast("Error connecting to Firebase", true);
+            });
         }
-        updatePostCounter();
-        renderFeed();
+    });
+
+    function setupRealtimeListener() {
+        const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
+        unsubscribePosts = onSnapshot(q, (snapshot) => {
+            const posts = [];
+            snapshot.forEach(doc => {
+                posts.push({ id: doc.id, ...doc.data() });
+            });
+            renderFeed(posts);
+            document.getElementById("postCountDisplay").innerText = `${posts.length} post${posts.length !== 1 ? 's' : ''}`;
+        }, (error) => {
+            console.error("Snapshot error:", error);
+            showToast("Error loading posts", true);
+        });
     }
 
-    function updatePostCounter() {
-        document.getElementById("postCountDisplay").innerText = `${posts.length} post${posts.length !== 1 ? 's' : ''}`;
+    // Upload file to Firebase Storage
+    async function uploadFile(file, userId) {
+        const fileExt = file.type.split('/')[0];
+        const fileName = `${Date.now()}_${userId.slice(0, 8)}.${file.name.split('.').pop()}`;
+        const storageRef = ref(storage, `posts/${fileName}`);
+        
+        const uploadTask = await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        return { url, type: fileExt };
     }
 
-    // escape HTML
+    // Publish post
+    let currentMediaFile = null;
+    let currentMediaURL = null;
+
+    document.getElementById("publishPost").addEventListener("click", async () => {
+        const text = document.getElementById("postContent").value.trim();
+        if (!text && !currentMediaFile) {
+            showToast("Please write something or add media", true);
+            return;
+        }
+
+        if (!currentUser) {
+            showToast("Please wait, connecting...", true);
+            return;
+        }
+
+        const publishBtn = document.getElementById("publishPost");
+        publishBtn.disabled = true;
+        publishBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Publishing...';
+
+        try {
+            let mediaData = null;
+            if (currentMediaFile) {
+                const { url, type } = await uploadFile(currentMediaFile, currentUser.uid);
+                mediaData = { url, type };
+            }
+
+            await addDoc(collection(db, "posts"), {
+                text: text || "📸 Shared media",
+                media: mediaData,
+                authorName: "MHM_" + currentUser.uid.slice(0, 6),
+                userId: currentUser.uid,
+                timestamp: serverTimestamp(),
+                likes: [],
+                likesCount: 0,
+                comments: []
+            });
+
+            // Reset form
+            document.getElementById("postContent").value = "";
+            clearMediaPreview();
+            showToast("✅ Post published successfully! Everyone can see it.");
+        } catch (error) {
+            console.error("Publish error:", error);
+            showToast("Error: " + error.message, true);
+        } finally {
+            publishBtn.disabled = false;
+            publishBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Publish to Cloud';
+        }
+    });
+
+    // Like/Unlike function
+    window.toggleLike = async (postId, currentLikes, userLiked) => {
+        if (!currentUser) return;
+        const postRef = doc(db, "posts", postId);
+        try {
+            if (userLiked) {
+                await updateDoc(postRef, {
+                    likes: arrayRemove(currentUser.uid),
+                    likesCount: currentLikes - 1
+                });
+            } else {
+                await updateDoc(postRef, {
+                    likes: arrayUnion(currentUser.uid),
+                    likesCount: currentLikes + 1
+                });
+            }
+        } catch (error) {
+            console.error("Like error:", error);
+        }
+    };
+
+    // Add comment
+    window.addComment = async (postId, commentText) => {
+        if (!currentUser || !commentText.trim()) {
+            if (!commentText.trim()) showToast("Write a comment first", true);
+            return;
+        }
+        const postRef = doc(db, "posts", postId);
+        const newComment = {
+            id: Date.now(),
+            author: "User_" + currentUser.uid.slice(0, 6),
+            text: commentText.trim(),
+            timestamp: new Date().toISOString()
+        };
+        try {
+            const postDoc = await import("firebase/firestore").then(m => m.getDoc(postRef));
+            const existingComments = (await postDoc).data()?.comments || [];
+            await updateDoc(postRef, {
+                comments: arrayUnion(newComment)
+            });
+            showToast("Comment added!");
+        } catch (error) {
+            console.error("Comment error:", error);
+            showToast("Error adding comment", true);
+        }
+    };
+
+    // Delete post
+    window.deletePost = async (postId, mediaUrl) => {
+        if (!confirm("Delete this post permanently? This action cannot be undone.")) return;
+        try {
+            if (mediaUrl && mediaUrl.includes("firebasestorage")) {
+                try {
+                    const mediaRef = ref(storage, mediaUrl);
+                    await deleteObject(mediaRef);
+                } catch(e) { console.log("Media delete skipped"); }
+            }
+            await deleteDoc(doc(db, "posts", postId));
+            showToast("Post deleted successfully");
+        } catch (error) {
+            console.error("Delete error:", error);
+            showToast("Error deleting post", true);
+        }
+    };
+
+    // Toggle comments visibility
+    window.toggleComments = (postId) => {
+        const div = document.getElementById(`comments-${postId}`);
+        if (div) div.style.display = div.style.display === 'none' ? 'block' : 'none';
+    };
+
+    // Escape HTML
     function escapeHtml(str) {
         if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
@@ -474,13 +645,12 @@
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) { return c; });
+        });
     }
 
-    // render comments HTML
-    function renderCommentsList(commentsArray) {
-        if (!commentsArray.length) return '<div style="padding:5px; color:#8ba0bc;">💬 No comments yet. Be the first!</div>';
-        return commentsArray.map(c => `
+    function renderComments(comments) {
+        if (!comments || !comments.length) return '<div style="padding:5px; color:#8ba0bc;">💬 No comments yet. Be the first!</div>';
+        return comments.map(c => `
             <div class="comment-item">
                 <span class="comment-author">${escapeHtml(c.author)}</span>
                 <span>${escapeHtml(c.text)}</span>
@@ -488,176 +658,96 @@
         `).join('');
     }
 
-    // main render feed
-    function renderFeed() {
-        const feedContainer = document.getElementById("postsFeed");
+    // Render feed
+    function renderFeed(posts) {
+        const container = document.getElementById("postsFeed");
         if (!posts.length) {
-            feedContainer.innerHTML = `<div class="empty-feed"><i class="far fa-newspaper"></i> No posts yet. Create the first one!</div>`;
+            container.innerHTML = '<div class="empty-feed"><i class="fas fa-comment-dots"></i> No posts yet. Create the first post! 🚀</div>';
             return;
         }
 
-        feedContainer.innerHTML = posts.map(post => {
-            const userLiked = post.likedBy && post.likedBy.includes(currentUserId);
+        container.innerHTML = posts.map(post => {
+            const userLiked = post.likes && currentUser && post.likes.includes(currentUser.uid);
+            const isOwner = post.userId === currentUser?.uid;
+            const likesCount = post.likesCount || 0;
+            const commentsCount = post.comments?.length || 0;
+            
             return `
-            <div class="post-card" data-post-id="${post.id}">
+            <div class="post-card">
                 <div class="post-header">
-                    <div class="post-avatar"><i class="fas fa-user-astronaut"></i></div>
+                    <div class="post-avatar"><i class="fas fa-user-circle"></i></div>
                     <div class="post-user-info">
-                        <div class="post-username">${escapeHtml(post.authorName)}</div>
-                        <div class="post-time">${escapeHtml(post.timestamp)}</div>
+                        <div class="post-username">${escapeHtml(post.authorName || "Anonymous")}</div>
+                        <div class="post-time">${post.timestamp ? new Date(post.timestamp.toDate()).toLocaleString() : "Just now"}</div>
                     </div>
-                    <button class="delete-post" data-id="${post.id}" title="Delete post"><i class="fas fa-trash-alt"></i></button>
+                    ${isOwner ? `<button class="delete-post" onclick="deletePost('${post.id}', '${post.media?.url || ''}')"><i class="fas fa-trash-alt"></i></button>` : ''}
                 </div>
                 <div class="post-text">${escapeHtml(post.text).replace(/\n/g, '<br>')}</div>
-                ${post.mediaURL ? `
+                ${post.media ? `
                     <div class="post-media">
-                        ${post.mediaType === 'image' ? `<img src="${post.mediaURL}" alt="post media" loading="lazy">` : 
-                          post.mediaType === 'video' ? `<video controls src="${post.mediaURL}" style="max-width:100%"></video>` : ''}
+                        ${post.media.type === 'image' ? `<img src="${post.media.url}" alt="post media" loading="lazy">` : 
+                          `<video controls src="${post.media.url}" style="max-width:100%"></video>`}
                     </div>
                 ` : ''}
                 <div class="action-bar">
-                    <button class="action-btn like-button ${userLiked ? 'liked' : ''}" data-id="${post.id}">
-                        <i class="fa-${userLiked ? 'solid' : 'regular'} fa-heart"></i> 
-                        <span class="like-count">${post.likes || 0}</span> Likes
+                    <button class="action-btn ${userLiked ? 'liked' : ''}" onclick="toggleLike('${post.id}', ${likesCount}, ${userLiked})">
+                        <i class="fa-${userLiked ? 'solid' : 'regular'} fa-heart"></i> ${likesCount} Likes
                     </button>
-                    <button class="action-btn toggle-comments" data-id="${post.id}">
-                        <i class="far fa-comment-dots"></i> Comments (${post.comments?.length || 0})
+                    <button class="action-btn" onclick="toggleComments('${post.id}')">
+                        <i class="far fa-comment-dots"></i> Comments (${commentsCount})
                     </button>
                 </div>
-                <div class="comments-area" id="commentsArea-${post.id}" style="display: none;">
+                <div class="comments-area" id="comments-${post.id}" style="display: none;">
                     <div class="comment-list" id="commentList-${post.id}">
-                        ${renderCommentsList(post.comments || [])}
+                        ${renderComments(post.comments || [])}
                     </div>
                     <div class="add-comment-form">
-                        <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="Write a comment...">
-                        <button class="comment-submit" data-id="${post.id}">Post</button>
+                        <input type="text" class="comment-input" id="commentInput-${post.id}" placeholder="Write a comment..." onkeypress="if(event.key==='Enter') addComment('${post.id}', this.value)">
+                        <button class="comment-submit" onclick="addComment('${post.id}', document.getElementById('commentInput-${post.id}').value)">Post</button>
                     </div>
                 </div>
             </div>`;
         }).join('');
-
-        // attach like event
-        document.querySelectorAll('.like-button').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const postId = parseInt(btn.getAttribute('data-id'));
-                handleLikeToggle(postId);
-            });
-        });
-        // attach comment toggle
-        document.querySelectorAll('.toggle-comments').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const postId = parseInt(btn.getAttribute('data-id'));
-                const commentsDiv = document.getElementById(`commentsArea-${postId}`);
-                if (commentsDiv.style.display === 'none') commentsDiv.style.display = 'block';
-                else commentsDiv.style.display = 'none';
-            });
-        });
-        // attach comment submit
-        document.querySelectorAll('.comment-submit').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const postId = parseInt(btn.getAttribute('data-id'));
-                const inputField = document.getElementById(`commentInput-${postId}`);
-                const commentText = inputField.value.trim();
-                if (commentText) {
-                    addCommentToPost(postId, commentText);
-                    inputField.value = '';
-                } else alert("Please write a comment.");
-            });
-        });
-        // delete post
-        document.querySelectorAll('.delete-post').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const postId = parseInt(btn.getAttribute('data-id'));
-                if (confirm("Delete this post permanently?")) {
-                    posts = posts.filter(p => p.id !== postId);
-                    persistPosts();
-                    renderFeed();
-                    updatePostCounter();
-                }
-            });
-        });
     }
 
-    function handleLikeToggle(postId) {
-        const postIndex = posts.findIndex(p => p.id === postId);
-        if (postIndex === -1) return;
-        const post = posts[postIndex];
-        if (!post.likedBy) post.likedBy = [];
-        const alreadyLiked = post.likedBy.includes(currentUserId);
-        if (alreadyLiked) {
-            post.likes = Math.max(0, post.likes - 1);
-            post.likedBy = post.likedBy.filter(uid => uid !== currentUserId);
-        } else {
-            post.likes = (post.likes || 0) + 1;
-            post.likedBy.push(currentUserId);
-        }
-        persistPosts();
-        renderFeed();  // re-render to update UI
-    }
-
-    function addCommentToPost(postId, commentText) {
-        const post = posts.find(p => p.id === postId);
-        if (!post) return;
-        if (!post.comments) post.comments = [];
-        const newComment = {
-            author: getRandomName(),
-            text: commentText.substring(0, 200),
-            timestamp: Date.now()
-        };
-        post.comments.push(newComment);
-        persistPosts();
-        renderFeed();
-        // automatically expand comments section
-        const commentsDiv = document.getElementById(`commentsArea-${postId}`);
-        if (commentsDiv) commentsDiv.style.display = 'block';
-    }
-
-    // ------- MEDIA UPLOAD & PREVIEW -------
-    let currentMediaFile = null;
-    let currentMediaType = null;   // 'image' or 'video'
-    let currentMediaURL = null;
-
+    // Media upload preview
     const photoInput = document.getElementById("photoUpload");
     const videoInput = document.getElementById("videoUploadFile");
     const previewContainer = document.getElementById("mediaPreview");
 
-    function clearMediaPreview() {
+    window.clearMediaPreview = function() {
         previewContainer.innerHTML = '';
         currentMediaFile = null;
-        currentMediaType = null;
         currentMediaURL = null;
-    }
+    };
 
     function showPreview(file, type) {
         clearMediaPreview();
         const reader = new FileReader();
         reader.onload = function(e) {
             currentMediaURL = e.target.result;
-            const previewDiv = document.createElement('div');
-            previewDiv.className = 'preview-item';
+            const div = document.createElement('div');
+            div.className = 'preview-item';
             if (type === 'image') {
                 const img = document.createElement('img');
                 img.src = e.target.result;
-                previewDiv.appendChild(img);
-            } else if (type === 'video') {
+                div.appendChild(img);
+            } else {
                 const vid = document.createElement('video');
                 vid.src = e.target.result;
                 vid.controls = true;
                 vid.style.maxHeight = '140px';
-                previewDiv.appendChild(vid);
+                div.appendChild(vid);
             }
             const removeBtn = document.createElement('div');
             removeBtn.className = 'remove-preview';
             removeBtn.innerHTML = '<i class="fas fa-times-circle"></i>';
             removeBtn.onclick = () => clearMediaPreview();
-            previewDiv.appendChild(removeBtn);
-            previewContainer.appendChild(previewDiv);
+            div.appendChild(removeBtn);
+            previewContainer.appendChild(div);
         };
         reader.readAsDataURL(file);
         currentMediaFile = file;
-        currentMediaType = type;
     }
 
     photoInput.addEventListener('change', (e) => {
@@ -665,7 +755,7 @@
             const file = e.target.files[0];
             if (file.type.startsWith('image/')) {
                 showPreview(file, 'image');
-            } else alert("Please select a valid image.");
+            } else showToast("Please select a valid image", true);
         }
         photoInput.value = '';
     });
@@ -675,83 +765,14 @@
             const file = e.target.files[0];
             if (file.type.startsWith('video/')) {
                 showPreview(file, 'video');
-            } else alert("Please select a valid video (mp4, webm).");
+            } else showToast("Please select a valid video (mp4, webm)", true);
         }
         videoInput.value = '';
     });
 
-    // Publish post logic
-    document.getElementById("publishPost").addEventListener("click", () => {
-        const postText = document.getElementById("postContent").value.trim();
-        if (!postText && !currentMediaURL) {
-            alert("Please write something or add a photo/video.");
-            return;
-        }
-        const newPost = {
-            id: Date.now(),
-            text: postText || "📎 Shared media",
-            mediaType: currentMediaType,
-            mediaURL: currentMediaURL,
-            likes: 0,
-            likedBy: [],
-            comments: [],
-            timestamp: new Date().toLocaleString(),
-            authorName: getRandomName(),
-        };
-        posts.unshift(newPost);
-        persistPosts();
-        // reset form
-        document.getElementById("postContent").value = '';
-        clearMediaPreview();
-        renderFeed();
-        updatePostCounter();
-        // scroll to top to see new post
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // Global reset all data
-    document.getElementById("globalClearBtn").addEventListener("click", () => {
-        if (confirm("⚠️ WARNING: This will delete ALL posts, comments and likes permanently. This action cannot be undone. Continue?")) {
-            posts = [];
-            persistPosts();
-            // optional re-add a welcome seed post
-            posts = [{
-                id: Date.now(),
-                text: "✨ Fresh start! Create new posts, add images or videos. All data saved automatically.",
-                mediaType: null,
-                mediaURL: null,
-                likes: 1,
-                likedBy: [currentUserId],
-                comments: [],
-                timestamp: new Date().toLocaleString(),
-                authorName: "SocialCanvas"
-            }];
-            persistPosts();
-            renderFeed();
-            updatePostCounter();
-            clearMediaPreview();
-            document.getElementById("postContent").value = '';
-        }
-    });
-
-    // ---------- INITIAL LOAD ----------
-    loadPostsFromStorage();
-
-    // explanation: what you need to save the posted data
-    console.log("=== DATA PERSISTENCE EXPLANATION ===");
-    console.log("To save all posted data, this application uses browser's localStorage API.");
-    console.log("Required data structure for each post:");
-    console.log("  - id: unique identifier (number)");
-    console.log("  - text: post content (string)");
-    console.log("  - mediaType: 'image', 'video' or null");
-    console.log("  - mediaURL: base64 data URL or null (stores image/video inline)");
-    console.log("  - likes: number of likes");
-    console.log("  - likedBy: array of user IDs (to prevent duplicate likes)");
-    console.log("  - comments: array of objects { author, text, timestamp }");
-    console.log("  - timestamp: readable date string");
-    console.log("  - authorName: display name");
-    console.log("Additionally, we store currentUserId for like tracking.");
-    console.log("All data is saved under localStorage key 'socialcanvas_posts_data'.");
+    console.log("🔥 MHMSocial is LIVE with Firebase!");
+    console.log("Firestore URL: firestore.googleapis.com");
+    console.log("Storage: mhmsocial.firebasestorage.app");
 </script>
 </body>
 </html>

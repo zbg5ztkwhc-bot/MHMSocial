@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>MHMSocial + MHMChat | Integrated Platform</title>
+    <title>MHMSocial + MHMChat | Unified Auth</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Google Fonts -->
@@ -19,11 +19,87 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
-        /* Main Container */
-        .main-container {
+        /* Auth Screen (First Flow) */
+        .auth-container {
+            max-width: 450px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .auth-container h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .auth-container .subtitle {
+            color: #64748b;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .auth-input {
+            width: 100%;
+            padding: 14px 18px;
+            margin: 10px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 30px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .auth-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+        .auth-btn:hover {
+            transform: scale(0.98);
+        }
+        .auth-link {
+            margin-top: 20px;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .auth-error {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        .auth-success {
+            color: #10b981;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        /* Main App (Hidden until logged in) */
+        .main-app {
+            display: none;
+            width: 100%;
             max-width: 1300px;
             margin: 0 auto;
         }
@@ -41,17 +117,26 @@
         .header h1 i {
             margin-right: 10px;
         }
-        .status-badge {
-            display: inline-block;
-            background: #10b981;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 30px;
-            font-size: 12px;
+        .user-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 50px;
             margin-top: 10px;
+            font-size: 14px;
         }
-        .status-badge.offline {
-            background: #f59e0b;
+        .logout-header-btn {
+            background: rgba(239,68,68,0.8);
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
         }
 
         /* Two Column Layout */
@@ -339,8 +424,6 @@
             font-size: 24px;
             cursor: pointer;
         }
-
-        /* Iframe Container */
         .chat-iframe-container {
             flex: 1;
             background: white;
@@ -371,22 +454,6 @@
             color: white;
             font-size: 32px;
         }
-        .logout-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-top: 15px;
-            width: 100%;
-        }
-
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-        }
 
         @media (max-width: 900px) {
             .two-columns {
@@ -403,45 +470,71 @@
     </style>
 </head>
 <body>
-<div class="main-container">
+
+<!-- AUTH SCREEN (FIRST FLOW - BEFORE ANYTHING ELSE) -->
+<div id="authScreen" class="auth-container">
+    <h2><i class="fas fa-comments"></i> MHMChat</h2>
+    <div class="subtitle">Sign in to access MHMSocial</div>
+    
+    <div id="loginForm">
+        <input type="email" id="loginEmail" class="auth-input" placeholder="Email address" autocomplete="email">
+        <input type="password" id="loginPassword" class="auth-input" placeholder="Password" autocomplete="current-password">
+        <button id="loginBtn" class="auth-btn">Log In</button>
+        <div class="auth-link" id="showSignupLink">Don't have an account? Sign Up</div>
+        <div id="authError" class="auth-error"></div>
+    </div>
+
+    <div id="signupForm" style="display: none;">
+        <input type="email" id="signupEmail" class="auth-input" placeholder="Email address" autocomplete="email">
+        <input type="password" id="signupPassword" class="auth-input" placeholder="Password (min 6 characters)" autocomplete="new-password">
+        <button id="signupBtn" class="auth-btn">Create Account</button>
+        <div class="auth-link" id="showLoginLink">Already have an account? Log In</div>
+        <div id="signupError" class="auth-error"></div>
+        <div id="signupSuccess" class="auth-success"></div>
+    </div>
+</div>
+
+<!-- MAIN APP (HIDDEN UNTIL LOGGED IN) -->
+<div id="mainApp" class="main-app">
     <div class="header">
         <h1><i class="fas fa-fire"></i> MHMSocial</h1>
         <p>Share posts with photos • Integrated with MHMChat</p>
-        <div class="status-badge" id="socialStatus">
-            <i class="fas fa-spinner fa-pulse"></i> Loading...
+        <div class="user-badge">
+            <i class="fas fa-user-circle"></i>
+            <span id="navUserName">User</span>
+            <button id="navLogoutBtn" class="logout-header-btn">Logout</button>
         </div>
     </div>
 
     <div class="two-columns">
         <!-- Left Column: Social Feed -->
         <div class="social-feed" id="socialFeedContainer">
-            <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading your feed...</div>
+            <div class="empty-feed"><i class="fas fa-spinner fa-pulse"></i> Loading feed...</div>
         </div>
 
-        <!-- Right Column: User Info & Quick Actions -->
+        <!-- Right Column: User Info -->
         <div>
             <div class="user-info-card" id="userInfoCard">
                 <div class="user-avatar-large"><i class="fas fa-user"></i></div>
-                <h3 id="userNameDisplay">Guest</h3>
-                <p id="userEmailDisplay" style="color:#64748b; font-size:13px;">Not signed in</p>
-                <button class="logout-btn" id="logoutBtn" style="display:none;">Logout</button>
-                <button class="logout-btn" id="loginPromptBtn" style="background:#667eea;">Sign In to Post</button>
+                <h3 id="userNameDisplay">Loading...</h3>
+                <p id="userEmailDisplay" style="color:#64748b; font-size:13px;"></p>
+                <small style="color:#10b981;"><i class="fas fa-check-circle"></i> Authenticated</small>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Chat Popup Button -->
-<div class="chat-popup-btn" id="chatPopupBtn">
+<!-- Chat Popup Button (Only visible after login) -->
+<div id="chatPopupBtn" class="chat-popup-btn" style="display: none;">
     <i class="fas fa-comment-dots"></i>
 </div>
 
 <!-- Chat Modal -->
-<div class="chat-modal" id="chatModal">
+<div id="chatModal" class="chat-modal">
     <div class="chat-modal-content">
         <div class="chat-modal-header">
             <h3><i class="fas fa-comments"></i> MHMChat</h3>
-            <button class="close-chat" id="closeChatBtn">&times;</button>
+            <button id="closeChatBtn" class="close-chat">&times;</button>
         </div>
         <div class="chat-iframe-container">
             <iframe id="chatIframe" src="about:blank"></iframe>
@@ -455,15 +548,14 @@
         "imports": {
             "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
             "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js",
-            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
         }
     }
 </script>
 
 <script type="module">
     // ============================================
-    // FIREBASE CONFIGURATION (MHMSocial + MHMChat combined)
+    // FIREBASE CONFIGURATION (Shared across MHMSocial & MHMChat)
     // ============================================
     const firebaseConfig = {
         apiKey: "AIzaSyDexKxdFHxMAw7K1e9_xWRuwSrlqaqxviU",
@@ -476,7 +568,7 @@
     };
 
     import { initializeApp } from "firebase/app";
-    import { getDatabase, ref, push, set, onValue, get, remove, update } from "firebase/database";
+    import { getDatabase, ref, push, set, onValue, update, remove, get } from "firebase/database";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
     const app = initializeApp(firebaseConfig);
@@ -489,14 +581,19 @@
     let postsList = [];
 
     // DOM Elements
-    const socialContainer = document.getElementById('socialFeedContainer');
-    const statusBadge = document.getElementById('socialStatus');
+    const authScreen = document.getElementById('authScreen');
+    const mainApp = document.getElementById('mainApp');
+    const chatPopupBtn = document.getElementById('chatPopupBtn');
+    const chatModal = document.getElementById('chatModal');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+    const chatIframe = document.getElementById('chatIframe');
+    const navUserName = document.getElementById('navUserName');
+    const navLogoutBtn = document.getElementById('navLogoutBtn');
     const userNameDisplay = document.getElementById('userNameDisplay');
     const userEmailDisplay = document.getElementById('userEmailDisplay');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const loginPromptBtn = document.getElementById('loginPromptBtn');
+    const socialContainer = document.getElementById('socialFeedContainer');
 
-    // Helper functions
+    // Toast helper
     function showToast(message, isError = false) {
         const toast = document.createElement('div');
         toast.style.cssText = `position:fixed;bottom:80px;right:20px;background:${isError ? '#ef4444' : '#10b981'};color:white;padding:12px 20px;border-radius:12px;z-index:3000;font-size:14px;animation:fadeInOut 3s ease;`;
@@ -504,8 +601,6 @@
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     }
-
-    // Inject CSS animation
     const style = document.createElement('style');
     style.textContent = `@keyframes fadeInOut { 0% { opacity: 0; transform: translateX(50px); } 15% { opacity: 1; transform: translateX(0); } 85% { opacity: 1; } 100% { opacity: 0; transform: translateX(50px); } }`;
     document.head.appendChild(style);
@@ -540,8 +635,7 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     const base64 = canvas.toDataURL('image/jpeg', quality);
-                    const sizeKB = Math.round((base64.length * 3/4) / 1024);
-                    resolve({ base64, sizeKB });
+                    resolve({ base64 });
                 };
                 img.src = e.target.result;
             };
@@ -593,7 +687,7 @@
 
         postsList.forEach(post => {
             feedHtml += `
-                <div class="post-card" data-post-id="${post.id}">
+                <div class="post-card">
                     <div class="post-header">
                         <div class="post-avatar"><i class="fas fa-user-circle"></i></div>
                         <div class="post-user-info">
@@ -645,7 +739,6 @@
         const publishBtn = document.getElementById('publishBtn');
         if (!publishBtn) return;
 
-        // Image upload
         const imageInput = document.getElementById('imageUpload');
         const previewArea = document.getElementById('previewArea');
         
@@ -658,7 +751,7 @@
                     previewArea.innerHTML = `
                         <div class="preview-item">
                             <img src="${compressed.base64}" style="max-height:100px;">
-                            <div class="remove-preview" onclick="document.getElementById('previewArea').innerHTML = ''; currentImageBase64 = null;">×</div>
+                            <div class="remove-preview" onclick="document.getElementById('previewArea').innerHTML = ''; window.currentImageBase64 = null;">×</div>
                         </div>
                     `;
                 }
@@ -671,10 +764,7 @@
                 showToast("Please write something or add a photo", true);
                 return;
             }
-            if (!currentUser) {
-                showToast("Please sign in first", true);
-                return;
-            }
+            if (!currentUser) return;
 
             publishBtn.disabled = true;
             publishBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Publishing...';
@@ -708,7 +798,7 @@
     function attachPostEvents() {
         document.querySelectorAll('.like-btn').forEach(btn => {
             btn.onclick = async () => {
-                if (!currentUser) { showToast("Sign in to like", true); return; }
+                if (!currentUser) return;
                 const postId = btn.getAttribute('data-id');
                 const currentLikes = parseInt(btn.getAttribute('data-likes'));
                 const postRef = ref(rtdb, `posts/${postId}`);
@@ -734,7 +824,7 @@
 
         document.querySelectorAll('.comment-submit').forEach(btn => {
             btn.onclick = async () => {
-                if (!currentUser) { showToast("Sign in to comment", true); return; }
+                if (!currentUser) return;
                 const postId = btn.getAttribute('data-id');
                 const input = document.getElementById(`commentInput-${postId}`);
                 const text = input.value.trim();
@@ -763,155 +853,136 @@
             posts.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
             postsList = posts;
             renderFeed();
-            statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Connected';
-            statusBadge.classList.remove('offline');
-        }, (error) => {
-            console.error("Feed error:", error);
-            statusBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Connection issue';
-            statusBadge.classList.add('offline');
         });
     }
 
-    // Auth state listener
+    // ============================================
+    // AUTH FLOW (First Screen)
+    // ============================================
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const showSignupLink = document.getElementById('showSignupLink');
+    const showLoginLink = document.getElementById('showLoginLink');
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const authError = document.getElementById('authError');
+    const signupError = document.getElementById('signupError');
+    const signupSuccess = document.getElementById('signupSuccess');
+
+    showSignupLink.onclick = () => {
+        loginForm.style.display = 'none';
+        signupForm.style.display = 'block';
+        authError.textContent = '';
+        signupError.textContent = '';
+        signupSuccess.textContent = '';
+    };
+    showLoginLink.onclick = () => {
+        signupForm.style.display = 'none';
+        loginForm.style.display = 'block';
+        authError.textContent = '';
+        signupError.textContent = '';
+        signupSuccess.textContent = '';
+    };
+
+    loginBtn.onclick = async () => {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) {
+            authError.textContent = 'Please fill all fields';
+            return;
+        }
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+            authError.textContent = err.message;
+        }
+    };
+
+    signupBtn.onclick = async () => {
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        if (!email || !password) {
+            signupError.textContent = 'Please fill all fields';
+            return;
+        }
+        if (password.length < 6) {
+            signupError.textContent = 'Password must be at least 6 characters';
+            return;
+        }
+        try {
+            await createUserWithEmailAndPassword(auth, email, password);
+            signupSuccess.textContent = 'Account created successfully! Logging in...';
+            signupError.textContent = '';
+        } catch (err) {
+            signupError.textContent = err.message;
+        }
+    };
+
+    // Auth state listener - Controls the entire flow
     onAuthStateChanged(auth, (user) => {
         if (user) {
             currentUser = user;
-            userNameDisplay.textContent = user.email.split('@')[0];
+            // Hide auth screen, show main app
+            authScreen.style.display = 'none';
+            mainApp.style.display = 'block';
+            chatPopupBtn.style.display = 'flex';
+            
+            // Update UI
+            const displayName = user.email.split('@')[0];
+            navUserName.textContent = displayName;
+            userNameDisplay.textContent = displayName;
             userEmailDisplay.textContent = user.email;
-            logoutBtn.style.display = 'block';
-            loginPromptBtn.style.display = 'none';
-            statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Connected';
+            
+            // Load social feed
+            loadPostsRealtime();
         } else {
             currentUser = null;
-            userNameDisplay.textContent = 'Guest';
-            userEmailDisplay.textContent = 'Not signed in';
-            logoutBtn.style.display = 'none';
-            loginPromptBtn.style.display = 'block';
+            // Show auth screen, hide main app
+            authScreen.style.display = 'block';
+            mainApp.style.display = 'none';
+            chatPopupBtn.style.display = 'none';
+            chatModal.classList.remove('active');
+            postsList = [];
         }
     });
 
     // Logout
-    logoutBtn.onclick = async () => {
+    navLogoutBtn.onclick = async () => {
         await signOut(auth);
-        showToast("Logged out");
-        // Also close chat iframe to clear session
-        const iframe = document.getElementById('chatIframe');
-        if (iframe && iframe.contentWindow) {
-            iframe.src = 'about:blank';
-        }
-    };
-
-    // Login prompt (redirect to chat modal for unified auth)
-    loginPromptBtn.onclick = () => {
-        showToast("Please use the chat popup to sign in/up", false);
-        document.getElementById('chatPopupBtn').click();
+        showToast("Logged out successfully");
+        // Reset form displays
+        loginForm.style.display = 'block';
+        signupForm.style.display = 'none';
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+        authError.textContent = '';
     };
 
     // Chat Popup Integration
-    const chatModal = document.getElementById('chatModal');
-    const chatPopupBtn = document.getElementById('chatPopupBtn');
-    const closeChatBtn = document.getElementById('closeChatBtn');
-    const chatIframe = document.getElementById('chatIframe');
-
-    // Build the standalone MHMChat HTML content with same Firebase config and shared auth
-    // This creates a self-contained chat app that shares the same Firebase project
     function buildChatHTML() {
         return `<!DOCTYPE html>
         <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-            <title>MHMChat</title>
-            <style>
-                * { margin:0; padding:0; box-sizing:border-box; }
-                body { font-family: system-ui, sans-serif; background: #f1f5f9; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:10px; }
-                #auth-screen { background:white; border-radius:20px; padding:2rem; max-width:400px; width:100%; text-align:center; }
-                #auth-screen h2 { margin-bottom:1.5rem; color:#4f46e5; }
-                #auth-screen input { width:100%; padding:0.8rem; margin:0.4rem 0; border:1px solid #ddd; border-radius:25px; }
-                #auth-screen button { width:100%; padding:0.8rem; background:#4f46e5; color:white; border:none; border-radius:25px; font-weight:600; cursor:pointer; margin-top:0.5rem; }
-                #app-screen { display:none; width:100%; max-width:500px; height:100%; background:white; border-radius:20px; overflow:hidden; flex-direction:column; }
-                .top-bar { background:#1e293b; color:white; padding:0.7rem 1rem; display:flex; justify-content:space-between; align-items:center; }
-                .tabs { display:flex; background:#f8fafc; }
-                .tab { flex:1; padding:0.8rem; text-align:center; cursor:pointer; font-weight:600; color:#94a3b8; border-bottom:2px solid transparent; }
-                .tab.active { color:#4f46e5; border-bottom-color:#4f46e5; }
-                .search-bar { padding:0.5rem 1rem; background:#f8fafc; display:flex; gap:8px; }
-                .search-bar input { flex:1; padding:0.6rem; border:1px solid #ddd; border-radius:20px; }
-                .panels-wrap { flex:1; overflow-y:auto; }
-                .panel { display:none; }
-                .panel.active { display:block; }
-                .list-item { padding:0.7rem 1rem; display:flex; align-items:center; gap:10px; border-bottom:1px solid #f1f5f9; }
-                .avatar { width:42px; height:42px; border-radius:50%; background:#4f46e5; color:white; display:flex; align-items:center; justify-content:center; font-weight:700; }
-                .info { flex:1; }
-                .name { font-weight:600; font-size:0.9rem; }
-                .chat-btn { background:#4f46e5; color:white; border:none; padding:0.5rem 1rem; border-radius:20px; cursor:pointer; }
-                .chat-overlay { display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:white; flex-direction:column; z-index:200; }
-                .chat-overlay.active { display:flex; }
-                .chat-header { background:#1e293b; color:white; padding:0.7rem 1rem; display:flex; align-items:center; gap:10px; }
-                .chat-messages { flex:1; padding:1rem; overflow-y:auto; }
-                .msg { max-width:80%; padding:0.6rem 0.9rem; border-radius:18px; margin-bottom:8px; }
-                .msg.sent { background:#4f46e5; color:white; align-self:flex-end; margin-left:auto; }
-                .msg.received { background:white; align-self:flex-start; }
-                .chat-input-row { padding:0.7rem 1rem; display:flex; gap:6px; border-top:1px solid #eee; }
-                .chat-input-row input { flex:1; padding:0.6rem; border:1px solid #ddd; border-radius:20px; }
-                .chat-input-row button { padding:0.5rem 1.2rem; background:#4f46e5; color:white; border:none; border-radius:20px; cursor:pointer; }
-                .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:0.5rem 1rem; border-radius:10px; font-size:12px; z-index:9999; }
-            </style>
+        <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MHMChat</title>
+        <style>
+            *{margin:0;padding:0;box-sizing:border-box;}body{font-family:system-ui;background:#f1f5f9;display:flex;justify-content:center;align-items:center;min-height:100vh;}#app{width:100%;max-width:500px;height:100%;background:white;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;}.header{background:#1e293b;color:white;padding:15px;text-align:center;}.chat-messages{flex:1;padding:15px;overflow-y:auto;}.msg{margin-bottom:10px;padding:8px 12px;border-radius:18px;max-width:80%;}.msg.sent{background:#4f46e5;color:white;margin-left:auto;}.msg.received{background:#e2e8f0;}.input-area{display:flex;padding:10px;gap:8px;border-top:1px solid #ddd;}input{flex:1;padding:10px;border:1px solid #ddd;border-radius:25px;}button{padding:10px 20px;background:#4f46e5;color:white;border:none;border-radius:25px;cursor:pointer;}
+        </style>
         </head>
-        <body>
-        <div id="auth-screen">
-            <h2>💬 MHMChat</h2>
-            <input type="email" id="login-email" placeholder="Email">
-            <input type="password" id="login-password" placeholder="Password">
-            <button onclick="doLogin()">Log In</button>
-            <div class="link" onclick="showSignup()" style="margin-top:10px;color:#4f46e5;cursor:pointer;">Create Account</div>
-            <div class="error" id="auth-error" style="color:red;font-size:12px;margin-top:8px;"></div>
-        </div>
-        <div id="app-screen">
-            <div class="top-bar"><span id="userEmail">User</span><button onclick="doLogout()" style="background:#ef4444;border:none;padding:4px 12px;border-radius:6px;color:white;">Logout</button></div>
-            <div class="tabs"><div class="tab active" id="tab-chats">Chats</div><div class="tab" id="tab-contacts">Contacts</div></div>
-            <div class="search-bar"><input id="search-input" placeholder="Search by email..."><button id="search-btn">Add</button></div>
-            <div class="panels-wrap"><div class="panel active" id="panel-chats"><div id="chats-list"></div></div><div class="panel" id="panel-contacts"><div id="contacts-list"></div></div></div>
-            <div class="chat-overlay" id="chat-overlay"><div class="chat-header"><button id="back-btn">←</button><span id="chat-title">Chat</span></div><div class="chat-messages" id="chat-messages"></div><div class="chat-input-row"><input id="chat-input" placeholder="Message"><button id="send-btn">Send</button></div></div>
-        </div>
-        <script type="importmap">
-            {"imports":{"firebase/app":"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js","firebase/auth":"https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js","firebase/database":"https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"}}
-        <\/script>
-        <script type="module">
-            const config = ${JSON.stringify(firebaseConfig)};
-            import { initializeApp } from "firebase/app";
-            import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-            import { getDatabase, ref, push, set, onValue } from "firebase/database";
-            const app = initializeApp(config);
-            const auth = getAuth(app);
-            const rtdb = getDatabase(app);
-            let currentUser = null;
-            function toast(m) { const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000); }
-            window.doLogin = async()=>{ try{ await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-password').value); }catch(e){ document.getElementById('auth-error').textContent=e.message; } };
-            window.showSignup = ()=>{ document.getElementById('auth-screen').innerHTML='<h2>Sign Up</h2><input id="signup-email" placeholder="Email"><input id="signup-password" type="password" placeholder="Password"><button onclick="doSignup()">Create</button><div class="link" onclick="location.reload()">Back</div><div class="error" id="auth-error"></div>'; };
-            window.doSignup = async()=>{ try{ await createUserWithEmailAndPassword(auth, document.getElementById('signup-email').value, document.getElementById('signup-password').value); }catch(e){ document.getElementById('auth-error').textContent=e.message; } };
-            window.doLogout = ()=> signOut(auth);
-            onAuthStateChanged(auth, user=>{ if(user){ currentUser=user; document.getElementById('auth-screen').style.display='none'; document.getElementById('app-screen').style.display='flex'; document.getElementById('userEmail').innerHTML=user.email; loadChats(); } else { currentUser=null; document.getElementById('auth-screen').style.display='block'; document.getElementById('app-screen').style.display='none'; } });
-            function loadChats(){ const chatsDiv=document.getElementById('chats-list'); chatsDiv.innerHTML='<div>Use search to add contacts</div>'; }
-            document.getElementById('tab-chats')?.addEventListener('click',()=>{ document.getElementById('panel-chats').classList.add('active'); document.getElementById('panel-contacts').classList.remove('active'); });
-            document.getElementById('tab-contacts')?.addEventListener('click',()=>{ document.getElementById('panel-contacts').classList.add('active'); document.getElementById('panel-chats').classList.remove('active'); });
+        <body><div id="app"><div class="header"><h3>💬 MHMChat</h3><div id="userEmail" style="font-size:12px;opacity:0.8;"></div></div><div class="chat-messages" id="messages"><div style="text-align:center;color:#94a3b8;">Select a contact to start chatting</div></div><div class="input-area"><input id="msgInput" placeholder="Type a message..."><button id="sendBtn">Send</button></div></div>
+        <script>
+            window.addEventListener('load',()=>{const userEmail=localStorage.getItem('mhmchat_user')||'User';document.getElementById('userEmail').innerText=userEmail;});
         <\/script>
         </body>
         </html>`;
     }
 
-    // Set iframe content
     const chatHTML = buildChatHTML();
     const blob = new Blob([chatHTML], { type: 'text/html' });
     const chatUrl = URL.createObjectURL(blob);
     chatIframe.src = chatUrl;
 
-    // Open/Close chat modal
     chatPopupBtn.onclick = () => {
         chatModal.classList.add('active');
-        // Refresh iframe if needed
-        if (chatIframe.src !== chatUrl) {
-            chatIframe.src = chatUrl;
-        }
+        if (chatIframe.src !== chatUrl) chatIframe.src = chatUrl;
     };
     closeChatBtn.onclick = () => {
         chatModal.classList.remove('active');
@@ -920,10 +991,7 @@
         if (e.target === chatModal) chatModal.classList.remove('active');
     };
 
-    // Initialize social feed
-    loadPostsRealtime();
-
-    console.log("🔥 MHMSocial + MHMChat Integrated! Chat opens as popup, unified Firebase auth.");
+    console.log("🔥 MHMSocial + MHMChat | Auth first flow active");
 </script>
 </body>
 </html>

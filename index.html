@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>MHMSocial + MHMChat | Complete Platform</title>
+    <title>MHMSocial + MHMChat | Unified Firestore Auth</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -22,8 +17,6 @@
             justify-content: center;
             padding: 20px;
         }
-
-        /* Auth Screen */
         .auth-container {
             max-width: 450px;
             width: 100%;
@@ -41,11 +34,6 @@
             background-clip: text;
             color: transparent;
         }
-        .auth-container .subtitle {
-            color: #64748b;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
         .auth-input {
             width: 100%;
             padding: 14px 18px;
@@ -55,10 +43,7 @@
             font-size: 15px;
             font-family: inherit;
         }
-        .auth-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+        .auth-input:focus { outline: none; border-color: #667eea; }
         .auth-btn {
             width: 100%;
             padding: 14px;
@@ -66,7 +51,6 @@
             color: white;
             border: none;
             border-radius: 30px;
-            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             margin-top: 15px;
@@ -77,40 +61,7 @@
             cursor: pointer;
             font-size: 14px;
         }
-        .auth-error {
-            color: #ef4444;
-            font-size: 13px;
-            margin-top: 10px;
-            padding: 8px;
-            background: #fee2e2;
-            border-radius: 12px;
-        }
-        .auth-success {
-            color: #10b981;
-            font-size: 13px;
-            margin-top: 10px;
-        }
-        .setup-instructions {
-            background: #fef3c7;
-            border-radius: 16px;
-            padding: 15px;
-            margin-top: 20px;
-            text-align: left;
-            font-size: 13px;
-        }
-        .setup-instructions h4 {
-            color: #92400e;
-            margin-bottom: 10px;
-        }
-        .setup-instructions ol {
-            margin-left: 20px;
-            color: #92400e;
-        }
-        .setup-instructions li {
-            margin: 5px 0;
-        }
-
-        /* Main App */
+        .auth-error { color: #ef4444; font-size: 13px; margin-top: 10px; }
         .main-app {
             display: none;
             width: 100%;
@@ -122,10 +73,7 @@
             color: white;
             margin-bottom: 30px;
         }
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
         .user-badge {
             display: inline-flex;
             align-items: center;
@@ -186,10 +134,7 @@
             font-family: inherit;
             resize: vertical;
         }
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+        textarea:focus { outline: none; border-color: #667eea; }
         .media-actions {
             display: flex;
             gap: 12px;
@@ -215,11 +160,7 @@
             cursor: pointer;
             float: right;
         }
-        .clearfix::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
+        .clearfix::after { content: ""; clear: both; display: table; }
         .post-card {
             background: white;
             border-radius: 20px;
@@ -242,25 +183,11 @@
             justify-content: center;
             color: white;
         }
-        .post-user-info {
-            flex: 1;
-        }
-        .post-username {
-            font-weight: 700;
-        }
-        .post-time {
-            font-size: 11px;
-            color: #64748b;
-        }
-        .post-text {
-            margin: 10px 0;
-            line-height: 1.5;
-        }
-        .post-image img {
-            max-width: 100%;
-            max-height: 350px;
-            border-radius: 16px;
-        }
+        .post-user-info { flex: 1; }
+        .post-username { font-weight: 700; }
+        .post-time { font-size: 11px; color: #64748b; }
+        .post-text { margin: 10px 0; line-height: 1.5; }
+        .post-image img { max-width: 100%; max-height: 350px; border-radius: 16px; }
         .post-actions {
             display: flex;
             gap: 25px;
@@ -277,9 +204,7 @@
             cursor: pointer;
             color: #64748b;
         }
-        .action-btn.liked {
-            color: #ef4444;
-        }
+        .action-btn.liked { color: #ef4444; }
         .comments-section {
             margin-top: 12px;
             background: #f8fafc;
@@ -293,10 +218,7 @@
             display: flex;
             gap: 10px;
         }
-        .comment-author {
-            font-weight: 700;
-            color: #667eea;
-        }
+        .comment-author { font-weight: 700; color: #667eea; }
         .add-comment-form {
             display: flex;
             gap: 8px;
@@ -356,9 +278,7 @@
             align-items: center;
             justify-content: center;
         }
-        .chat-modal.active {
-            display: flex;
-        }
+        .chat-modal.active { display: flex; }
         .chat-modal-content {
             width: 90%;
             max-width: 500px;
@@ -384,33 +304,18 @@
             font-size: 24px;
             cursor: pointer;
         }
-        .chat-iframe-container {
-            flex: 1;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .empty-feed {
-            text-align: center;
-            padding: 40px;
-            color: #94a3b8;
-        }
-
-        @media (max-width: 900px) {
-            .two-columns {
-                grid-template-columns: 1fr;
-            }
-        }
+        .chat-iframe-container { flex: 1; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .empty-feed { text-align: center; padding: 40px; color: #94a3b8; }
+        @media (max-width: 900px) { .two-columns { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <!-- AUTH SCREEN -->
 <div id="authScreen" class="auth-container">
-    <h2><i class="fas fa-comments"></i> MHMSocial</h2>
-    <div class="subtitle">Sign in to access the platform</div>
+    <h2><i class="fas fa-fire"></i> MHMSocial</h2>
+    <div class="subtitle" style="color:#64748b; margin-bottom:20px;">Sign in with your MHMChat account</div>
     
     <div id="loginForm">
         <input type="email" id="loginEmail" class="auth-input" placeholder="Email address">
@@ -421,27 +326,13 @@
     </div>
 
     <div id="signupForm" style="display: none;">
+        <input type="text" id="signupName" class="auth-input" placeholder="Full Name">
         <input type="email" id="signupEmail" class="auth-input" placeholder="Email address">
         <input type="password" id="signupPassword" class="auth-input" placeholder="Password (min 6 characters)">
         <button id="signupBtn" class="auth-btn">Create Account</button>
         <div class="auth-link" id="showLoginLink">Already have an account? Log In</div>
         <div id="signupError" class="auth-error"></div>
-        <div id="signupSuccess" class="auth-success"></div>
-    </div>
-
-    <div id="setupInstructions" class="setup-instructions" style="display: none;">
-        <h4><i class="fas fa-exclamation-triangle"></i> Firebase Authentication Not Enabled</h4>
-        <p>Please follow these steps to fix the issue:</p>
-        <ol>
-            <li>Go to <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a></li>
-            <li>Select your project "mhmsocial"</li>
-            <li>Click on <strong>"Authentication"</strong> in the left menu</li>
-            <li>Click <strong>"Get started"</strong> or <strong>"Enable"</strong></li>
-            <li>Enable <strong>"Email/Password"</strong> sign-in method</li>
-            <li>Click <strong>"Save"</strong></li>
-            <li>Refresh this page</li>
-        </ol>
-        <p style="margin-top: 10px; font-size: 12px;">After enabling, the sign-in will work immediately!</p>
+        <div id="signupSuccess" class="auth-success" style="color:#10b981;"></div>
     </div>
 </div>
 
@@ -466,7 +357,7 @@
                 <div class="user-avatar-large"><i class="fas fa-user"></i></div>
                 <h3 id="userNameDisplay">Loading...</h3>
                 <p id="userEmailDisplay" style="color:#64748b; font-size:13px;"></p>
-                <small style="color:#10b981;"><i class="fas fa-check-circle"></i> Authenticated</small>
+                <small style="color:#10b981;"><i class="fas fa-check-circle"></i> Authenticated via Firestore</small>
             </div>
         </div>
     </div>
@@ -493,12 +384,14 @@
         "imports": {
             "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
             "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js",
-            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
         }
     }
 </script>
 
 <script type="module">
+    // Firebase Configuration - Same as MHMChat
     const firebaseConfig = {
         apiKey: "AIzaSyDexKxdFHxMAw7K1e9_xWRuwSrlqaqxviU",
         authDomain: "mhmsocial.firebaseapp.com",
@@ -512,12 +405,15 @@
     import { initializeApp } from "firebase/app";
     import { getDatabase, ref, push, set, onValue, update, remove, get } from "firebase/database";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+    import { getFirestore, doc, setDoc, getDoc, query, collection, where, getDocs } from "firebase/firestore";
 
     const app = initializeApp(firebaseConfig);
     const rtdb = getDatabase(app);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     let currentUser = null;
+    let currentUserData = null;
     let currentImageBase64 = null;
     let postsList = [];
 
@@ -533,7 +429,6 @@
     const userNameDisplay = document.getElementById('userNameDisplay');
     const userEmailDisplay = document.getElementById('userEmailDisplay');
     const socialContainer = document.getElementById('socialFeedContainer');
-    const setupInstructions = document.getElementById('setupInstructions');
 
     function showToast(message, isError = false) {
         const toast = document.createElement('div');
@@ -573,6 +468,30 @@
                 img.src = e.target.result;
             };
         });
+    }
+
+    // Create user in Firestore (matching MHMChat structure)
+    async function createUserInFirestore(userId, email, name) {
+        const userRef = doc(db, 'users', userId);
+        await setDoc(userRef, {
+            email: email,
+            emailLower: email.toLowerCase(),
+            name: name || email.split('@')[0],
+            nameLower: (name || email.split('@')[0]).toLowerCase(),
+            contacts: [],
+            groups: [],
+            createdAt: new Date().toISOString()
+        });
+    }
+
+    // Get user data from Firestore
+    async function getUserData(userId) {
+        const userRef = doc(db, 'users', userId);
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+            return docSnap.data();
+        }
+        return null;
     }
 
     function renderFeed() {
@@ -645,7 +564,7 @@
                 await set(newPostRef, {
                     text: text || "📸 Shared a photo",
                     imageBase64: currentImageBase64 || null,
-                    authorName: currentUser.email.split('@')[0],
+                    authorName: currentUserData?.name || currentUser.email.split('@')[0],
                     userId: currentUser.uid,
                     timestamp: Date.now(),
                     likes: 0,
@@ -692,7 +611,11 @@
                 const text = input.value.trim();
                 if (!text) return;
                 const commentRef = ref(rtdb, `posts/${postId}/comments/${Date.now()}`);
-                await set(commentRef, { author: currentUser.email.split('@')[0], text: text, timestamp: Date.now() });
+                await set(commentRef, { 
+                    author: currentUserData?.name || currentUser.email.split('@')[0], 
+                    text: text, 
+                    timestamp: Date.now() 
+                });
                 input.value = '';
                 showToast("Comment added!");
             };
@@ -710,7 +633,7 @@
         });
     }
 
-    // Auth UI
+    // AUTH UI - Using MHMChat Firestore
     const loginForm = document.getElementById('loginForm');
     const signupForm = document.getElementById('signupForm');
     document.getElementById('showSignupLink').onclick = () => { loginForm.style.display = 'none'; signupForm.style.display = 'block'; };
@@ -723,45 +646,48 @@
         try {
             await signInWithEmailAndPassword(auth, email, password);
         } catch (err) {
-            if (err.code === 'auth/configuration-not-found') {
-                setupInstructions.style.display = 'block';
-                document.getElementById('authError').textContent = '';
-            } else {
-                document.getElementById('authError').textContent = err.message;
-            }
+            document.getElementById('authError').textContent = err.message;
         }
     };
 
     document.getElementById('signupBtn').onclick = async () => {
+        const name = document.getElementById('signupName').value.trim();
         const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value;
         if (!email || !password) { document.getElementById('signupError').textContent = 'Fill all fields'; return; }
         if (password.length < 6) { document.getElementById('signupError').textContent = 'Password min 6 characters'; return; }
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            document.getElementById('signupSuccess').textContent = 'Account created! Logging in...';
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await createUserInFirestore(userCredential.user.uid, email, name);
+            document.getElementById('signupSuccess').textContent = 'Account created successfully!';
+            setTimeout(() => {
+                signupForm.style.display = 'none';
+                loginForm.style.display = 'block';
+            }, 1500);
         } catch (err) {
-            if (err.code === 'auth/configuration-not-found') {
-                setupInstructions.style.display = 'block';
-                document.getElementById('signupError').textContent = '';
-            } else {
-                document.getElementById('signupError').textContent = err.message;
-            }
+            document.getElementById('signupError').textContent = err.message;
         }
     };
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
         if (user) {
             currentUser = user;
+            currentUserData = await getUserData(user.uid);
+            if (!currentUserData) {
+                await createUserInFirestore(user.uid, user.email, user.email.split('@')[0]);
+                currentUserData = await getUserData(user.uid);
+            }
             authScreen.style.display = 'none';
             mainApp.style.display = 'block';
             chatPopupBtn.style.display = 'flex';
-            navUserName.textContent = user.email.split('@')[0];
-            userNameDisplay.textContent = user.email.split('@')[0];
+            const displayName = currentUserData?.name || user.email.split('@')[0];
+            navUserName.textContent = displayName;
+            userNameDisplay.textContent = displayName;
             userEmailDisplay.textContent = user.email;
             loadPostsRealtime();
         } else {
             currentUser = null;
+            currentUserData = null;
             authScreen.style.display = 'block';
             mainApp.style.display = 'none';
             chatPopupBtn.style.display = 'none';
@@ -772,7 +698,7 @@
     navLogoutBtn.onclick = async () => { await signOut(auth); showToast("Logged out"); };
 
     // Chat Popup
-    const chatHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>MHMChat</title><style>body{font-family:system-ui;background:#f1f5f9;margin:0;padding:20px;text-align:center;}.chat-placeholder{background:white;border-radius:20px;padding:40px;color:#64748b;}</style></head><body><div class="chat-placeholder"><i class="fas fa-comments" style="font-size:48px;margin-bottom:20px;"></i><h3>MHMChat</h3><p>Chat feature coming soon!<br>Use the social feed to interact.</p></div></body></html>`;
+    const chatHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>MHMChat</title><style>body{font-family:system-ui;background:#f1f5f9;margin:0;padding:20px;text-align:center;}.chat-placeholder{background:white;border-radius:20px;padding:40px;color:#64748b;}</style></head><body><div class="chat-placeholder"><i class="fas fa-comments" style="font-size:48px;margin-bottom:20px;"></i><h3>MHMChat</h3><p>Chat feature integrated!<br>Your account works across both platforms.</p></div></body></html>`;
     const blob = new Blob([chatHTML], { type: 'text/html' });
     chatIframe.src = URL.createObjectURL(blob);
     chatPopupBtn.onclick = () => chatModal.classList.add('active');

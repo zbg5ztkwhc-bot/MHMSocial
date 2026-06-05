@@ -314,6 +314,23 @@
   .comment-edit-save{background:#667eea;color:white;border:none;border-radius:14px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;}
   .comment-edit-cancel{background:#e2e8f0;border:none;border-radius:14px;padding:5px 10px;font-size:12px;cursor:pointer;}
   .show-more-btn{background:none;border:none;color:#667eea;font-size:12px;font-weight:600;cursor:pointer;padding:6px 0;display:block;width:100%;text-align:left;}
+
+  /* ── Online presence indicator ── */
+  .online-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e;border:2px solid white;position:absolute;bottom:0;right:0;}
+  .offline-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#94a3b8;border:2px solid white;position:absolute;bottom:0;right:0;}
+  .li-avatar-wrap{position:relative;display:inline-block;flex-shrink:0;}
+  /* ── Delete contact btn ── */
+  .del-contact-btn{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:4px 8px;border-radius:8px;font-size:11px;cursor:pointer;margin-left:4px;}
+  /* ── Post menu ── */
+  .post-menu-wrap{position:relative;display:inline-block;}
+  .post-menu-btn{background:rgba(255,255,255,.12);border:none;border-radius:8px;padding:4px 9px;font-size:15px;cursor:pointer;color:#64748b;}
+  .post-menu-btn:hover{background:#f1f5f9;}
+  .post-menu-dropdown{display:none;position:absolute;right:0;top:110%;background:white;border:1px solid #e2e8f0;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:999;min-width:140px;overflow:hidden;}
+  .post-menu-dropdown.open{display:block;}
+  .post-menu-item{padding:9px 14px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:7px;color:#1e293b;}
+  .post-menu-item:hover{background:#f8fafc;}
+  .post-menu-item.danger{color:#dc2626;}
+
   .chat-del-contact-btn{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:4px 8px;border-radius:8px;font-size:11px;margin-left:4px;cursor:pointer;}
   .forward-btn{background:#f0f9ff;border:1px solid #bae6fd;color:#0369a1;padding:4px 8px;border-radius:8px;font-size:11px;cursor:pointer;}
   .msg-del-btn{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:4px 8px;border-radius:8px;font-size:11px;cursor:pointer;}
@@ -679,14 +696,12 @@
     try {
       const pid = await _getPlayerId(toEmail);
       if (!pid) return;
-      navigator.sendBeacon
-        ? navigator.sendBeacon("https://onesignal.com/api/v1/notifications",
-            new Blob([_osPayload([pid], title, body, url)], {type:"application/json"}))
-        : fetch("https://onesignal.com/api/v1/notifications", {
-            method:"POST", keepalive:true,
-            headers:{"Content-Type":"application/json","Authorization":"Basic "+ONESIGNAL_REST_KEY},
-            body:_osPayload([pid], title, body, url)
-          });
+      // Use fetch with keepalive - sendBeacon can't send Authorization header
+      fetch("https://onesignal.com/api/v1/notifications", {
+        method:"POST", keepalive:true,
+        headers:{"Content-Type":"application/json","Authorization":"Basic "+ONESIGNAL_REST_KEY},
+        body:_osPayload([pid], title, body, url)
+      }).catch(()=>{});
     } catch(e) { console.warn("[OneSignal] sendPushToUser failed:", e); }
   }
   async function sendPushToUsers(emailList, title, body, url) {
@@ -698,14 +713,11 @@
           .map(em => _getPlayerId(em))
       )).filter(Boolean);
       if (!playerIds.length) return;
-      navigator.sendBeacon
-        ? navigator.sendBeacon("https://onesignal.com/api/v1/notifications",
-            new Blob([_osPayload(playerIds, title, body, url)], {type:"application/json"}))
-        : fetch("https://onesignal.com/api/v1/notifications", {
-            method:"POST", keepalive:true,
-            headers:{"Content-Type":"application/json","Authorization":"Basic "+ONESIGNAL_REST_KEY},
-            body:_osPayload(playerIds, title, body, url)
-          });
+      fetch("https://onesignal.com/api/v1/notifications", {
+        method:"POST", keepalive:true,
+        headers:{"Content-Type":"application/json","Authorization":"Basic "+ONESIGNAL_REST_KEY},
+        body:_osPayload(playerIds, title, body, url)
+      }).catch(()=>{});
     } catch(e) { console.warn("[OneSignal] sendPushToUsers failed:", e); }
   }
 
@@ -772,11 +784,13 @@
       });
     }
   }
-  function showBrowserNotif(title,body,icon){
-    // Always play sound for in-app notifications
+  async function showBrowserNotif(title,body,icon){
     playNotifSound();
-    // Show OS notification regardless of visibility
-    if(!("Notification" in window)||Notification.permission!=="granted") return;
+    if(!("Notification" in window)) return;
+    if(Notification.permission==="default"){
+      await Notification.requestPermission().catch(()=>{});
+    }
+    if(Notification.permission!=="granted") return;
     const notifOpts={body:body||"",icon:icon||"icon-192.png",badge:"icon-192.png",vibrate:[200,100,200,100,200],renotify:true,tag:title+":"+body};
     if(swReg&&swReg.active){
       swReg.showNotification(title,{...notifOpts,actions:[{action:"open",title:"Open"}]});
@@ -800,6 +814,7 @@
     unreadNotifCount++;
     renderNotifBell();
     if(notifDropdownOpen) renderNotifDropdown();
+    showBrowserNotif("MHMSocial "+icon, text, "icon-192.png");
   }
   function renderNotifBell(){
     const cnt=$("notif-bell-count");if(!cnt) return;
@@ -929,6 +944,10 @@
       stopChatNotifListeners();stopContactProfileListeners();
       chatUnreadCounts={};chatLastTs={};unreadCount=0;socialFeedInitialized=false;socialNewPostBuffer=[];return;
     }
+    // ── Write online presence ──
+    const presRef=ref(chatRtdb,"presence/"+safeEmail(user.email));
+    set(presRef,{online:true,lastSeen:Date.now()});
+    window.addEventListener("beforeunload",()=>{set(presRef,{online:false,lastSeen:Date.now()});});
     $("login-screen").classList.add("hidden");$("social-screen").classList.remove("hidden");$("chat-fab").style.display="flex";
     window.__mhmCurrentEmail = user.email;
     requestNotifPermission();showNotifPromptIfNeeded();
@@ -956,7 +975,7 @@
       userProfile.name=s.data().name;userProfile.photoBase64=s.data().photoBase64||null;
       contacts=s.data().contacts||[];groups=s.data().groups||[];
       for(const gid of groups){if(!groupCache[gid]){const gs=await getDoc(doc(chatDb,"groups",gid));if(gs.exists())groupCache[gid]=gs.data();}}
-      updateSocialAvatars();updateTopBar();renderPanel();startChatNotifListeners();startContactProfileListeners();
+      updateSocialAvatars();updateTopBar();renderPanel();startChatNotifListeners();startContactProfileListeners();startPresenceListeners();
     });
   }
   function startInviteListener(){
@@ -976,6 +995,28 @@
     for(const key of Object.keys(contactProfileListeners)){
       if(!contacts.map(e=>e.toLowerCase()).includes(key)){contactProfileListeners[key]();delete contactProfileListeners[key];delete contactProfiles[key];}
     }
+  }
+  const presenceCache={};
+  const presenceListeners={};
+  function startPresenceListeners(){
+    for(const em of contacts){
+      const key=safeEmail(em);
+      if(presenceListeners[key]) continue;
+      const r=ref(chatRtdb,"presence/"+key);
+      const unsub=onValue(r,snap=>{
+        presenceCache[em.toLowerCase()]=snap.exists()?snap.val():{online:false};
+        renderPanel();
+      });
+      presenceListeners[key]=()=>off(r,"value",unsub);
+    }
+    // Clean up listeners for removed contacts
+    for(const key of Object.keys(presenceListeners)){
+      if(!contacts.map(e=>safeEmail(e)).includes(key)){presenceListeners[key]();delete presenceListeners[key];}
+    }
+  }
+  function presenceDot(em){
+    const p=presenceCache[em.toLowerCase()];
+    return p?.online?'<span class="online-dot"></span>':'<span class="offline-dot"></span>';
   }
   function stopContactProfileListeners(){for(const u of Object.values(contactProfileListeners))u();contactProfileListeners={};contactProfiles={};}
   function startChatNotifListeners(){
@@ -1167,7 +1208,7 @@
     h+='<div class="post-header">';
     h+=postAvatar(p);
     h+='<div style="flex:1;"><div class="post-author">'+esc(p.authorName||getName(p.author))+'</div><div class="post-time">'+new Date(p.timestamp).toLocaleString()+'</div></div>';
-    if(mine){h+='<button class="post-edit-btn" data-action="edit-post" title="Edit post">✏️</button><button class="post-delete" data-action="del-post" title="Delete post">🗑</button>';}
+    if(mine){h+='<div class="post-menu-wrap"><button class="post-menu-btn" data-action="open-post-menu">⋯</button><div class="post-menu-dropdown" id="pmenu-'+p._key+'"><div class="post-menu-item" data-action="edit-post">✏️ Edit post</div><div class="post-menu-item danger" data-action="del-post">🗑 Delete post</div></div></div>';}
     h+='</div>';
     h+='<div class="post-text" id="pt-'+p._key+'">'+renderMentions(p.text||"")+'</div>';
     h+=imgHtml;
@@ -1231,6 +1272,12 @@
     const ck=commentItem?.dataset.ck;
 
     if(action==="lightbox"){openLightbox(e.target.src);return;}
+    if(action==="open-post-menu"){
+      // Close all other menus first
+      document.querySelectorAll('.post-menu-dropdown.open').forEach(d=>{if(d.id!=='pmenu-'+postKey)d.classList.remove('open');});
+      document.getElementById('pmenu-'+postKey)?.classList.toggle('open');
+      e.stopPropagation();return;
+    }
     if(action==="like"){
       if(!postKey||!currentUser) return;
       const userKey=safeEmail(currentUser.email);
@@ -1307,6 +1354,7 @@
   });
   document.addEventListener("click",e=>{
     if(!$("comment-reaction-picker")?.contains(e.target)) hideCommentReactionPicker();
+    if(!e.target.closest('.post-menu-wrap')) document.querySelectorAll('.post-menu-dropdown.open').forEach(d=>d.classList.remove('open'));
     if(!e.target.dataset.action) return;
     if(e.target.dataset.action==="cancel-edit-post"){const wrap=e.target.closest("[data-action=edit-post-wrap]");if(!wrap) return;const pkey=wrap.dataset.pkey;const ptEl=document.getElementById("pt-"+pkey);if(ptEl) ptEl.style.display="";wrap.remove();}
     if(e.target.dataset.action==="save-edit-post"){const wrap=e.target.closest("[data-action=edit-post-wrap]");if(!wrap) return;const pkey=wrap.dataset.pkey;const ed=document.getElementById("pe-"+pkey);if(!ed) return;const newText=ed.value.trim();if(!newText){showToast("Post can't be empty",false);return;}update(ref(chatRtdb,"socialPosts/"+pkey),{text:newText}).then(()=>{const ptEl=document.getElementById("pt-"+pkey);if(ptEl) ptEl.style.display="";wrap.remove();});}
@@ -1446,7 +1494,14 @@
   // Panel
   window.setTab=tab=>{activeTab=tab;["chats","contacts","groups"].forEach(t=>$("tab-"+t).classList.toggle("active",t===tab));renderPanel();};
   function renderPanel(){const el=$("panel-content");if(activeTab==="chats") renderChatsTab(el);else if(activeTab==="contacts") renderContactsTab(el);else renderGroupsTab(el);}
-  function liAvatar(em){const cp=contactProfiles[em.toLowerCase()];if(cp?.photoBase64) return '<div class="li-avatar" style="background:transparent;"><img src="'+cp.photoBase64+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>';return '<div class="li-avatar" style="background:'+avatarColor(em)+';">'+getInitial(em)+'</div>';}
+  function liAvatar(em){
+    const cp=contactProfiles[em.toLowerCase()];
+    const dot=presenceDot(em);
+    const av=cp?.photoBase64
+      ?'<div class="li-avatar" style="background:transparent;"><img src="'+cp.photoBase64+'"></div>'
+      :'<div class="li-avatar" style="background:'+avatarColor(em)+';">'+getInitial(cp?.name||getName(em))+'</div>';
+    return '<div class="li-avatar-wrap">'+av+dot+'</div>';
+  }
   function renderChatsTab(el){
     if(!contacts.length&&!groups.length){el.innerHTML='<div class="empty-msg">No chats yet. Add a contact!</div>';return;}
     const allItems=[];
@@ -1469,7 +1524,14 @@
     if(groups.length){h+='<div class="section-label">Group Chats</div>';h+=groups.map(gid=>{const g=groupCache[gid]||{name:"Group",members:[]};const uc=chatUnreadCounts[gid]||0;return '<div class="list-item"><div class="li-avatar" style="background:#059669;">👥</div><div class="li-info"><div class="li-name">'+esc(g.name)+'</div><div class="li-sub">'+g.members.length+' members</div></div>'+(uc>0?'<span class="chat-unread-dot">'+(uc>99?"99+":uc)+'</span>':"")+'<button class="chat-btn" data-action="open-chat" data-id="'+gid+'" data-type="group" data-name="'+esc(g.name)+'">💬 Chat</button></div>';}).join("");}
     el.innerHTML=h;
   }
-  function renderContactsTab(el){if(!contacts.length){el.innerHTML='<div class="empty-msg">No contacts yet.</div>';return;}el.innerHTML=contacts.map(em=>{const dn=contactProfiles[em.toLowerCase()]?.name||getName(em);return '<div class="list-item">'+liAvatar(em)+'<div class="li-info"><div class="li-name">'+esc(dn)+'</div><div class="li-sub">'+em+'</div></div><button class="chat-btn" data-action="open-chat" data-id="'+em+'" data-type="direct" data-name="'+esc(dn)+'">💬 Chat</button></div>';}).join("");}
+  function renderContactsTab(el){
+    if(!contacts.length){el.innerHTML='<div class="empty-msg">No contacts yet.</div>';return;}
+    el.innerHTML=contacts.map(em=>{
+      const cp=contactProfiles[em.toLowerCase()];const dn=cp?.name||getName(em);
+      const p=presenceCache[em.toLowerCase()];const onlineLabel=p?.online?'<span style="color:#22c55e;font-size:10px;font-weight:600;">● Online</span>':'<span style="color:#94a3b8;font-size:10px;">○ Offline</span>';
+      return '<div class="list-item">'+liAvatar(em)+'<div class="li-info"><div class="li-name">'+esc(dn)+'</div><div class="li-sub">'+onlineLabel+'</div></div><button class="chat-btn" data-action="open-chat" data-id="'+em+'" data-type="direct" data-name="'+esc(dn)+'">💬</button><button class="del-contact-btn" data-action="del-contact" data-email="'+em+'" title="Remove contact">🗑</button></div>';
+    }).join('');
+  }
   function renderGroupsTab(el){if(!groups.length){el.innerHTML='<div class="empty-msg">No groups yet.</div>';return;}el.innerHTML=groups.map(gid=>{const g=groupCache[gid]||{name:"Group",members:[]};return '<div class="list-item"><div class="li-avatar" style="background:#059669;">👥</div><div class="li-info"><div class="li-name">'+esc(g.name)+'</div><div class="li-sub">'+g.members.length+' members</div></div><div style="display:flex;gap:5px;"><button class="icon-btn" data-action="manage-group" data-gid="'+gid+'">⚙️</button><button class="del-btn" data-action="del-group" data-gid="'+gid+'">🗑</button><button class="chat-btn" data-action="open-chat" data-id="'+gid+'" data-type="group" data-name="'+esc(g.name)+'">💬</button></div></div>';}).join("");}
   $("panel-content").addEventListener("click",e=>{
     const el=e.target.closest("[data-action]");if(!el) return;
@@ -1477,6 +1539,7 @@
     if(el.dataset.action==="manage-group"){managingGroupId=el.dataset.gid;selectedAddEmails=new Set();showView("group-manage");}
     if(el.dataset.action==="del-group") deleteGroupById(el.dataset.gid);
     if(el.dataset.action==="del-chat-history") deleteChatHistory(el.dataset.chatid,el.dataset.chattype);
+    if(el.dataset.action==="del-contact") deleteContact(el.dataset.email);
   });
 
   // Groups
@@ -1521,7 +1584,7 @@
       const ma=$("messages-area");const wasAtBottom=ma.scrollHeight-ma.scrollTop-ma.clientHeight<80;
       ma.innerHTML=msgs.map(m=>{
         const mine=m.sender===currentUser.email;const imgHtml=m.imageBase64?'<img class="bubble-img" src="'+m.imageBase64+'" data-action="lightbox">':"";
-        const txtHtml=m.text?'<span>'+esc(m.text)+'</span>':"";const reactionBar=buildReactionBar(m.reactions,mine);
+        const txtHtml=m.text?'<span>'+esc(m.text)+'</span>':"";const reactionBar=buildReactionBar(m.reactions,mine,m._key);
         return '<div class="bubble-wrap'+(mine?" mine":"")+'" data-msgkey="'+m._key+'"><div class="bubble'+(mine?" mine":" theirs")+'">'+(type==="group"&&!mine?'<span class="bubble-sender">'+getName(m.sender)+'</span>':"")
           +imgHtml+txtHtml+'<span class="bubble-time">'+new Date(m.timestamp).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})+'</span>'+reactionBar+'</div></div>';
       }).join("")||'<div style="text-align:center;padding:2rem;color:#94a3b8;font-size:13px;">No messages yet 👋</div>';
@@ -1534,10 +1597,19 @@
   window.closeChat=closeChat;
 
   // Reactions (messages)
-  function buildReactionBar(reactions,mine){
-    if(!reactions) return "";
-    const pills=EMOJI_KEYS.map(key=>{const users=reactions[key]||{};const count=Object.keys(users).length;if(!count) return "";const reacted=!!users[safeEmail(currentUser?.email||"")];return '<button class="reaction-pill'+(reacted?" reacted":"")+'" data-ek="'+key+'">'+EMOJI_MAP[key]+" "+count+'</button>';}).filter(Boolean).join("");
-    return pills?'<div class="reaction-bar">'+pills+'</div>':"";
+  function buildReactionBar(reactions, mine, msgKey){
+    const pills = reactions ? EMOJI_KEYS.map(key=>{
+      const users=reactions[key]||{};const count=Object.keys(users).length;if(!count) return "";
+      const reacted=!!users[safeEmail(currentUser?.email||"")];
+      return '<button class="reaction-pill'+(reacted?" reacted":"")+'" data-ek="'+key+'">'+EMOJI_MAP[key]+" "+count+'</button>';
+    }).filter(Boolean) : [];
+    const pillsHtml = pills.length ? '<div class="reaction-bar">'+pills.join("")+'</div>' : "";
+    if(!msgKey) return pillsHtml;
+    const actionsHtml = '<div class="msg-actions-row">'
+      +'<button class="forward-btn" data-action="forward-msg" data-msgkey="'+msgKey+'" title="Forward">↪ Forward</button>'
+      +(mine ? '<button class="msg-del-btn" data-action="del-msg" data-msgkey="'+msgKey+'" title="Delete">🗑 Delete</button>' : '')
+      +'</div>';
+    return pillsHtml + actionsHtml;
   }
   function showReactionPicker(bubbleWrap){
     const picker=$("reaction-picker");const rect=bubbleWrap.getBoundingClientRect();
@@ -1640,6 +1712,14 @@
   }
 
   // ── Delete chat history (from chats list) ──
+  async function deleteContact(email) {
+    if(!confirm('Remove '+getName(email)+' from contacts?')) return;
+    // Remove from both sides
+    await updateDoc(doc(chatDb,'users',userProfile.docId),{contacts:arrayRemove(email)});
+    const s=await getDocs(query(collection(chatDb,'users'),where('emailLower','==',email.toLowerCase())));
+    if(!s.empty) await updateDoc(doc(chatDb,'users',s.docs[0].id),{contacts:arrayRemove(currentUser.email)});
+    showToast(getName(email)+' removed from contacts');
+  }
   async function deleteChatHistory(chatId, chatType) {
     if (!confirm('Clear all messages in this chat?')) return;
     const path = chatType === 'direct' ? directPath(currentUser.email, chatId) : 'groupMessages/' + chatId;
